@@ -1,0 +1,66 @@
+# =============================================================================
+#  LifeofM — pile complete (application + PostgreSQL)
+# -----------------------------------------------------------------------------
+#    docker compose up -d          demarre
+#    docker compose logs -f app    suit les journaux
+#    docker compose down -v        arrete et supprime les donnees
+#
+#  Avant le premier demarrage, basculez le provider Prisma sur PostgreSQL :
+#    npm run db:use postgresql
+# =============================================================================
+
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: lifeofm-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-lifeofm}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-lifeofm}
+      POSTGRES_DB: ${POSTGRES_DB:-lifeofm}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+    healthcheck:
+      # L'application ne demarre qu'une fois la base reellement prete.
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-lifeofm} -d ${POSTGRES_DB:-lifeofm}']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: lifeofm-app
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://${POSTGRES_USER:-lifeofm}:${POSTGRES_PASSWORD:-lifeofm}@db:5432/${POSTGRES_DB:-lifeofm}?schema=public
+      NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-http://localhost:3000}
+      # OBLIGATOIRE en production : definissez AUTH_SECRET dans un fichier .env
+      # a cote de ce docker-compose.yml.
+      AUTH_SECRET: ${AUTH_SECRET:?AUTH_SECRET est requis}
+      ACCESS_TOKEN_TTL: ${ACCESS_TOKEN_TTL:-15m}
+      REFRESH_TOKEN_TTL_DAYS: ${REFRESH_TOKEN_TTL_DAYS:-30}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      AI_MODEL: ${AI_MODEL:-claude-sonnet-5}
+      OPENWEATHER_API_KEY: ${OPENWEATHER_API_KEY:-}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      EMAIL_FROM: ${EMAIL_FROM:-LifeofM <no-reply@lifeofm.app>}
+    ports:
+      - '3000:3000'
+    volumes:
+      # Fichiers televerses, conserves entre deux redemarrages.
+      - uploads:/app/public/uploads
+
+volumes:
+  postgres-data:
+  uploads:

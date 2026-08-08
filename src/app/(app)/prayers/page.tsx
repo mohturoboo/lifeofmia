@@ -1,0 +1,232 @@
+'use client';
+
+import { useState } from 'react';
+import { api, useResource } from '@/lib/client/api';
+import { Badge, Card, CardHeader, Progress, Select, Skeleton, cx } from '@/components/ui/primitives';
+import { Icon } from '@/components/ui/icons';
+import { PageHeader, DateNav } from '@/components/page-header';
+import { useToast } from '@/components/ui/toast';
+import { useI18n } from '@/i18n/provider';
+import { dateKeyIn } from '@/lib/date';
+
+interface PrayerData {
+  date: string;
+  times: Record<string, string>;
+  source: 'aladhan' | 'local';
+  current: string | null;
+  next: string | null;
+  minutesToNext: number | null;
+  logs: Array<{ name: string; status: string }>;
+  settings: { method: number; school: number; notifyBefore: number; notifications: boolean };
+  methods: Array<{ id: number; name: string }>;
+  location: { city: string; country: string; latitude: number; longitude: number; timezone: string };
+  monthlyRate: number;
+  monthLogs: Array<{ date: string; name: string; status: string }>;
+}
+
+/** `Sunrise` (Chourouk) est affiche mais n'est pas une priere obligatoire. */
+const PRAYERS = ['Fajr', 'Sunrise', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'] as const;
+const OBLIGATORY = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
+
+export default function PrayersPage() {
+  const { t, locale } = useI18n();
+  const toast = useToast();
+
+  const [date, setDate] = useState(() => dateKeyIn(Intl.DateTimeFormat().resolvedOptions().timeZone));
+  const { data, loading, refresh } = useResource<PrayerData>(`/api/prayers?date=${date}`, [date]);
+
+  async function mark(name: string, status: 'done' | 'late' | 'missed') {
+    await api.post('/api/prayers', { date, name, status }).catch(() => toast.error(t('common.error')));
+    void refresh();
+  }
+
+  async function updateSettings(patch: Record<string, number | boolean>) {
+    await api.patch('/api/prayers', patch);
+    void refresh();
+  }
+
+  if (loading || !data) {
+    return (
+      <div className="mx-auto max-w-4xl space-y-4">
+        <Skeleton className="h-28 rounded-2xl" />
+        <Skeleton className="h-80 rounded-2xl" />
+      </div>
+    );
+  }
+
+  const statusOf = (name: string) => data.logs.find((log) => log.name === name)?.status;
+  const doneToday = data.logs.filter((log) => log.status !== 'missed').length;
+
+  return (
+    <div className="mx-auto max-w-4xl">
+      <PageHeader
+        title={t('prayers.title')}
+        subtitle={`${data.location.city}, ${data.location.country}`}
+        icon="moon"
+        color="#5e9c9b"
+        actions={<DateNav date={date} onChange={setDate} locale={locale} />}
+      />
+
+      {data.next && data.minutesToNext !== null && (
+        <Card className="mb-4 border-[#5e9c9b]/25 bg-[#5e9c9b]/[0.06]">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <p className="text-xs text-[var(--text-faint)]">{t('dash.nextPrayer')}</p>
+              <p className="mt-0.5 text-2xl font-semibold text-[#5e9c9b]">
+                {t(`prayers.${data.next.toLowerCase()}` as 'prayers.fajr')}
+                <span className="ms-2 text-base font-normal text-[var(--text-muted)]">{data.times[data.next]}</span>
+              </p>
+            </div>
+            <div className="text-end">
+              <p className="text-xs text-[var(--text-faint)]">{t('prayers.in')}</p>
+              <p className="mt-0.5 text-2xl font-semibold tabular-nums text-[var(--text)]">
+                {Math.floor(data.minutesToNext / 60)}h{String(data.minutesToNext % 60).padStart(2, '0')}
+              </p>
+            </div>
+          </div>
+        </Card>
+      )}
+
+      <div className="grid gap-4 lg:grid-cols-3">
+        <Card className="lg:col-span-2">
+          <CardHeader
+            title={t('prayers.title')}
+            subtitle={data.source === 'local' ? t('prayers.sourceLocal') : t('prayers.sourceApi')}
+            icon="clock"
+            accent="#5e9c9b"
+            action={<Badge color="#5e9c9b">{doneToday}/5</Badge>}
+          />
+
+          <ul className="space-y-1.5">
+            {PRAYERS.map((name) => {
+              const status = statusOf(name);
+              const isNext = data.next === name;
+              const isObligatory = OBLIGATORY.includes(name);
+
+              return (
+                <li
+                  key={name}
+                  className={cx(
+                    'flex items-center gap-3 rounded-xl border px-3.5 py-3 transition-colors',
+                    isNext ? 'border-[#5e9c9b]/40 bg-[#5e9c9b]/[0.07]' : 'border-[var(--border)]',
+                  )}
+                >
+                  <span
+                    className={cx(
+                      'grid size-9 shrink-0 place-items-center rounded-xl',
+                      status === 'done'
+                        ? 'bg-[#6fa394] text-[var(--on-glow)]'
+                        : status === 'late'
+                          ? 'bg-[#d99a63] text-[var(--on-glow)]'
+                          : status === 'missed'
+                            ? 'bg-red-500/15 text-red-500'
+                            : 'bg-[var(--surface-2)] text-[var(--text-faint)]',
+                    )}
+                  >
+                    <Icon name={status === 'done' ? 'check' : name === 'Sunrise' ? 'sun' : 'moon'} size={17} />
+                  </span>
+
+                  <div className="min-w-0 flex-1">
+                    <p className={cx('text-sm', isNext ? 'font-medium text-[#5e9c9b]' : 'text-[var(--text)]')}>
+                      {t(`prayers.${name.toLowerCase()}` as 'prayers.fajr')}
+                    </p>
+                    {!isObligatory && <p className="text-[11px] text-[var(--text-faint)]">{t('dash.sunrise')}</p>}
+                  </div>
+
+                  <span className="shrink-0 text-lg font-semibold tabular-nums text-[var(--text)]">
+                    {data.times[name]}
+                  </span>
+
+                  {isObligatory && (
+                    <div className="flex shrink-0 gap-1">
+                      {(
+                        [
+                          ['done', 'check', '#7ba083', t('prayers.markDone')],
+                          ['late', 'clock', '#d99a63', t('prayers.markLate')],
+                          ['missed', 'close', '#c97f63', t('prayers.markMissed')],
+                        ] as const
+                      ).map(([value, icon, color, label]) => (
+                        <button
+                          key={value}
+                          type="button"
+                          onClick={() => mark(name, value)}
+                          aria-label={`${label} — ${name}`}
+                          aria-pressed={status === value}
+                          className="grid size-7 place-items-center rounded-lg transition-colors"
+                          style={{
+                            background: status === value ? `${color}22` : 'transparent',
+                            color: status === value ? color : 'var(--text-faint)',
+                          }}
+                        >
+                          <Icon name={icon} size={13} />
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        </Card>
+
+        <div className="space-y-4">
+          <Card>
+            <CardHeader title={t('prayers.monthlyRate')} icon="chart" accent="#5e9c9b" />
+            <p className="text-3xl font-semibold text-[var(--text)]">{data.monthlyRate}%</p>
+            <div className="mt-3">
+              <Progress value={data.monthlyRate} color="#5e9c9b" label={t('prayers.monthlyRate')} />
+            </div>
+          </Card>
+
+          <Card>
+            <CardHeader title={t('settings.title')} icon="settings" accent="#5e9c9b" />
+            <div className="space-y-3">
+              <label className="block">
+                <span className="mb-1.5 block text-[13px] text-[var(--text-muted)]">{t('prayers.method')}</span>
+                <Select
+                  value={data.settings.method}
+                  onChange={(event) => updateSettings({ method: Number(event.target.value) })}
+                >
+                  {data.methods.map((method) => (
+                    <option key={method.id} value={method.id}>
+                      {method.name}
+                    </option>
+                  ))}
+                </Select>
+              </label>
+
+              <label className="block">
+                <span className="mb-1.5 block text-[13px] text-[var(--text-muted)]">{t('prayers.school')}</span>
+                <Select
+                  value={data.settings.school}
+                  onChange={(event) => updateSettings({ school: Number(event.target.value) })}
+                >
+                  <option value={0}>{t('prayers.schoolShafi')}</option>
+                  <option value={1}>{t('prayers.schoolHanafi')}</option>
+                </Select>
+              </label>
+
+              <label className="block">
+                <span className="mb-1.5 block text-[13px] text-[var(--text-muted)]">{t('prayers.notifyBefore')}</span>
+                <Select
+                  value={data.settings.notifyBefore}
+                  onChange={(event) => updateSettings({ notifyBefore: Number(event.target.value) })}
+                >
+                  {[0, 5, 10, 15, 30].map((minutes) => (
+                    <option key={minutes} value={minutes}>
+                      {minutes} min
+                    </option>
+                  ))}
+                </Select>
+              </label>
+
+              <p className="pt-1 text-[11px] leading-relaxed text-[var(--text-faint)]">
+                Les horaires suivent votre ville. Changez-la dans les reglages pour les mettre a jour automatiquement.
+              </p>
+            </div>
+          </Card>
+        </div>
+      </div>
+    </div>
+  );
+}
