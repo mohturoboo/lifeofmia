@@ -4,14 +4,47 @@
  * les dependances explicites et permet de detecter tot une config incomplete.
  */
 
-function required(name: string, fallback?: string): string {
-  const value = process.env[name] ?? fallback;
-  if (value === undefined || value === '') {
-    if (process.env.NODE_ENV === 'production') {
-      throw new Error(`Variable d'environnement manquante : ${name}`);
-    }
-    return fallback ?? '';
+/**
+ * Valeur d'exemple publiee dans `.env.example` et dans le depot.
+ * Elle ne doit JAMAIS servir en production : quiconque lit le code pourrait
+ * forger un jeton de session valide et se faire passer pour n'importe qui.
+ */
+const INSECURE_PLACEHOLDER = 'dev-secret-change-me-in-production-please-32-chars-min';
+
+/** Longueur minimale acceptable pour une cle de signature HS256. */
+const MIN_SECRET_LENGTH = 32;
+
+/**
+ * Variable obligatoire en production, tolerante en developpement.
+ *
+ * Le controle porte sur `process.env[name]` et non sur la valeur deja resolue :
+ * une version precedente testait la valeur APRES application du repli, qui
+ * n'est jamais vide — la verification de production etait donc inatteignable,
+ * et une application deployee sans `AUTH_SECRET` demarrait silencieusement
+ * avec la cle d'exemple.
+ */
+function required(name: string, devFallback: string): string {
+  const value = process.env[name]?.trim();
+
+  if (process.env.NODE_ENV !== 'production') {
+    return value && value.length > 0 ? value : devFallback;
   }
+
+  if (!value) {
+    throw new Error(
+      `${name} est absente. Definissez-la dans les variables d'environnement de votre hebergeur.`,
+    );
+  }
+  if (value === INSECURE_PLACEHOLDER) {
+    throw new Error(
+      `${name} utilise encore la valeur d'exemple, qui est publique. Generez-en une avec : ` +
+        `node -e "console.log(require('crypto').randomBytes(48).toString('base64url'))"`,
+    );
+  }
+  if (value.length < MIN_SECRET_LENGTH) {
+    throw new Error(`${name} doit faire au moins ${MIN_SECRET_LENGTH} caracteres.`);
+  }
+
   return value;
 }
 
