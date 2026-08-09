@@ -79,8 +79,10 @@ Répond toujours `{ "data": { "sent": true } }`, que l'adresse existe ou non.
 ```
 Révoque **toutes** les sessions de l'utilisateur.
 
-### `POST /api/auth/verify-email` · `PUT /api/auth/verify-email`
-`POST` consomme le jeton (+25 XP). `PUT` renvoie l'email (utilisateur connecté).
+> Il n'existe **pas** d'étape de vérification d'adresse email : un compte est
+> utilisable dès sa création. Le champ `emailVerified` reste en base (il est
+> renseigné à l'inscription) pour l'export RGPD et pour pouvoir réintroduire la
+> vérification plus tard sans migration.
 
 ---
 

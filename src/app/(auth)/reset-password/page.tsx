@@ -39,7 +39,7 @@ function ResetForm() {
   if (!token) {
     return (
       <div className="text-center">
-        <h1 className="text-xl font-semibold text-[var(--text)]">{t('auth.verifyError')}</h1>
+        <h1 className="text-xl font-semibold text-[var(--text)]">{t('auth.linkInvalid')}</h1>
         <Link href="/forgot-password" className="mt-5 inline-block text-sm font-medium text-[var(--brand-text)]">
           {t('auth.forgotPassword')}
         </Link>

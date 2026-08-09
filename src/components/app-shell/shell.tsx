@@ -29,7 +29,6 @@ export interface ShellUser {
   xp: number;
   level: number;
   currentStreak: number;
-  emailVerified: boolean;
 }
 
 export function AppShell({ user, children }: { user: ShellUser; children: ReactNode }) {
@@ -265,12 +264,6 @@ export function AppShell({ user, children }: { user: ShellUser; children: ReactN
                         </p>
                         <p className="truncate text-xs text-[var(--text-faint)]">{user.email}</p>
                       </div>
-
-                      {!user.emailVerified && (
-                        <div className="border-b border-[var(--border)] bg-[#ff9fbf]/8 px-4 py-2.5">
-                          <p className="text-[11px] leading-relaxed text-[#ff9fbf]">{t('auth.verifyPending')}</p>
-                        </div>
-                      )}
 
                       <Link
                         href="/settings"

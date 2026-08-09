@@ -39,10 +39,6 @@ export const resetPasswordSchema = z.object({
   password: passwordSchema,
 });
 
-export const verifyEmailSchema = z.object({
-  token: z.string().min(10, 'Jeton invalide.'),
-});
-
 export const updateProfileSchema = z.object({
   firstName: z.string().trim().min(1).max(60).optional(),
   lastName: z.string().trim().min(1).max(60).optional(),

@@ -30,7 +30,6 @@ interface ProfileData {
     gender: string | null;
     heightCm: number | null;
     mainGoal: string | null;
-    emailVerified: string | null;
     marketingOptIn: boolean;
     createdAt: string;
   };
@@ -132,10 +131,6 @@ export default function SettingsPage() {
     }
   }
 
-  async function resendVerification() {
-    await api.put('/api/auth/verify-email').catch(() => undefined);
-    toast.success(t('auth.verifyPending'));
-  }
 
   async function deleteAccount() {
     if (!window.confirm(`${t('settings.deleteHint')}\n\n${t('common.deleteConfirm')}`)) return;
@@ -198,18 +193,7 @@ export default function SettingsPage() {
             </div>
 
             <Field label={t('auth.email')} htmlFor="email">
-              <div className="flex items-center gap-2">
-                <Input id="email" value={data.profile.email} disabled className="flex-1" />
-                {data.profile.emailVerified ? (
-                  <Badge color="#fbe3ec">
-                    <Icon name="check" size={11} /> Verifie
-                  </Badge>
-                ) : (
-                  <Button variant="secondary" size="sm" onClick={resendVerification}>
-                    {t('auth.resendVerification')}
-                  </Button>
-                )}
-              </div>
+              <Input id="email" value={data.profile.email} disabled />
             </Field>
 
             <div className="grid gap-3 sm:grid-cols-3">

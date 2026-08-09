@@ -18,7 +18,7 @@ export const GET = route(async ({ user }) => {
         country: true, city: true, latitude: true, longitude: true, timezone: true,
         locale: true, theme: true, timeFormat: true, units: true,
         birthDate: true, gender: true, heightCm: true, mainGoal: true,
-        emailVerified: true, twoFactorEnabled: true, marketingOptIn: true,
+        twoFactorEnabled: true, marketingOptIn: true,
         xp: true, level: true, currentStreak: true, longestStreak: true, createdAt: true,
       },
     }),

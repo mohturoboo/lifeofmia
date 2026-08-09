@@ -96,7 +96,6 @@ export const POST = publicRoute(
       lastName: user.lastName,
       locale: user.locale,
       theme: user.theme,
-      emailVerified: user.emailVerified,
     });
   },
   { schema: loginSchema, rateLimit: { key: 'login', ...RATE_LIMITS.login } },

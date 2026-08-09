@@ -5,9 +5,7 @@ import { created, fail } from '@/lib/api/response';
 import { registerSchema } from '@/lib/validation/auth';
 import { hashPassword } from '@/lib/auth/password';
 import { createSession } from '@/lib/auth/session';
-import { issueToken, TOKEN_TYPES } from '@/lib/auth/tokens';
 import { RATE_LIMITS } from '@/lib/auth/rate-limit';
-import { sendMail, verificationEmail } from '@/lib/mailer';
 import { seedUserWorkspace } from '@/lib/onboarding';
 import { audit } from '@/lib/audit';
 
@@ -15,9 +13,13 @@ import { audit } from '@/lib/audit';
  * POST /api/auth/register — creation d'un compte.
  *
  * Enchainement : validation, unicite de l'email, hash bcrypt, creation du
- * compte, mise en place de l'espace de depart, envoi du lien de verification,
- * puis ouverture immediate de la session (l'email non verifie n'empeche pas
- * l'usage, il est simplement signale dans l'interface).
+ * compte, mise en place de l'espace de depart, puis ouverture immediate de la
+ * session.
+ *
+ * Il n'y a pas de verification d'adresse email : le compte est utilisable
+ * des sa creation. `emailVerified` est donc renseigne immediatement — le champ
+ * reste dans le schema pour ne pas casser l'export RGPD et pour pouvoir
+ * reintroduire la verification plus tard sans migration.
  */
 export const POST = publicRoute(
   async ({ body }) => {
@@ -46,15 +48,12 @@ export const POST = publicRoute(
         gender: body.gender ?? null,
         birthDate: birthDate && !Number.isNaN(birthDate.getTime()) ? birthDate : null,
         mainGoal: body.mainGoal?.trim() || null,
+        emailVerified: new Date(),
         consentAt: new Date(),
       },
     });
 
     await seedUserWorkspace(user.id, body.city, body.mainGoal);
-
-    const token = await issueToken(user.id, TOKEN_TYPES.EMAIL_VERIFICATION);
-    await sendMail(verificationEmail(user.email, user.firstName, token));
-
     await createSession(user);
     await audit({ action: 'REGISTER', userId: user.id, headers: await headers() });
 
@@ -64,7 +63,6 @@ export const POST = publicRoute(
       firstName: user.firstName,
       lastName: user.lastName,
       locale: user.locale,
-      emailVerified: null,
     });
   },
   { schema: registerSchema, rateLimit: { key: 'register', ...RATE_LIMITS.register } },

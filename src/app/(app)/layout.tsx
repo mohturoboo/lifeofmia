@@ -30,7 +30,6 @@ export default async function AppLayout({ children }: { children: React.ReactNod
               xp: user.xp,
               level: user.level,
               currentStreak: user.currentStreak,
-              emailVerified: Boolean(user.emailVerified),
             }}
           >
             {children}

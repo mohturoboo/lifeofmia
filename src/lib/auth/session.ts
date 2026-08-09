@@ -30,7 +30,6 @@ export type SessionUser = Pick<
   | 'level'
   | 'currentStreak'
   | 'longestStreak'
-  | 'emailVerified'
   | 'twoFactorEnabled'
   | 'heightCm'
   | 'birthDate'
@@ -57,7 +56,6 @@ const SESSION_USER_SELECT = {
   level: true,
   currentStreak: true,
   longestStreak: true,
-  emailVerified: true,
   twoFactorEnabled: true,
   heightCm: true,
   birthDate: true,

@@ -11,14 +11,12 @@ import { prisma } from '@/lib/prisma';
  */
 
 export const TOKEN_TYPES = {
-  EMAIL_VERIFICATION: 'EMAIL_VERIFICATION',
   PASSWORD_RESET: 'PASSWORD_RESET',
 } as const;
 
 export type TokenType = (typeof TOKEN_TYPES)[keyof typeof TOKEN_TYPES];
 
 const TTL_MINUTES: Record<TokenType, number> = {
-  EMAIL_VERIFICATION: 60 * 24, // 24 heures
   PASSWORD_RESET: 60, // 1 heure
 };
 

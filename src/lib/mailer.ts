@@ -78,21 +78,6 @@ Vous recevez cet email car un compte LifeofM est associe a cette adresse. Si vou
 </td></tr></table></td></tr></table></body></html>`;
 }
 
-export function verificationEmail(to: string, firstName: string, token: string): MailMessage {
-  const url = `${env.appUrl}/verify-email?token=${encodeURIComponent(token)}`;
-  return {
-    to,
-    subject: 'Confirmez votre adresse email — LifeofM',
-    html: layout(
-      `Bienvenue ${firstName} !`,
-      "Il ne reste qu'une etape : confirmez votre adresse email pour activer votre espace personnel. Ce lien expire dans 24 heures.",
-      'Confirmer mon email',
-      url,
-    ),
-    text: `Bienvenue ${firstName} !\n\nConfirmez votre adresse email : ${url}\n\nCe lien expire dans 24 heures.`,
-  };
-}
-
 export function passwordResetEmail(to: string, firstName: string, token: string): MailMessage {
   const url = `${env.appUrl}/reset-password?token=${encodeURIComponent(token)}`;
   return {
