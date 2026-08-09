@@ -54,7 +54,7 @@ export default function NutritionPage() {
   const toast = useToast();
 
   const [date, setDate] = useState(() => dateKeyIn(Intl.DateTimeFormat().resolvedOptions().timeZone));
-  const { data, loading, refresh } = useResource<NutritionData>(`/api/meals?date=${date}`, [date]);
+  const { data, loading, refresh, setData } = useResource<NutritionData>(`/api/meals?date=${date}`, [date]);
 
   const [modalOpen, setModalOpen] = useState(false);
   const [form, setForm] = useState(EMPTY_FORM);
@@ -123,9 +123,30 @@ export default function NutritionPage() {
     void refresh();
   }
 
+  /**
+   * Hydratation : la jauge bouge immediatement, le reseau suit.
+   *
+   * Le bouton attendait la reponse du serveur puis rechargeait toute la page
+   * de nutrition — deux allers-retours avant le moindre retour visuel. On
+   * remplaçait donc un geste instantane par une attente, et rien n'empechait
+   * l'utilisateur de cliquer cinq fois en croyant que le bouton ne marchait pas.
+   *
+   * La reponse porte le total recalcule cote serveur : il remplace l'estimation
+   * locale des son arrivee, et l'echec restaure la valeur precedente.
+   */
   async function addWater(amount: number) {
-    await api.post('/api/water', { date, amountMl: amount });
-    void refresh();
+    const previous = data?.waterMl ?? 0;
+    setData((current) =>
+      current ? { ...current, waterMl: Math.max(0, current.waterMl + amount) } : current,
+    );
+
+    try {
+      const result = await api.post<{ waterMl: number }>('/api/water', { date, amountMl: amount });
+      setData((current) => (current ? { ...current, waterMl: result.waterMl } : current));
+    } catch {
+      setData((current) => (current ? { ...current, waterMl: previous } : current));
+      toast.error(t('common.error'));
+    }
   }
 
   if (loading || !data) {

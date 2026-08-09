@@ -7,6 +7,11 @@ import { recomputeDay } from '@/lib/stats';
 /**
  * POST /api/water — ajoute (ou retire, avec un montant negatif) de l'hydratation.
  * Le total du jour ne peut pas devenir negatif.
+ *
+ * Le total est lu dans le resultat de `recomputeDay()`, qui agrege deja
+ * l'hydratation du jour. Une version precedente faisait la meme agregation
+ * juste avant : un aller-retour reseau de plus vers la base pour une valeur
+ * qu'on obtenait de toute facon.
  */
 export const POST = route(
   async ({ user, body }) => {
@@ -14,15 +19,9 @@ export const POST = route(
       data: { userId: user.id, date: body.date, amountMl: body.amountMl },
     });
 
-    const total = await prisma.waterLog.aggregate({
-      where: { userId: user.id, date: body.date },
-      _sum: { amountMl: true },
-    });
+    const stats = await recomputeDay(user.id, body.date);
 
-    const waterMl = Math.max(0, total._sum.amountMl ?? 0);
-    await recomputeDay(user.id, body.date);
-
-    return ok({ date: body.date, waterMl });
+    return ok({ date: body.date, waterMl: Math.max(0, stats.waterMl) });
   },
   { schema: waterLogSchema },
 );
