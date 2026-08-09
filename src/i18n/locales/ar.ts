@@ -208,6 +208,7 @@ export const ar: Dictionary = {
   'nutrition.dinner': 'العشاء',
   'nutrition.snack': 'وجبة خفيفة',
   'nutrition.addMeal': 'إضافة وجبة',
+  'nutrition.editMeal': 'تعديل الوجبة',
   'nutrition.calories': 'السعرات',
   'nutrition.protein': 'البروتين',
   'nutrition.carbs': 'الكربوهيدرات',

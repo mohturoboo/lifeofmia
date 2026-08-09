@@ -218,6 +218,7 @@ export const fr = {
   'nutrition.dinner': 'Diner',
   'nutrition.snack': 'Collation',
   'nutrition.addMeal': 'Ajouter un repas',
+  'nutrition.editMeal': 'Modifier le repas',
   'nutrition.calories': 'Calories',
   'nutrition.protein': 'Proteines',
   'nutrition.carbs': 'Glucides',

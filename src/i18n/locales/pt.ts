@@ -207,6 +207,7 @@ export const pt: Dictionary = {
   'nutrition.dinner': 'Jantar',
   'nutrition.snack': 'Lanche',
   'nutrition.addMeal': 'Adicionar uma refeicao',
+  'nutrition.editMeal': 'Editar a refeicao',
   'nutrition.calories': 'Calorias',
   'nutrition.protein': 'Proteinas',
   'nutrition.carbs': 'Hidratos de carbono',

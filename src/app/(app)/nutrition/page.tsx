@@ -23,6 +23,7 @@ interface Meal {
   quantity: number;
   notes: string | null;
   aiGenerated: boolean;
+  isTemplate: boolean;
 }
 
 interface NutritionData {
@@ -59,6 +60,8 @@ export default function NutritionPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [form, setForm] = useState(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
+  /** Repas en cours de modification ; `null` signifie « creation ». */
+  const [editing, setEditing] = useState<Meal | null>(null);
 
   const set = <K extends keyof typeof form>(key: K, value: (typeof form)[K]) =>
     setForm((current) => ({ ...current, [key]: value }));
@@ -71,7 +74,33 @@ export default function NutritionPage() {
   };
 
   function openCreate(type: Meal['type']) {
+    setEditing(null);
     setForm({ ...EMPTY_FORM, type });
+    setModalOpen(true);
+  }
+
+  /**
+   * Ouvre le formulaire pre-rempli. Meme fenetre que la creation : les champs
+   * sont les memes, et un second formulaire aurait diverge a la premiere
+   * evolution du modele.
+   *
+   * Les nombres sont convertis en chaines parce que le formulaire travaille sur
+   * du texte — sans ca, un champ a 0 s'afficherait vide et une valeur effacee
+   * repartirait a zero sans que l'utilisateur l'ait demande.
+   */
+  function openEdit(meal: Meal) {
+    setEditing(meal);
+    setForm({
+      type: meal.type,
+      name: meal.name,
+      calories: String(meal.calories),
+      protein: String(meal.protein),
+      carbs: String(meal.carbs),
+      fat: String(meal.fat),
+      fiber: String(meal.fiber),
+      notes: meal.notes ?? '',
+      isTemplate: meal.isTemplate,
+    });
     setModalOpen(true);
   }
 
@@ -95,27 +124,41 @@ export default function NutritionPage() {
   async function save() {
     if (form.name.trim().length === 0) return;
     setSaving(true);
+
+    const payload = {
+      type: form.type,
+      name: form.name,
+      calories: Number(form.calories) || 0,
+      protein: Number(form.protein) || 0,
+      carbs: Number(form.carbs) || 0,
+      fat: Number(form.fat) || 0,
+      fiber: Number(form.fiber) || 0,
+      notes: form.notes || null,
+      isTemplate: form.isTemplate,
+    };
+
     try {
-      await api.post('/api/meals', {
-        date,
-        type: form.type,
-        name: form.name,
-        calories: Number(form.calories) || 0,
-        protein: Number(form.protein) || 0,
-        carbs: Number(form.carbs) || 0,
-        fat: Number(form.fat) || 0,
-        fiber: Number(form.fiber) || 0,
-        notes: form.notes || null,
-        isTemplate: form.isTemplate,
-      });
+      // La date n'est envoyee qu'a la creation : modifier un repas ne doit pas
+      // le deplacer sur la journee affichee, sinon corriger les calories d'hier
+      // depuis aujourd'hui le ferait changer de jour au passage.
+      if (editing) await api.patch(`/api/meals/${editing.id}`, payload);
+      else await api.post('/api/meals', { date, ...payload });
+
       toast.success(t('common.success'));
       setModalOpen(false);
+      setEditing(null);
       void refresh();
     } catch {
       toast.error(t('common.error'));
     } finally {
       setSaving(false);
     }
+  }
+
+  /** Fermer remet l'etat a plat : sans ca, rouvrir en creation garderait le repas precedent. */
+  function closeModal() {
+    setModalOpen(false);
+    setEditing(null);
   }
 
   async function remove(meal: Meal) {
@@ -274,14 +317,29 @@ export default function NutritionPage() {
                           {Math.round(meal.fat)}
                         </p>
                       </div>
-                      <button
-                        type="button"
-                        onClick={() => remove(meal)}
-                        aria-label={t('common.delete')}
-                        className="grid size-7 shrink-0 place-items-center rounded-lg text-[var(--text-faint)] opacity-0 transition-opacity hover:text-red-500 group-hover:opacity-100"
-                      >
-                        <Icon name="trash" size={13} />
-                      </button>
+                      {/*
+                        Les actions restent visibles sur petit ecran : elles
+                        n'apparaissaient qu'au survol, un geste qui n'existe pas
+                        sur mobile — le bouton etait donc inatteignable au doigt.
+                      */}
+                      <div className="flex shrink-0 items-center gap-0.5 transition-opacity sm:opacity-0 sm:group-hover:opacity-100 sm:group-focus-within:opacity-100">
+                        <button
+                          type="button"
+                          onClick={() => openEdit(meal)}
+                          aria-label={`${t('common.edit')} — ${meal.name}`}
+                          className="grid size-7 place-items-center rounded-lg text-[var(--text-faint)] transition-colors hover:text-[var(--text)]"
+                        >
+                          <Icon name="edit" size={13} />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => remove(meal)}
+                          aria-label={`${t('common.delete')} — ${meal.name}`}
+                          className="grid size-7 place-items-center rounded-lg text-[var(--text-faint)] transition-colors hover:text-red-500"
+                        >
+                          <Icon name="trash" size={13} />
+                        </button>
+                      </div>
                     </li>
                   ))}
                 </ul>
@@ -295,16 +353,35 @@ export default function NutritionPage() {
         <Card className="mt-4">
           <CardHeader title={t('nutrition.templates')} icon="note" accent="#d9c7f0" />
           <div className="flex flex-wrap gap-2">
+            {/*
+              Deux actions distinctes sur un meme modele : le corps l'ajoute a
+              la journee, le crayon le corrige. Ce sont deux boutons frere a
+              frere — un bouton imbrique dans un autre serait du HTML invalide
+              et le clic interieur declencherait aussi l'exterieur.
+            */}
             {data.templates.map((template) => (
-              <button
+              <div
                 key={template.id}
-                type="button"
-                onClick={() => applyTemplate(template)}
-                className="rounded-xl border border-[var(--border)] px-3 py-2 text-start transition-colors hover:border-[var(--border-strong)] hover:bg-[var(--surface-2)]"
+                className="group flex items-center rounded-xl border border-[var(--border)] transition-colors hover:border-[var(--border-strong)] hover:bg-[var(--surface-2)]"
               >
-                <span className="block text-[13px] text-[var(--text)]">{template.name}</span>
-                <span className="block text-[11px] text-[var(--text-faint)]">{Math.round(template.calories)} kcal</span>
-              </button>
+                <button
+                  type="button"
+                  onClick={() => applyTemplate(template)}
+                  className="px-3 py-2 text-start"
+                  aria-label={`${t('nutrition.addMeal')} — ${template.name}`}
+                >
+                  <span className="block text-[13px] text-[var(--text)]">{template.name}</span>
+                  <span className="block text-[11px] text-[var(--text-faint)]">{Math.round(template.calories)} kcal</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => openEdit(template)}
+                  aria-label={`${t('common.edit')} — ${template.name}`}
+                  className="grid size-7 place-items-center rounded-lg me-1.5 text-[var(--text-faint)] transition-colors hover:text-[var(--text)]"
+                >
+                  <Icon name="edit" size={13} />
+                </button>
+              </div>
             ))}
           </div>
         </Card>
@@ -312,11 +389,11 @@ export default function NutritionPage() {
 
       <Modal
         open={modalOpen}
-        onClose={() => setModalOpen(false)}
-        title={t('nutrition.addMeal')}
+        onClose={closeModal}
+        title={editing ? t('nutrition.editMeal') : t('nutrition.addMeal')}
         footer={
           <>
-            <Button variant="ghost" onClick={() => setModalOpen(false)}>
+            <Button variant="ghost" onClick={closeModal}>
               {t('common.cancel')}
             </Button>
             <Button onClick={save} loading={saving} disabled={form.name.trim().length === 0}>

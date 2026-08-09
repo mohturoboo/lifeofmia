@@ -207,6 +207,7 @@ export const tr: Dictionary = {
   'nutrition.dinner': 'Aksam yemegi',
   'nutrition.snack': 'Atistirmalik',
   'nutrition.addMeal': 'Ogun ekle',
+  'nutrition.editMeal': 'Ogunu duzenle',
   'nutrition.calories': 'Kalori',
   'nutrition.protein': 'Protein',
   'nutrition.carbs': 'Karbonhidrat',
