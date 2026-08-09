@@ -114,10 +114,10 @@ export default function AiPage() {
   if (data && !data.enabled) {
     return (
       <div className="mx-auto max-w-2xl">
-        <PageHeader title={t('ai.title')} subtitle={t('ai.subtitle')} icon="sparkles" color="#e9a76b" />
+        <PageHeader title={t('ai.title')} subtitle={t('ai.subtitle')} icon="sparkles" color="#fbc7da" />
         <Card>
           <div className="flex flex-col items-center gap-3 py-10 text-center">
-            <span className="grid size-14 place-items-center rounded-2xl bg-[#d99a63]/12 text-[#d99a63]">
+            <span className="grid size-14 place-items-center rounded-2xl bg-[#ff9fbf]/12 text-[#ff9fbf]">
               <Icon name="lock" size={24} />
             </span>
             <p className="text-sm font-medium text-[var(--text)]">{t('ai.disabled')}</p>
@@ -137,7 +137,7 @@ export default function AiPage() {
         title={t('ai.title')}
         subtitle={t('ai.subtitle')}
         icon="sparkles"
-        color="#e9a76b"
+        color="#fbc7da"
         actions={
           <Button
             variant="secondary"
@@ -157,7 +157,7 @@ export default function AiPage() {
         <div className="min-h-0 flex-1 overflow-y-auto p-5">
           {messages.length === 0 ? (
             <div className="flex h-full flex-col items-center justify-center gap-5 text-center">
-              <span className="grid size-16 place-items-center rounded-3xl lm-gradient-bg text-[var(--on-glow)]">
+              <span className="grid size-16 place-items-center rounded-3xl lm-gradient-bg text-[var(--on-pink)]">
                 <Icon name="sparkles" size={28} />
               </span>
               <div>
@@ -193,7 +193,7 @@ export default function AiPage() {
                         'grid size-8 shrink-0 place-items-center rounded-xl',
                         message.role === 'user'
                           ? 'bg-[var(--surface-2)] text-[var(--text-muted)]'
-                          : 'lm-gradient-bg text-[var(--on-glow)]',
+                          : 'lm-gradient-bg text-[var(--on-pink)]',
                       )}
                     >
                       <Icon name={message.role === 'user' ? 'user' : 'sparkles'} size={15} />
@@ -224,7 +224,7 @@ export default function AiPage() {
                               <Icon
                                 name={action.ok ? 'checkCircle' : 'close'}
                                 size={12}
-                                className={action.ok ? 'text-[#6fa394]' : 'text-red-500'}
+                                className={action.ok ? 'text-[#f6d9e4]' : 'text-red-500'}
                               />
                               <span className="text-[var(--text-muted)]">{action.summary}</span>
                             </div>
@@ -238,7 +238,7 @@ export default function AiPage() {
 
               {thinking && (
                 <div className="flex gap-3">
-                  <span className="grid size-8 shrink-0 place-items-center rounded-xl lm-gradient-bg text-[var(--on-glow)]">
+                  <span className="grid size-8 shrink-0 place-items-center rounded-xl lm-gradient-bg text-[var(--on-pink)]">
                     <Icon name="sparkles" size={15} />
                   </span>
                   <div className="flex items-center gap-1.5 rounded-2xl border border-[var(--border)] px-4 py-3">

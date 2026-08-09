@@ -94,7 +94,7 @@ export default function JournalPage() {
         title={t('journal.title')}
         subtitle={t('journal.subtitle')}
         icon="book"
-        color="#a98ba0"
+        color="#efc4e2"
         actions={
           <>
             <DateNav date={date} onChange={setDate} locale={locale} />
@@ -110,7 +110,7 @@ export default function JournalPage() {
       ) : (
         <div className="space-y-4">
           <Card>
-            <CardHeader title={t('journal.mood')} icon="sparkles" accent="#a98ba0" />
+            <CardHeader title={t('journal.mood')} icon="sparkles" accent="#efc4e2" />
             <div className="flex justify-between gap-2">
               {MOOD_EMOJIS.map((emoji, index) => (
                 <button
@@ -122,7 +122,7 @@ export default function JournalPage() {
                   className={cx(
                     'flex flex-1 flex-col items-center gap-1.5 rounded-xl border py-3 transition-all',
                     form.mood === index + 1
-                      ? 'border-[#a98ba0]/40 bg-[#a98ba0]/10'
+                      ? 'border-[#efc4e2]/40 bg-[#efc4e2]/10'
                       : 'border-[var(--border)] hover:border-[var(--border-strong)]',
                   )}
                 >
@@ -146,7 +146,7 @@ export default function JournalPage() {
                 value={form.energy}
                 onChange={(event) => set('energy', Number(event.target.value))}
                 aria-label={t('journal.energy')}
-                className="w-full accent-[#a98ba0]"
+                className="w-full accent-[#efc4e2]"
               />
             </div>
           </Card>
@@ -174,7 +174,7 @@ export default function JournalPage() {
           </Card>
 
           <Card>
-            <CardHeader title={t('journal.gratitude')} subtitle={t('journal.gratitudeHint')} icon="sparkles" accent="#d99a63" />
+            <CardHeader title={t('journal.gratitude')} subtitle={t('journal.gratitudeHint')} icon="sparkles" accent="#ff9fbf" />
             <Textarea
               rows={3}
               value={form.gratitude}
@@ -185,7 +185,7 @@ export default function JournalPage() {
 
           {data?.entry?.aiSummary && (
             <Card>
-              <CardHeader title={t('journal.aiSummary')} icon="sparkles" accent="#e9a76b" />
+              <CardHeader title={t('journal.aiSummary')} icon="sparkles" accent="#fbc7da" />
               <p className="text-sm leading-relaxed text-[var(--text-muted)]">{data.entry.aiSummary}</p>
             </Card>
           )}

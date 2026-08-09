@@ -20,7 +20,7 @@ function ResetForm() {
   const [done, setDone] = useState(false);
 
   const strength = useMemo(() => evaluatePassword(password), [password]);
-  const colors = ['#c97f63', '#c97f63', '#d99a63', '#7ba083', '#7ba083'];
+  const colors = ['#ff9fbf', '#ff9fbf', '#ff9fbf', '#fbe3ec', '#fbe3ec'];
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
@@ -50,7 +50,7 @@ function ResetForm() {
   if (done) {
     return (
       <div className="text-center">
-        <span className="mx-auto grid size-14 place-items-center rounded-2xl bg-[#6fa394]/12 text-[#6fa394]">
+        <span className="mx-auto grid size-14 place-items-center rounded-2xl bg-[#f6d9e4]/12 text-[#f6d9e4]">
           <Icon name="checkCircle" size={24} />
         </span>
         <h1 className="mt-5 text-xl font-semibold text-[var(--text)]">{t('common.success')}</h1>

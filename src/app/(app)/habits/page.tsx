@@ -32,13 +32,13 @@ interface Habit {
   history: Array<{ date: string; done: boolean }>;
 }
 
-const COLORS = ['#6e93a8', '#e9a76b', '#6fa394', '#d99a63', '#8592ad', '#5f9aa6', '#a98ba0', '#5e9c9b'];
+const COLORS = ['#e9b8d5', '#fbc7da', '#f6d9e4', '#ff9fbf', '#d9c7f0', '#e6e6e6', '#efc4e2', '#dcc7ea'];
 
 const EMPTY_FORM = {
   name: '',
   description: '',
   icon: 'check',
-  color: '#6e93a8',
+  color: '#e9b8d5',
   category: 'other',
   targetPerDay: 1,
   unit: '',
@@ -158,7 +158,7 @@ export default function HabitsPage() {
         title={t('habits.title')}
         subtitle={t('habits.subtitle')}
         icon="flame"
-        color="#6e93a8"
+        color="#e9b8d5"
         actions={
           <>
             <Button variant="secondary" size="sm" onClick={() => setShowArchived((value) => !value)}>
@@ -255,7 +255,7 @@ export default function HabitsPage() {
 
                       <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
                         <Badge color={habit.color}>{t(`habits.category${habit.category.charAt(0).toUpperCase()}${habit.category.slice(1)}` as 'habits.categoryOther')}</Badge>
-                        {habit.isNegative && <Badge color="#d99a63">{t('habits.negative')}</Badge>}
+                        {habit.isNegative && <Badge color="#ff9fbf">{t('habits.negative')}</Badge>}
                         {multi && (
                           <span className="text-[11px] text-[var(--text-faint)]">
                             {count}/{habit.targetPerDay} {habit.unit}
@@ -283,7 +283,7 @@ export default function HabitsPage() {
 
                       <div className="mt-2.5 flex items-center justify-between text-[11px] text-[var(--text-faint)]">
                         <span className="flex items-center gap-1">
-                          <Icon name="flame" size={12} className="text-[#d99a63]" />
+                          <Icon name="flame" size={12} className="text-[#ff9fbf]" />
                           {habit.streak} {t('habits.streakDays')}
                         </span>
                         <span>
@@ -346,7 +346,7 @@ export default function HabitsPage() {
                   className={cx(
                     'grid size-9 place-items-center rounded-lg border transition-all',
                     form.icon === icon
-                      ? 'border-transparent text-[var(--on-glow)]'
+                      ? 'border-transparent text-[var(--on-pink)]'
                       : 'border-[var(--border)] text-[var(--text-muted)] hover:border-[var(--border-strong)]',
                   )}
                   style={form.icon === icon ? { background: form.color } : undefined}

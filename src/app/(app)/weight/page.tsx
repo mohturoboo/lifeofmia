@@ -31,10 +31,10 @@ interface WeightData {
 }
 
 const BMI_COLORS = {
-  underweight: '#5f9aa6',
-  normal: '#7ba083',
-  overweight: '#d99a63',
-  obese: '#c97f63',
+  underweight: '#e6e6e6',
+  normal: '#fbe3ec',
+  overweight: '#ff9fbf',
+  obese: '#ff9fbf',
 } as const;
 
 export default function WeightPage() {
@@ -120,7 +120,7 @@ export default function WeightPage() {
         title={t('weight.title')}
         subtitle={t('weight.subtitle')}
         icon="scale"
-        color="#6fa394"
+        color="#f6d9e4"
         actions={
           <Button icon="plus" onClick={() => setModalOpen(true)}>
             {t('weight.addEntry')}
@@ -136,7 +136,7 @@ export default function WeightPage() {
             {data.latest && <span className="ms-1 text-sm font-normal text-[var(--text-faint)]">kg</span>}
           </p>
           {totalDelta !== null && (
-            <p className={`mt-0.5 text-[11px] ${totalDelta < 0 ? 'text-[#6fa394]' : 'text-[#d99a63]'}`}>
+            <p className={`mt-0.5 text-[11px] ${totalDelta < 0 ? 'text-[#f6d9e4]' : 'text-[#ff9fbf]'}`}>
               {totalDelta > 0 ? '+' : ''}
               {totalDelta} kg depuis le debut
             </p>
@@ -189,17 +189,17 @@ export default function WeightPage() {
           title={t('weight.evolution')}
           subtitle={data.forecast ? t('weight.forecastHint') : undefined}
           icon="trending"
-          accent="#6fa394"
+          accent="#f6d9e4"
         />
         {data.entries.length < 2 ? (
           <EmptyState icon="scale" title={t('weight.empty')} hint={t('common.emptyHint')} />
         ) : (
-          <LineChart data={chartData} forecast={forecastData} color="#6fa394" unit=" kg" height={230} />
+          <LineChart data={chartData} forecast={forecastData} color="#f6d9e4" unit=" kg" height={230} />
         )}
       </Card>
 
       <Card>
-        <CardHeader title={t('weight.history')} icon="clock" accent="#6fa394" />
+        <CardHeader title={t('weight.history')} icon="clock" accent="#f6d9e4" />
         {data.entries.length === 0 ? (
           <EmptyState icon="scale" title={t('weight.empty')} />
         ) : (
@@ -216,7 +216,7 @@ export default function WeightPage() {
                   <span className="text-sm font-medium text-[var(--text)]">{entry.weightKg} kg</span>
 
                   {delta !== null && delta !== 0 && (
-                    <span className={`flex items-center gap-0.5 text-[11px] ${delta < 0 ? 'text-[#6fa394]' : 'text-[#d99a63]'}`}>
+                    <span className={`flex items-center gap-0.5 text-[11px] ${delta < 0 ? 'text-[#f6d9e4]' : 'text-[#ff9fbf]'}`}>
                       <Icon name={delta < 0 ? 'arrowDown' : 'arrowUp'} size={11} />
                       {Math.abs(delta)}
                     </span>

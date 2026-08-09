@@ -24,11 +24,11 @@ export async function ensureBadges(): Promise<void> {
 }
 
 const STARTER_HABITS = [
-  { name: 'Boire 2 L d\'eau', icon: 'droplet', color: '#5f9aa6', category: 'health', targetPerDay: 8, unit: 'verres', xpReward: 10 },
-  { name: 'Lire 20 minutes', icon: 'book', color: '#8592ad', category: 'mind', targetPerDay: 1, xpReward: 15 },
-  { name: 'Bouger 30 minutes', icon: 'dumbbell', color: '#c97f63', category: 'sport', targetPerDay: 1, xpReward: 20 },
-  { name: 'Dormir avant 23 h', icon: 'moon', color: '#6e93a8', category: 'health', targetPerDay: 1, xpReward: 15 },
-  { name: 'Pas de reseaux sociaux', icon: 'shield', color: '#d99a63', category: 'mind', targetPerDay: 1, xpReward: 20, isNegative: true },
+  { name: 'Boire 2 L d\'eau', icon: 'droplet', color: '#e6e6e6', category: 'health', targetPerDay: 8, unit: 'verres', xpReward: 10 },
+  { name: 'Lire 20 minutes', icon: 'book', color: '#d9c7f0', category: 'mind', targetPerDay: 1, xpReward: 15 },
+  { name: 'Bouger 30 minutes', icon: 'dumbbell', color: '#ff9fbf', category: 'sport', targetPerDay: 1, xpReward: 20 },
+  { name: 'Dormir avant 23 h', icon: 'moon', color: '#e9b8d5', category: 'health', targetPerDay: 1, xpReward: 15 },
+  { name: 'Pas de reseaux sociaux', icon: 'shield', color: '#ff9fbf', category: 'mind', targetPerDay: 1, xpReward: 20, isNegative: true },
 ];
 
 export async function seedUserWorkspace(userId: string, city: string, mainGoal?: string | null): Promise<void> {

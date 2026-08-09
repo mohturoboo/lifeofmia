@@ -26,7 +26,7 @@ export default function ForgotPasswordPage() {
   if (sent) {
     return (
       <div className="text-center">
-        <span className="mx-auto grid size-14 place-items-center rounded-2xl bg-[#6fa394]/12 text-[#6fa394]">
+        <span className="mx-auto grid size-14 place-items-center rounded-2xl bg-[#f6d9e4]/12 text-[#f6d9e4]">
           <Icon name="mail" size={24} />
         </span>
         <h1 className="mt-5 text-xl font-semibold text-[var(--text)]">{t('auth.forgotTitle')}</h1>

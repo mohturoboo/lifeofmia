@@ -53,7 +53,7 @@ export default function ComparePage() {
         title={t('compare.title')}
         subtitle={t('compare.subtitle')}
         icon="compare"
-        color="#8592ad"
+        color="#d9c7f0"
         actions={
           <div className="flex flex-wrap gap-1 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-1">
             {PERIODS.map((value) => (
@@ -97,7 +97,7 @@ export default function ComparePage() {
       </div>
 
       <Card className="mb-4">
-        <CardHeader title={t('compare.metric')} subtitle="Periode courante face a la precedente" icon="chart" accent="#8592ad" />
+        <CardHeader title={t('compare.metric')} subtitle="Periode courante face a la precedente" icon="chart" accent="#d9c7f0" />
 
         <div className="overflow-x-auto">
           <table className="w-full min-w-[520px] text-sm">
@@ -118,7 +118,7 @@ export default function ComparePage() {
                 // est vrai (le poids, dont la direction souhaitee depend de l'objectif).
                 const improved = metric.lowerIsBetter ? metric.delta < 0 : metric.delta > 0;
                 const neutral = metric.delta === 0;
-                const color = neutral ? 'var(--text-faint)' : improved ? '#7ba083' : '#c97f63';
+                const color = neutral ? 'var(--text-faint)' : improved ? '#fbe3ec' : '#ff9fbf';
 
                 return (
                   <tr key={metric.key} className="border-b border-[var(--border)] last:border-0">
@@ -150,26 +150,26 @@ export default function ComparePage() {
 
       <div className="grid gap-4 lg:grid-cols-3">
         <Card className="lg:col-span-2">
-          <CardHeader title={t('dash.disciplineScore')} subtitle={periodLabels[period]} icon="trending" accent="#e9a76b" />
+          <CardHeader title={t('dash.disciplineScore')} subtitle={periodLabels[period]} icon="trending" accent="#fbc7da" />
           <LineChart
             data={data.current.series.map((day) => ({
               label: new Date(`${day.date}T12:00:00Z`).toLocaleDateString(locale, { day: 'numeric', month: 'short' }),
               value: day.disciplineScore,
             }))}
-            color="#e9a76b"
+            color="#fbc7da"
             unit="%"
             height={230}
           />
         </Card>
 
         <Card>
-          <CardHeader title={t('stats.radar')} subtitle="Plein : aujourd'hui · pointilles : avant" icon="compare" accent="#8592ad" />
+          <CardHeader title={t('stats.radar')} subtitle="Plein : aujourd'hui · pointilles : avant" icon="compare" accent="#d9c7f0" />
           <RadarChart
             data={data.radar.current.map((axis) => ({ label: t(axis.labelKey), value: axis.value }))}
             compareData={data.radar.previous.map((axis) => ({ label: t(axis.labelKey), value: axis.value }))}
             size={240}
-            color="#8592ad"
-            compareColor="#7d8f95"
+            color="#d9c7f0"
+            compareColor="#b4b4b4"
           />
         </Card>
       </div>

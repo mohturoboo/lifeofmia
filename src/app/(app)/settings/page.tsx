@@ -162,7 +162,7 @@ export default function SettingsPage() {
 
   return (
     <div className="mx-auto max-w-4xl">
-      <PageHeader title={t('settings.title')} icon="settings" color="#7d8f95" />
+      <PageHeader title={t('settings.title')} icon="settings" color="#b4b4b4" />
 
       <div className="mb-4 flex gap-1 overflow-x-auto rounded-xl border border-[var(--border)] bg-[var(--surface)] p-1">
         {sections.map((item) => (
@@ -186,7 +186,7 @@ export default function SettingsPage() {
 
       {section === 'profile' && (
         <Card>
-          <CardHeader title={t('settings.profile')} icon="user" accent="#7d8f95" />
+          <CardHeader title={t('settings.profile')} icon="user" accent="#b4b4b4" />
           <div className="space-y-4">
             <div className="grid gap-3 sm:grid-cols-2">
               <Field label={t('auth.firstName')} htmlFor="first-name">
@@ -201,7 +201,7 @@ export default function SettingsPage() {
               <div className="flex items-center gap-2">
                 <Input id="email" value={data.profile.email} disabled className="flex-1" />
                 {data.profile.emailVerified ? (
-                  <Badge color="#7ba083">
+                  <Badge color="#fbe3ec">
                     <Icon name="check" size={11} /> Verifie
                   </Badge>
                 ) : (
@@ -251,7 +251,7 @@ export default function SettingsPage() {
             title={t('settings.localization')}
             subtitle="Change la ville met automatiquement a jour la meteo et les horaires de priere."
             icon="globe"
-            accent="#5f9aa6"
+            accent="#e6e6e6"
           />
           <div className="space-y-4">
             <Field label={t('auth.language')} htmlFor="locale">
@@ -317,7 +317,7 @@ export default function SettingsPage() {
 
       {section === 'appearance' && (
         <Card>
-          <CardHeader title={t('settings.appearance')} icon="sun" accent="#d99a63" />
+          <CardHeader title={t('settings.appearance')} icon="sun" accent="#ff9fbf" />
           <Field label={t('settings.theme')}>
             <div className="grid grid-cols-3 gap-2">
               {(
@@ -351,7 +351,7 @@ export default function SettingsPage() {
       {section === 'security' && (
         <div className="space-y-4">
           <Card>
-            <CardHeader title={t('settings.changePassword')} icon="lock" accent="#c97f63" />
+            <CardHeader title={t('settings.changePassword')} icon="lock" accent="#ff9fbf" />
             <div className="space-y-4">
               {passwordError && (
                 <div role="alert" className="rounded-xl border border-red-500/25 bg-red-500/10 px-4 py-3 text-sm text-red-500">
@@ -383,7 +383,7 @@ export default function SettingsPage() {
           </Card>
 
           <Card>
-            <CardHeader title={t('settings.sessions')} subtitle={`${data.sessions.length} appareil(s)`} icon="shield" accent="#5f9aa6" />
+            <CardHeader title={t('settings.sessions')} subtitle={`${data.sessions.length} appareil(s)`} icon="shield" accent="#e6e6e6" />
             <ul className="space-y-2">
               {data.sessions.map((session) => (
                 <li key={session.id} className="flex items-center justify-between gap-3 rounded-xl bg-[var(--surface-2)] px-3.5 py-2.5">
@@ -408,7 +408,7 @@ export default function SettingsPage() {
       {section === 'data' && (
         <div className="space-y-4">
           <Card>
-            <CardHeader title={t('settings.exportData')} subtitle={t('settings.exportHint')} icon="download" accent="#7ba083" />
+            <CardHeader title={t('settings.exportData')} subtitle={t('settings.exportHint')} icon="download" accent="#fbe3ec" />
             <a
               href="/api/profile/export"
               download
@@ -420,12 +420,12 @@ export default function SettingsPage() {
           </Card>
 
           <Card>
-            <CardHeader title={t('dash.badges')} subtitle={`${data.badges.length} debloques`} icon="award" accent="#d99a63" />
+            <CardHeader title={t('dash.badges')} subtitle={`${data.badges.length} debloques`} icon="award" accent="#ff9fbf" />
             <div className="flex flex-wrap gap-2">
               {data.badges.length === 0 ? (
                 <p className="text-xs text-[var(--text-faint)]">{t('common.empty')}</p>
               ) : (
-                data.badges.map((badge) => <Badge key={badge.code} color="#d99a63">{badge.name}</Badge>)
+                data.badges.map((badge) => <Badge key={badge.code} color="#ff9fbf">{badge.name}</Badge>)
               )}
             </div>
             <p className="mt-3 text-xs text-[var(--text-faint)]">
@@ -434,7 +434,7 @@ export default function SettingsPage() {
           </Card>
 
           <Card className="border-red-500/25">
-            <CardHeader title={t('settings.deleteAccount')} subtitle={t('settings.deleteHint')} icon="trash" accent="#c97f63" />
+            <CardHeader title={t('settings.deleteAccount')} subtitle={t('settings.deleteHint')} icon="trash" accent="#ff9fbf" />
             <Button variant="danger" icon="trash" onClick={deleteAccount}>
               {t('settings.deleteAccount')}
             </Button>

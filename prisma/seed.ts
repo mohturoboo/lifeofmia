@@ -31,13 +31,13 @@ const BADGES = [
 ];
 
 const HABITS = [
-  { name: 'Priere du Fajr', icon: 'moon', color: '#5e9c9b', category: 'spirituality', targetPerDay: 1, xpReward: 20, reliability: 0.82 },
-  { name: 'Lire 30 minutes', icon: 'book', color: '#8592ad', category: 'mind', targetPerDay: 1, xpReward: 15, reliability: 0.68 },
-  { name: 'Boire 2 L d\'eau', icon: 'droplet', color: '#5f9aa6', category: 'health', targetPerDay: 8, unit: 'verres', xpReward: 10, reliability: 0.75 },
-  { name: 'Seance de sport', icon: 'dumbbell', color: '#c97f63', category: 'sport', targetPerDay: 1, xpReward: 25, reliability: 0.55 },
-  { name: 'Dormir avant 23 h', icon: 'moon', color: '#6e93a8', category: 'health', targetPerDay: 1, xpReward: 15, reliability: 0.6 },
-  { name: 'Pas de reseaux sociaux', icon: 'shield', color: '#d99a63', category: 'mind', targetPerDay: 1, xpReward: 20, reliability: 0.45, isNegative: true },
-  { name: 'Travail sur mon business', icon: 'zap', color: '#e9a76b', category: 'work', targetPerDay: 1, xpReward: 25, reliability: 0.72 },
+  { name: 'Priere du Fajr', icon: 'moon', color: '#dcc7ea', category: 'spirituality', targetPerDay: 1, xpReward: 20, reliability: 0.82 },
+  { name: 'Lire 30 minutes', icon: 'book', color: '#d9c7f0', category: 'mind', targetPerDay: 1, xpReward: 15, reliability: 0.68 },
+  { name: 'Boire 2 L d\'eau', icon: 'droplet', color: '#e6e6e6', category: 'health', targetPerDay: 8, unit: 'verres', xpReward: 10, reliability: 0.75 },
+  { name: 'Seance de sport', icon: 'dumbbell', color: '#ff9fbf', category: 'sport', targetPerDay: 1, xpReward: 25, reliability: 0.55 },
+  { name: 'Dormir avant 23 h', icon: 'moon', color: '#e9b8d5', category: 'health', targetPerDay: 1, xpReward: 15, reliability: 0.6 },
+  { name: 'Pas de reseaux sociaux', icon: 'shield', color: '#ff9fbf', category: 'mind', targetPerDay: 1, xpReward: 20, reliability: 0.45, isNegative: true },
+  { name: 'Travail sur mon business', icon: 'zap', color: '#fbc7da', category: 'work', targetPerDay: 1, xpReward: 25, reliability: 0.72 },
 ];
 
 const DAYS = 90;
@@ -283,7 +283,7 @@ async function main() {
       category: 'health',
       horizon: 'mid',
       priority: 'high',
-      color: '#6fa394',
+      color: '#f6d9e4',
       targetValue: 78,
       currentValue: weight,
       unit: 'kg',
@@ -296,7 +296,7 @@ async function main() {
       category: 'learning',
       horizon: 'long',
       priority: 'medium',
-      color: '#8592ad',
+      color: '#d9c7f0',
       targetValue: 24,
       currentValue: 9,
       unit: 'livres',
@@ -309,7 +309,7 @@ async function main() {
       category: 'career',
       horizon: 'long',
       priority: 'urgent',
-      color: '#e9a76b',
+      color: '#fbc7da',
       deadline: new Date(Date.now() + 180 * 86_400_000),
       steps: ['Valider le probleme aupres de 20 personnes', 'Construire la version minimale', 'Trouver les 10 premiers clients', 'Mettre en place la facturation'],
     },
@@ -397,14 +397,14 @@ async function main() {
         content:
           '1. Ne jamais manquer deux jours de suite.\n2. Rendre la bonne action facile et la mauvaise difficile.\n3. Mesurer ce qui compte.\n4. Le systeme bat la motivation.',
         pinned: true,
-        color: '#e9a76b',
+        color: '#fbc7da',
         tags: JSON.stringify(['discipline']),
       },
       {
         userId: user.id,
         title: 'Idees de contenu',
         content: '- Mon systeme de suivi d\'habitudes\n- Comment je planifie ma semaine\n- Retour sur 90 jours de discipline',
-        color: '#8592ad',
+        color: '#d9c7f0',
         tags: JSON.stringify(['business']),
       },
     ],

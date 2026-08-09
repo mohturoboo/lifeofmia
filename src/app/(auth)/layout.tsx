@@ -17,7 +17,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           <div className="grid min-h-dvh lg:grid-cols-2">
             <div className="relative flex flex-col px-5 py-8 sm:px-10">
               <Link href="/" className="inline-flex w-fit items-center gap-2.5">
-                <span className="grid size-9 place-items-center rounded-xl lm-gradient-bg text-[var(--on-glow)]">
+                <span className="grid size-9 place-items-center rounded-xl lm-gradient-bg text-[var(--on-pink)]">
                   <Icon name="zap" size={19} />
                 </span>
                 <span className="text-lg font-semibold tracking-tight text-[var(--text)]">LifeofM</span>
@@ -48,10 +48,10 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
 
                 <div className="mt-14 grid grid-cols-2 gap-3">
                   {[
-                    { icon: 'flame' as const, label: 'Habitudes', color: '#e9a76b' },
-                    { icon: 'target' as const, label: 'Objectifs', color: '#8592ad' },
-                    { icon: 'scale' as const, label: 'Sante', color: '#6fa394' },
-                    { icon: 'sparkles' as const, label: 'Life AI', color: '#d99a63' },
+                    { icon: 'flame' as const, label: 'Habitudes', color: '#fbc7da' },
+                    { icon: 'target' as const, label: 'Objectifs', color: '#d9c7f0' },
+                    { icon: 'scale' as const, label: 'Sante', color: '#f6d9e4' },
+                    { icon: 'sparkles' as const, label: 'Life AI', color: '#ff9fbf' },
                   ].map((item) => (
                     <div key={item.label} className="lm-card flex items-center gap-3 p-4">
                       <span

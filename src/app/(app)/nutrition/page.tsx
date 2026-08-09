@@ -149,13 +149,13 @@ export default function NutritionPage() {
         title={t('nutrition.title')}
         subtitle={t('nutrition.subtitle')}
         icon="apple"
-        color="#d99a63"
+        color="#ff9fbf"
         actions={<DateNav date={date} onChange={setDate} locale={locale} />}
       />
 
       <div className="mb-4 grid gap-4 lg:grid-cols-3">
         <Card className="lg:col-span-2">
-          <CardHeader title={t('nutrition.macros')} icon="chart" accent="#d99a63" />
+          <CardHeader title={t('nutrition.macros')} icon="chart" accent="#ff9fbf" />
           <div className="grid gap-5 sm:grid-cols-2">
             <DonutChart
               data={macros}
@@ -166,10 +166,10 @@ export default function NutritionPage() {
             />
             <dl className="space-y-2.5 self-center">
               {[
-                { label: t('nutrition.protein'), value: data.totals.protein, unit: 'g', color: '#6e93a8' },
-                { label: t('nutrition.carbs'), value: data.totals.carbs, unit: 'g', color: '#e9a76b' },
-                { label: t('nutrition.fat'), value: data.totals.fat, unit: 'g', color: '#6fa394' },
-                { label: t('nutrition.fiber'), value: data.totals.fiber, unit: 'g', color: '#d99a63' },
+                { label: t('nutrition.protein'), value: data.totals.protein, unit: 'g', color: '#e9b8d5' },
+                { label: t('nutrition.carbs'), value: data.totals.carbs, unit: 'g', color: '#fbc7da' },
+                { label: t('nutrition.fat'), value: data.totals.fat, unit: 'g', color: '#f6d9e4' },
+                { label: t('nutrition.fiber'), value: data.totals.fiber, unit: 'g', color: '#ff9fbf' },
               ].map((macro) => (
                 <div key={macro.label} className="flex items-center justify-between gap-4">
                   <dt className="flex items-center gap-2 text-sm text-[var(--text-muted)]">
@@ -186,7 +186,7 @@ export default function NutritionPage() {
         </Card>
 
         <Card>
-          <CardHeader title={t('nutrition.water')} icon="droplet" accent="#5f9aa6" />
+          <CardHeader title={t('nutrition.water')} icon="droplet" accent="#e6e6e6" />
           <div className="text-center">
             <p className="text-3xl font-semibold text-[var(--text)]">
               {(data.waterMl / 1000).toFixed(1)}
@@ -202,7 +202,7 @@ export default function NutritionPage() {
                   key={index}
                   className={cx(
                     'h-8 w-3 rounded-sm transition-colors',
-                    index * GLASS_ML < data.waterMl ? 'bg-[#5f9aa6]' : 'bg-[var(--surface-2)]',
+                    index * GLASS_ML < data.waterMl ? 'bg-[#e6e6e6]' : 'bg-[var(--surface-2)]',
                   )}
                 />
               ))}
@@ -231,7 +231,7 @@ export default function NutritionPage() {
                 title={typeLabels[type]}
                 subtitle={`${n(Math.round(calories))} kcal`}
                 icon="apple"
-                accent="#d99a63"
+                accent="#ff9fbf"
                 action={
                   <Button variant="ghost" size="sm" icon="plus" onClick={() => openCreate(type)} aria-label={t('nutrition.addMeal')} />
                 }
@@ -272,7 +272,7 @@ export default function NutritionPage() {
 
       {data.templates.length > 0 && (
         <Card className="mt-4">
-          <CardHeader title={t('nutrition.templates')} icon="note" accent="#8592ad" />
+          <CardHeader title={t('nutrition.templates')} icon="note" accent="#d9c7f0" />
           <div className="flex flex-wrap gap-2">
             {data.templates.map((template) => (
               <button

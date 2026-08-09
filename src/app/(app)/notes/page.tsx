@@ -20,7 +20,7 @@ interface Note {
   updatedAt: string;
 }
 
-const COLORS = ['#7d8f95', '#6e93a8', '#e9a76b', '#6fa394', '#d99a63', '#8592ad'];
+const COLORS = ['#b4b4b4', '#e9b8d5', '#fbc7da', '#f6d9e4', '#ff9fbf', '#d9c7f0'];
 
 export default function NotesPage() {
   const { t, locale } = useI18n();
@@ -35,14 +35,14 @@ export default function NotesPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<Note | null>(null);
   const [saving, setSaving] = useState(false);
-  const [form, setForm] = useState({ title: '', content: '', color: '#7d8f95' });
+  const [form, setForm] = useState({ title: '', content: '', color: '#b4b4b4' });
 
   const set = <K extends keyof typeof form>(key: K, value: string) =>
     setForm((current) => ({ ...current, [key]: value }));
 
   function openCreate() {
     setEditing(null);
-    setForm({ title: '', content: '', color: '#7d8f95' });
+    setForm({ title: '', content: '', color: '#b4b4b4' });
     setModalOpen(true);
   }
 
@@ -86,7 +86,7 @@ export default function NotesPage() {
         title={t('notes.title')}
         subtitle={t('notes.subtitle')}
         icon="note"
-        color="#7d8f95"
+        color="#b4b4b4"
         actions={
           <>
             <div className="relative">
@@ -151,7 +151,7 @@ export default function NotesPage() {
                     className={cx(
                       'grid size-7 place-items-center rounded-lg transition-colors',
                       note.pinned
-                        ? 'text-[#d99a63]'
+                        ? 'text-[#ff9fbf]'
                         : 'text-[var(--text-faint)] opacity-0 group-hover:opacity-100 hover:text-[var(--text)]',
                     )}
                   >

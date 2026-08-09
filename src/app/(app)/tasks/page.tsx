@@ -24,10 +24,10 @@ interface Task {
 }
 
 const PRIORITY_COLORS: Record<string, string> = {
-  low: '#7d8f95',
-  medium: '#5f9aa6',
-  high: '#d99a63',
-  urgent: '#c97f63',
+  low: '#b4b4b4',
+  medium: '#e6e6e6',
+  high: '#ff9fbf',
+  urgent: '#ff9fbf',
 };
 
 const SCOPES = ['today', 'week', 'month', 'overdue', 'all'] as const;
@@ -152,7 +152,7 @@ export default function TasksPage() {
             aria-label={done ? t('habits.markUndone') : t('habits.markDone')}
             className={cx(
               'mt-0.5 grid size-5 shrink-0 place-items-center rounded-md border-2 transition-all',
-              done ? 'border-transparent bg-[#6fa394] text-[var(--on-glow)]' : 'border-[var(--border-strong)] hover:border-[#6fa394]',
+              done ? 'border-transparent bg-[#f6d9e4] text-[var(--on-pink)]' : 'border-[var(--border-strong)] hover:border-[#f6d9e4]',
             )}
           >
             {done && <Icon name="check" size={12} />}
@@ -229,7 +229,7 @@ export default function TasksPage() {
         title={t('tasks.title')}
         subtitle={t('tasks.subtitle')}
         icon="checkCircle"
-        color="#5f9aa6"
+        color="#e6e6e6"
         actions={
           <Button icon="plus" onClick={() => openCreate()}>
             {t('tasks.new')}

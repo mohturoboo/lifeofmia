@@ -31,7 +31,7 @@ export const habitCreateSchema = z.object({
   name: z.string().trim().min(1, 'Nom requis.').max(80),
   description: optionalText(500),
   icon: z.string().trim().max(40).default('check'),
-  color: hexColorSchema.default('#6e93a8'),
+  color: hexColorSchema.default('#e9b8d5'),
   category: z.enum(HABIT_CATEGORIES).default('other'),
   frequency: z.enum(['daily', 'weekly', 'custom']).default('daily'),
   weekDays: z.array(z.number().int().min(0).max(6)).max(7).default([0, 1, 2, 3, 4, 5, 6]),
@@ -103,7 +103,7 @@ export const goalCreateSchema = z.object({
   unit: optionalText(20),
   deadline: optionalDate,
   parentId: z.string().nullable().optional(),
-  color: hexColorSchema.default('#8592ad'),
+  color: hexColorSchema.default('#d9c7f0'),
   steps: z.array(z.string().trim().min(1).max(160)).max(50).default([]),
 });
 
@@ -251,7 +251,7 @@ export const projectSchema = z.object({
   name: z.string().trim().min(1, 'Nom requis.').max(120),
   description: optionalText(2000),
   status: z.enum(['active', 'paused', 'done', 'archived']).default('active'),
-  color: hexColorSchema.default('#5f9aa6'),
+  color: hexColorSchema.default('#e6e6e6'),
   deadline: optionalDate,
   progress: z.number().int().min(0).max(100).default(0),
 });
@@ -263,7 +263,7 @@ export const noteSchema = z.object({
   content: z.string().max(50000).default(''),
   tags: tagsSchema,
   pinned: z.boolean().default(false),
-  color: hexColorSchema.default('#7d8f95'),
+  color: hexColorSchema.default('#b4b4b4'),
   projectId: z.string().nullable().optional(),
 });
 
@@ -276,7 +276,7 @@ export const calendarEventSchema = z.object({
   endAt: z.string().min(1),
   allDay: z.boolean().default(false),
   location: optionalText(200),
-  color: hexColorSchema.default('#6e93a8'),
+  color: hexColorSchema.default('#e9b8d5'),
 });
 
 export const calendarEventUpdateSchema = calendarEventSchema.partial();

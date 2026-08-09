@@ -63,16 +63,16 @@ export default function PrayersPage() {
         title={t('prayers.title')}
         subtitle={`${data.location.city}, ${data.location.country}`}
         icon="moon"
-        color="#5e9c9b"
+        color="#dcc7ea"
         actions={<DateNav date={date} onChange={setDate} locale={locale} />}
       />
 
       {data.next && data.minutesToNext !== null && (
-        <Card className="mb-4 border-[#5e9c9b]/25 bg-[#5e9c9b]/[0.06]">
+        <Card className="mb-4 border-[#dcc7ea]/25 bg-[#dcc7ea]/[0.06]">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
               <p className="text-xs text-[var(--text-faint)]">{t('dash.nextPrayer')}</p>
-              <p className="mt-0.5 text-2xl font-semibold text-[#5e9c9b]">
+              <p className="mt-0.5 text-2xl font-semibold text-[#dcc7ea]">
                 {t(`prayers.${data.next.toLowerCase()}` as 'prayers.fajr')}
                 <span className="ms-2 text-base font-normal text-[var(--text-muted)]">{data.times[data.next]}</span>
               </p>
@@ -93,8 +93,8 @@ export default function PrayersPage() {
             title={t('prayers.title')}
             subtitle={data.source === 'local' ? t('prayers.sourceLocal') : t('prayers.sourceApi')}
             icon="clock"
-            accent="#5e9c9b"
-            action={<Badge color="#5e9c9b">{doneToday}/5</Badge>}
+            accent="#dcc7ea"
+            action={<Badge color="#dcc7ea">{doneToday}/5</Badge>}
           />
 
           <ul className="space-y-1.5">
@@ -108,16 +108,16 @@ export default function PrayersPage() {
                   key={name}
                   className={cx(
                     'flex items-center gap-3 rounded-xl border px-3.5 py-3 transition-colors',
-                    isNext ? 'border-[#5e9c9b]/40 bg-[#5e9c9b]/[0.07]' : 'border-[var(--border)]',
+                    isNext ? 'border-[#dcc7ea]/40 bg-[#dcc7ea]/[0.07]' : 'border-[var(--border)]',
                   )}
                 >
                   <span
                     className={cx(
                       'grid size-9 shrink-0 place-items-center rounded-xl',
                       status === 'done'
-                        ? 'bg-[#6fa394] text-[var(--on-glow)]'
+                        ? 'bg-[#f6d9e4] text-[var(--on-pink)]'
                         : status === 'late'
-                          ? 'bg-[#d99a63] text-[var(--on-glow)]'
+                          ? 'bg-[#ff9fbf] text-[var(--on-pink)]'
                           : status === 'missed'
                             ? 'bg-red-500/15 text-red-500'
                             : 'bg-[var(--surface-2)] text-[var(--text-faint)]',
@@ -127,7 +127,7 @@ export default function PrayersPage() {
                   </span>
 
                   <div className="min-w-0 flex-1">
-                    <p className={cx('text-sm', isNext ? 'font-medium text-[#5e9c9b]' : 'text-[var(--text)]')}>
+                    <p className={cx('text-sm', isNext ? 'font-medium text-[#dcc7ea]' : 'text-[var(--text)]')}>
                       {t(`prayers.${name.toLowerCase()}` as 'prayers.fajr')}
                     </p>
                     {!isObligatory && <p className="text-[11px] text-[var(--text-faint)]">{t('dash.sunrise')}</p>}
@@ -141,9 +141,9 @@ export default function PrayersPage() {
                     <div className="flex shrink-0 gap-1">
                       {(
                         [
-                          ['done', 'check', '#7ba083', t('prayers.markDone')],
-                          ['late', 'clock', '#d99a63', t('prayers.markLate')],
-                          ['missed', 'close', '#c97f63', t('prayers.markMissed')],
+                          ['done', 'check', '#fbe3ec', t('prayers.markDone')],
+                          ['late', 'clock', '#ff9fbf', t('prayers.markLate')],
+                          ['missed', 'close', '#ff9fbf', t('prayers.markMissed')],
                         ] as const
                       ).map(([value, icon, color, label]) => (
                         <button
@@ -171,15 +171,15 @@ export default function PrayersPage() {
 
         <div className="space-y-4">
           <Card>
-            <CardHeader title={t('prayers.monthlyRate')} icon="chart" accent="#5e9c9b" />
+            <CardHeader title={t('prayers.monthlyRate')} icon="chart" accent="#dcc7ea" />
             <p className="text-3xl font-semibold text-[var(--text)]">{data.monthlyRate}%</p>
             <div className="mt-3">
-              <Progress value={data.monthlyRate} color="#5e9c9b" label={t('prayers.monthlyRate')} />
+              <Progress value={data.monthlyRate} color="#dcc7ea" label={t('prayers.monthlyRate')} />
             </div>
           </Card>
 
           <Card>
-            <CardHeader title={t('settings.title')} icon="settings" accent="#5e9c9b" />
+            <CardHeader title={t('settings.title')} icon="settings" accent="#dcc7ea" />
             <div className="space-y-3">
               <label className="block">
                 <span className="mb-1.5 block text-[13px] text-[var(--text-muted)]">{t('prayers.method')}</span>

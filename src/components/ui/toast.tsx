@@ -27,9 +27,9 @@ interface ToastValue {
 const ToastContext = createContext<ToastValue | null>(null);
 
 const STYLES: Record<ToastKind, { icon: IconName; color: string }> = {
-  success: { icon: 'checkCircle', color: '#7ba083' },
-  error: { icon: 'close', color: '#c97f63' },
-  info: { icon: 'sparkles', color: '#8592ad' },
+  success: { icon: 'checkCircle', color: '#fbe3ec' },
+  error: { icon: 'close', color: '#ff9fbf' },
+  info: { icon: 'sparkles', color: '#d9c7f0' },
 };
 
 export function ToastProvider({ children }: { children: ReactNode }) {

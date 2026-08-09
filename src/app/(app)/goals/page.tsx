@@ -36,7 +36,7 @@ interface Goal {
 }
 
 const HORIZONS = ['short', 'mid', 'long'] as const;
-const COLORS = ['#8592ad', '#e9a76b', '#6fa394', '#d99a63', '#5f9aa6', '#a98ba0'];
+const COLORS = ['#d9c7f0', '#fbc7da', '#f6d9e4', '#ff9fbf', '#e6e6e6', '#efc4e2'];
 
 const EMPTY_FORM = {
   title: '',
@@ -48,7 +48,7 @@ const EMPTY_FORM = {
   targetValue: '',
   currentValue: '',
   unit: '',
-  color: '#8592ad',
+  color: '#d9c7f0',
   steps: [''],
 };
 
@@ -164,7 +164,7 @@ export default function GoalsPage() {
         title={t('goals.title')}
         subtitle={t('goals.subtitle')}
         icon="target"
-        color="#8592ad"
+        color="#d9c7f0"
         actions={
           <Button icon="plus" onClick={openCreate}>
             {t('goals.new')}
@@ -238,7 +238,7 @@ export default function GoalsPage() {
                               <div className="mt-2 flex flex-wrap items-center gap-1.5">
                                 <Badge color={goal.color}>{goal.category}</Badge>
                                 {goal.targetValue !== null && (
-                                  <Badge color="#7d8f95">
+                                  <Badge color="#b4b4b4">
                                     {goal.currentValue ?? 0} / {goal.targetValue} {goal.unit}
                                   </Badge>
                                 )}
@@ -265,7 +265,7 @@ export default function GoalsPage() {
                                   type="button"
                                   onClick={() => complete(goal)}
                                   aria-label={t('goals.statusDone')}
-                                  className="grid size-7 place-items-center rounded-lg text-[var(--text-faint)] transition-colors hover:bg-[#6fa394]/10 hover:text-[#6fa394]"
+                                  className="grid size-7 place-items-center rounded-lg text-[var(--text-faint)] transition-colors hover:bg-[#f6d9e4]/10 hover:text-[#f6d9e4]"
                                 >
                                   <Icon name="checkCircle" size={14} />
                                 </button>
@@ -303,7 +303,7 @@ export default function GoalsPage() {
                                   aria-pressed={step.done}
                                   className={cx(
                                     'grid size-4 shrink-0 place-items-center rounded border-2 transition-all',
-                                    step.done ? 'border-transparent text-[var(--on-glow)]' : 'border-[var(--border-strong)]',
+                                    step.done ? 'border-transparent text-[var(--on-pink)]' : 'border-[var(--border-strong)]',
                                   )}
                                   style={step.done ? { background: goal.color } : undefined}
                                 >

@@ -18,12 +18,12 @@ export default async function LandingPage() {
   const t = createTranslator(resolveLocale('fr'));
 
   const features: Array<{ icon: IconName; title: string; text: string; color: string }> = [
-    { icon: 'flame', title: t('landing.f1Title'), text: t('landing.f1Text'), color: '#e9a76b' },
-    { icon: 'scale', title: t('landing.f2Title'), text: t('landing.f2Text'), color: '#6fa394' },
-    { icon: 'target', title: t('landing.f3Title'), text: t('landing.f3Text'), color: '#8592ad' },
-    { icon: 'moon', title: t('landing.f4Title'), text: t('landing.f4Text'), color: '#5e9c9b' },
-    { icon: 'compare', title: t('landing.f5Title'), text: t('landing.f5Text'), color: '#5f9aa6' },
-    { icon: 'sparkles', title: t('landing.f6Title'), text: t('landing.f6Text'), color: '#d99a63' },
+    { icon: 'flame', title: t('landing.f1Title'), text: t('landing.f1Text'), color: '#fbc7da' },
+    { icon: 'scale', title: t('landing.f2Title'), text: t('landing.f2Text'), color: '#f6d9e4' },
+    { icon: 'target', title: t('landing.f3Title'), text: t('landing.f3Text'), color: '#d9c7f0' },
+    { icon: 'moon', title: t('landing.f4Title'), text: t('landing.f4Text'), color: '#dcc7ea' },
+    { icon: 'compare', title: t('landing.f5Title'), text: t('landing.f5Text'), color: '#e6e6e6' },
+    { icon: 'sparkles', title: t('landing.f6Title'), text: t('landing.f6Text'), color: '#ff9fbf' },
   ];
 
   return (
@@ -31,7 +31,7 @@ export default async function LandingPage() {
       {/* --- En-tete --- */}
       <header className="relative z-20 mx-auto flex max-w-6xl items-center justify-between px-5 py-5 sm:px-8">
         <Link href="/" className="flex items-center gap-2.5">
-          <span className="grid size-9 place-items-center rounded-xl lm-gradient-bg text-[var(--on-glow)]">
+          <span className="grid size-9 place-items-center rounded-xl lm-gradient-bg text-[var(--on-pink)]">
             <Icon name="zap" size={19} />
           </span>
           <span className="text-lg font-semibold tracking-tight text-[var(--text)]">LifeofM</span>
@@ -119,9 +119,9 @@ export default async function LandingPage() {
 
                 <div className="mt-5 grid grid-cols-3 gap-2.5">
                   {[
-                    { label: 'Discipline', value: '87%', color: '#e9a76b' },
-                    { label: 'Habitudes', value: '6/7', color: '#6e93a8' },
-                    { label: 'Focus', value: '2 h', color: '#6fa394' },
+                    { label: 'Discipline', value: '87%', color: '#fbc7da' },
+                    { label: 'Habitudes', value: '6/7', color: '#e9b8d5' },
+                    { label: 'Focus', value: '2 h', color: '#f6d9e4' },
                   ].map((tile) => (
                     <div key={tile.label} className="rounded-xl bg-[var(--surface-2)] p-3">
                       <p className="text-[10px] text-[var(--text-faint)]">{tile.label}</p>
@@ -134,16 +134,16 @@ export default async function LandingPage() {
 
                 <div className="mt-4 space-y-2">
                   {[
-                    { name: 'Priere du Fajr', done: true, color: '#5e9c9b' },
-                    { name: 'Lecture 30 min', done: true, color: '#8592ad' },
-                    { name: 'Seance de sport', done: false, color: '#c97f63' },
+                    { name: 'Priere du Fajr', done: true, color: '#dcc7ea' },
+                    { name: 'Lecture 30 min', done: true, color: '#d9c7f0' },
+                    { name: 'Seance de sport', done: false, color: '#ff9fbf' },
                   ].map((habit) => (
                     <div
                       key={habit.name}
                       className="flex items-center gap-3 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] px-3 py-2.5"
                     >
                       <span
-                        className="grid size-6 place-items-center rounded-lg text-[var(--on-glow)]"
+                        className="grid size-6 place-items-center rounded-lg text-[var(--on-pink)]"
                         style={{ background: habit.done ? habit.color : 'var(--border-strong)' }}
                       >
                         {habit.done && <Icon name="check" size={13} />}
@@ -159,7 +159,7 @@ export default async function LandingPage() {
 
                 <div className="mt-4 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] p-3.5">
                   <div className="flex items-center gap-2">
-                    <span className="grid size-6 place-items-center rounded-lg lm-gradient-bg text-[var(--on-glow)]">
+                    <span className="grid size-6 place-items-center rounded-lg lm-gradient-bg text-[var(--on-pink)]">
                       <Icon name="sparkles" size={13} />
                     </span>
                     <span className="text-[11px] font-medium text-[var(--text-muted)]">Life AI</span>
@@ -189,7 +189,7 @@ export default async function LandingPage() {
             {features.map((feature) => (
               <article
                 key={feature.title}
-                className="lm-card group p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[var(--border-strong)]"
+                className="lm-card lm-card-hover group p-6"
               >
                 <span
                   className="grid size-11 place-items-center rounded-2xl transition-transform duration-300 group-hover:scale-110"
@@ -209,7 +209,7 @@ export default async function LandingPage() {
           <div className="lm-card relative overflow-hidden p-8 text-center sm:p-14">
             <div className="lm-aura opacity-70" aria-hidden="true" />
             <div className="relative">
-              <span className="mx-auto grid size-12 place-items-center rounded-2xl bg-[#6fa394]/12 text-[#6fa394]">
+              <span className="mx-auto grid size-12 place-items-center rounded-2xl bg-[#f6d9e4]/12 text-[#f6d9e4]">
                 <Icon name="shield" size={23} />
               </span>
               <h2 className="mt-5 text-2xl font-semibold text-[var(--text)] sm:text-3xl">

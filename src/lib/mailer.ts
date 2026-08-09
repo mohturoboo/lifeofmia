@@ -51,29 +51,29 @@ export async function sendMail(message: MailMessage): Promise<void> {
 }
 
 /**
- * Gabarit d'email aux couleurs de la marque : petrole et lumiere ambree.
+ * Gabarit d'email aux couleurs de la marque : noir et rose bebe.
  *
  * Les polices de la marque ne sont pas chargeables dans un client mail ; on
  * s'appuie donc sur une pile serif systeme pour le titre, qui conserve le
  * registre editorial, et sur une sans-serif systeme pour le corps.
  */
 function layout(title: string, body: string, ctaLabel?: string, ctaUrl?: string): string {
-  return `<!doctype html><html><body style="margin:0;background:#0b1418;font-family:system-ui,-apple-system,'Segoe UI',sans-serif;color:#e6eef0">
+  return `<!doctype html><html><body style="margin:0;background:#000000;font-family:system-ui,-apple-system,'Segoe UI',sans-serif;color:#ffffff">
 <table width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="padding:48px 16px">
-<table width="100%" style="max-width:520px;background:#132126;border:1px solid #1e3038;border-radius:14px;overflow:hidden">
+<table width="100%" style="max-width:520px;background:#0b0b0b;border:1px solid #1e1e1e;border-radius:14px;overflow:hidden">
 <tr><td style="padding:36px 36px 8px">
 <div style="font-family:Georgia,'Times New Roman',serif;font-size:24px;font-weight:500;letter-spacing:0.02em">LifeofM</div>
-<div style="height:1px;width:56px;background:linear-gradient(90deg,#e9a76b,transparent);margin:14px 0 28px"></div>
+<div style="height:1px;width:56px;background:linear-gradient(90deg,#fbc7da,transparent);margin:14px 0 28px"></div>
 <h1 style="margin:0 0 14px;font-family:Georgia,'Times New Roman',serif;font-size:22px;font-weight:500;letter-spacing:-0.01em">${title}</h1>
-<div style="font-size:15px;line-height:1.65;color:#93a7ad">${body}</div>
+<div style="font-size:15px;line-height:1.65;color:#b4b4b4">${body}</div>
 ${
   ctaUrl
-    ? `<div style="margin:30px 0 8px"><a href="${ctaUrl}" style="display:inline-block;background:linear-gradient(135deg,#f7d3ae,#e9a76b 46%,#c9834a);color:#0b1418;text-decoration:none;padding:13px 28px;border-radius:10px;font-weight:600;font-size:14px;letter-spacing:0.03em">${ctaLabel}</a></div>
-       <div style="font-size:12px;color:#6b8189;margin-top:18px;word-break:break-all">Ou copiez ce lien : ${ctaUrl}</div>`
+    ? `<div style="margin:30px 0 8px"><a href="${ctaUrl}" style="display:inline-block;background:linear-gradient(135deg,#fddced,#fbc7da 46%,#f8b0c9);color:#0a0a0a;text-decoration:none;padding:13px 28px;border-radius:10px;font-weight:600;font-size:14px;letter-spacing:0.03em">${ctaLabel}</a></div>
+       <div style="font-size:12px;color:#7a7a7a;margin-top:18px;word-break:break-all">Ou copiez ce lien : ${ctaUrl}</div>`
     : ''
 }
 </td></tr>
-<tr><td style="padding:26px 36px 34px;font-size:12px;line-height:1.6;color:#6b8189;border-top:1px solid #1e3038">
+<tr><td style="padding:26px 36px 34px;font-size:12px;line-height:1.6;color:#7a7a7a;border-top:1px solid #1e1e1e">
 Vous recevez cet email car un compte LifeofM est associe a cette adresse. Si vous n'etes pas a l'origine de cette demande, ignorez ce message.
 </td></tr></table></td></tr></table></body></html>`;
 }

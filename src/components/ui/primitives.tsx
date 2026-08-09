@@ -28,25 +28,26 @@ type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'subtle';
 type ButtonSize = 'sm' | 'md' | 'lg';
 
 /*
- * Le bouton principal est une plaque de champagne a encre sombre : sur un
- * metal clair, un libelle blanc tomberait sous le seuil de contraste et
- * perdrait l'effet « estampe » recherche.
+ * Le bouton principal est une pastille rose bebe a encre noire, entouree d'une
+ * lueur rose. Sur un rose aussi clair, un libelle blanc serait illisible :
+ * l'encre noire donne 13,5:1 et renforce l'effet « pastille lumineuse ».
+ * `lm-sweep` fait passer une bande de lumiere au survol.
  */
 const BUTTON_VARIANTS: Record<ButtonVariant, string> = {
-  primary:
-    'lm-gradient-bg text-[var(--on-glow)] shadow-[0_6px_18px_-10px_rgba(0,0,0,0.5)] hover:brightness-[1.06] active:brightness-95',
+  primary: 'lm-gradient-bg lm-sweep lm-glow text-[var(--on-pink)] hover:brightness-[1.04] active:scale-[0.985]',
   secondary:
-    'bg-[var(--surface-2)] text-[var(--text)] border border-[var(--border)] hover:bg-[var(--surface-hover)]',
+    'bg-[var(--surface-2)] text-[var(--text)] border border-[var(--border)] hover:border-brand-300/40 hover:bg-[var(--surface-hover)]',
   ghost: 'text-[var(--text-muted)] hover:bg-[var(--surface-2)] hover:text-[var(--text)]',
-  subtle: 'bg-[var(--surface)] text-[var(--text)] border border-[var(--border)] hover:border-[var(--border-strong)]',
-  danger: 'bg-[#c97f63]/10 text-[#c97f63] border border-[#c97f63]/25 hover:bg-[#c97f63]/20',
+  subtle:
+    'bg-[var(--surface)] text-[var(--text)] border border-[var(--border)] hover:border-brand-300/40',
+  danger: 'bg-[#ff9fbf]/10 text-[#ff9fbf] border border-[#ff9fbf]/25 hover:bg-[#ff9fbf]/20',
 };
 
-/* Interlettrage ouvert et hauteurs plus genereuses : le luxe respire. */
+/* Pastilles franchement arrondies, interlettrage ouvert. */
 const BUTTON_SIZES: Record<ButtonSize, string> = {
-  sm: 'h-9 px-4 text-[12.5px] tracking-[0.02em] gap-1.5 rounded-lg',
-  md: 'h-11 px-6 text-[13.5px] tracking-[0.02em] gap-2 rounded-xl',
-  lg: 'h-13 px-8 text-[14.5px] tracking-[0.03em] gap-2.5 rounded-xl',
+  sm: 'h-9 px-4 text-[12.5px] tracking-[0.03em] gap-1.5 rounded-full',
+  md: 'h-11 px-6 text-[13.5px] tracking-[0.03em] gap-2 rounded-full',
+  lg: 'h-13 px-8 text-[14.5px] tracking-[0.04em] gap-2.5 rounded-full',
 };
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -124,10 +125,11 @@ export function Field({ label, hint, error, required, htmlFor, children, classNa
 }
 
 const CONTROL_BASE =
-  'w-full bg-[var(--surface-2)] border border-[var(--border)] rounded-xl px-3.5 text-sm text-[var(--text)] ' +
-  'placeholder:text-[var(--text-faint)] transition-colors ' +
-  'focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-[var(--ring)] ' +
-  'disabled:opacity-50 aria-[invalid=true]:border-red-500/60';
+  'w-full bg-[var(--surface-2)] border border-[var(--border)] rounded-xl px-4 text-sm text-[var(--text)] ' +
+  'placeholder:text-[var(--text-faint)] transition-all duration-200 ' +
+  // Au focus, le champ s'entoure d'un halo rose plutot que d'un simple liseret.
+  'focus:outline-none focus:border-brand-300/60 focus:ring-4 focus:ring-[var(--ring)] focus:bg-[var(--surface-hover)] ' +
+  'disabled:opacity-50 aria-[invalid=true]:border-[#ff9fbf]/60';
 
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   invalid?: boolean;
@@ -236,7 +238,7 @@ export function Card({
   className?: string;
   padded?: boolean;
 }) {
-  return <div className={cx('lm-card', padded && 'p-5', className)}>{children}</div>;
+  return <div className={cx('lm-card', padded && 'p-6', className)}>{children}</div>;
 }
 
 export function CardHeader({
@@ -257,10 +259,17 @@ export function CardHeader({
       <div className="flex items-center gap-3 min-w-0">
         {icon && (
           <span
-            className="grid size-9 shrink-0 place-items-center rounded-xl"
-            style={{ background: `${accent ?? '#6e93a8'}1f`, color: accent ?? '#6e93a8' }}
+            className="grid size-10 shrink-0 place-items-center rounded-2xl ring-1 ring-inset"
+            style={{
+              background: `${accent ?? '#fbc7da'}16`,
+              color: accent ?? '#fbc7da',
+              borderColor: 'transparent',
+              // La lueur reprend la teinte du module : chaque section garde son
+              // identite sans introduire de couleur supplementaire.
+              boxShadow: `0 0 24px -10px ${accent ?? '#fbc7da'}`,
+            }}
           >
-            <Icon name={icon} size={18} />
+            <Icon name={icon} size={19} />
           </span>
         )}
         <div className="min-w-0">
@@ -339,8 +348,8 @@ export function EmptyState({
 }) {
   return (
     <div className="flex flex-col items-center justify-center gap-3 px-6 py-14 text-center">
-      <span className="grid size-14 place-items-center rounded-2xl bg-[var(--surface-2)] text-[var(--text-faint)]">
-        <Icon name={icon} size={24} />
+      <span className="grid size-16 place-items-center rounded-3xl bg-brand-300/10 text-brand-300 ring-1 ring-brand-300/20">
+        <Icon name={icon} size={26} />
       </span>
       <p className="text-sm font-medium text-[var(--text)]">{title}</p>
       {hint && <p className="max-w-sm text-xs text-[var(--text-faint)]">{hint}</p>}

@@ -139,7 +139,7 @@ export default function DashboardPage() {
       label: t('dash.disciplineScore'),
       value: `${stats.disciplineScore}%`,
       icon: 'shield',
-      color: '#e9a76b',
+      color: '#fbc7da',
       href: '/stats',
       trend: week.map((day) => day.disciplineScore),
     },
@@ -147,7 +147,7 @@ export default function DashboardPage() {
       label: t('dash.habitsDone'),
       value: `${habitsDone}/${data.habits.length}`,
       icon: 'flame',
-      color: '#6e93a8',
+      color: '#e9b8d5',
       href: '/habits',
       trend: week.map((day) => day.habitsDone),
     },
@@ -155,7 +155,7 @@ export default function DashboardPage() {
       label: t('dash.tasksDone'),
       value: String(stats.tasksDone),
       icon: 'checkCircle',
-      color: '#5f9aa6',
+      color: '#e6e6e6',
       href: '/tasks',
       trend: week.map((day) => day.tasksDone),
     },
@@ -163,7 +163,7 @@ export default function DashboardPage() {
       label: t('dash.calories'),
       value: n(stats.calories),
       icon: 'apple',
-      color: '#d99a63',
+      color: '#ff9fbf',
       href: '/nutrition',
       trend: week.map((day) => day.calories),
     },
@@ -171,14 +171,14 @@ export default function DashboardPage() {
       label: t('dash.currentWeight'),
       value: data.weight ? `${data.weight.weightKg} kg` : '—',
       icon: 'scale',
-      color: '#6fa394',
+      color: '#f6d9e4',
       href: '/weight',
     },
     {
       label: t('dash.focusTime'),
       value: `${Math.floor(stats.focusMinutes / 60)} h ${stats.focusMinutes % 60}`,
       icon: 'clock',
-      color: '#8592ad',
+      color: '#d9c7f0',
       href: '/stats',
       trend: week.map((day) => day.focusMinutes),
     },
@@ -186,93 +186,96 @@ export default function DashboardPage() {
 
   return (
     <div className="mx-auto max-w-7xl space-y-5">
-      {/* --- Bandeau d'accueil --- */}
+      {/*
+        --- Ouverture ---
+        L'accueil n'est plus une carte : le titre respire directement sur le
+        noir, centre, avec l'anneau de progression pose au-dessus. La date, la
+        meteo et le lieu descendent en une ligne unique de metadonnees, ce qui
+        libere tout le haut de page pour la seule information qui compte.
+      */}
       <motion.section
-        initial={{ opacity: 0, y: 12 }}
+        initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
-        className="lm-card relative overflow-hidden p-6 sm:p-7"
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        className="relative flex flex-col items-center px-4 pb-2 pt-6 text-center sm:pt-10"
       >
-        <div className="lm-aura opacity-70" aria-hidden="true" />
-        <div className="relative flex flex-wrap items-start justify-between gap-6">
-          <div className="min-w-0">
-            <h1 className="text-2xl font-semibold tracking-tight text-[var(--text)] sm:text-3xl">
-              {t(greetingKey)} <span className="lm-gradient-text">{data.user.firstName}</span>
-            </h1>
-            <p className="mt-1.5 text-sm capitalize text-[var(--text-muted)]">
-              {formatFullDate(locale, new Date(data.localDate), data.user.timezone)}
-              <span className="mx-2 text-[var(--text-faint)]">·</span>
-              {data.localTime}
-              <span className="mx-2 text-[var(--text-faint)]">·</span>
-              {data.user.city}
-            </p>
+        <RingProgress value={stats.completionRate} size={104} thickness={5} color="#fbc7da" />
 
-            {data.user.mainGoal ? (
-              <div className="mt-4 flex items-center gap-2.5">
-                <Icon name="target" size={16} className="text-accent-400" />
-                <span className="text-sm text-[var(--text)]">{data.user.mainGoal}</span>
-              </div>
-            ) : (
-              <Link href="/settings" className="mt-4 inline-block text-sm text-[var(--brand-text)] hover:opacity-80">
-                {t('dash.setMainGoal')}
-              </Link>
-            )}
-          </div>
+        <h1 className="mt-6 text-4xl font-medium tracking-tight text-[var(--text)] sm:text-5xl">
+          {t(greetingKey)} <span className="lm-gradient-text">{data.user.firstName}</span>
+        </h1>
 
-          <div className="flex items-center gap-5">
-            {data.weather && (
-              <div className="text-end">
-                <div className="flex items-center justify-end gap-2">
-                  <Icon name={WEATHER_ICONS[data.weather.icon] ?? 'cloud'} size={22} className="text-[var(--text-muted)]" />
-                  <span className="text-3xl font-semibold text-[var(--text)]">{data.weather.temperature}°</span>
-                </div>
-                <p className="mt-0.5 text-xs capitalize text-[var(--text-faint)]">{data.weather.condition}</p>
-                {data.weather.sunrise && (
-                  <p className="mt-1.5 text-[11px] text-[var(--text-faint)]">
-                    ↑ {data.weather.sunrise} · ↓ {data.weather.sunset}
-                  </p>
-                )}
-              </div>
-            )}
+        <p className="lm-eyebrow mt-4 flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
+          <span className="capitalize">{formatFullDate(locale, new Date(data.localDate), data.user.timezone)}</span>
+          <span className="text-brand-300/50">◆</span>
+          <span>{data.localTime}</span>
+          <span className="text-brand-300/50">◆</span>
+          <span>{data.user.city}</span>
+          {data.weather && (
+            <>
+              <span className="text-brand-300/50">◆</span>
+              <span className="inline-flex items-center gap-1.5 normal-case tracking-normal">
+                <Icon name={WEATHER_ICONS[data.weather.icon] ?? 'cloud'} size={13} />
+                {data.weather.temperature}° {data.weather.condition}
+              </span>
+            </>
+          )}
+        </p>
 
-            {/* Le libelle est place sous l'anneau : « Progression du jour »
-                est trop long pour tenir dans le disque interieur. */}
-            <div className="flex flex-col items-center gap-1.5">
-              <RingProgress value={stats.completionRate} size={92} thickness={8} color="#e9a76b" />
-              <span className="text-[11px] text-[var(--text-faint)]">{t('dash.dailyProgress')}</span>
-            </div>
-          </div>
-        </div>
+        {data.user.mainGoal ? (
+          <p className="mt-5 inline-flex max-w-xl items-center gap-2.5 rounded-full border border-brand-300/20 bg-brand-300/[0.06] px-5 py-2.5 text-sm text-[var(--text)]">
+            <Icon name="target" size={15} className="shrink-0 text-brand-300" />
+            {data.user.mainGoal}
+          </p>
+        ) : (
+          <Link
+            href="/settings"
+            className="mt-5 inline-block text-sm text-[var(--brand-text)] transition-opacity hover:opacity-80"
+          >
+            {t('dash.setMainGoal')}
+          </Link>
+        )}
 
-        <blockquote className="relative mt-6 border-s-2 border-brand-500/40 ps-4">
-          <p className="text-pretty text-sm italic leading-relaxed text-[var(--text-muted)]">« {data.quote.text} »</p>
-          <footer className="mt-1 text-xs text-[var(--text-faint)]">— {data.quote.author}</footer>
+        <blockquote className="mx-auto mt-8 max-w-2xl">
+          <div className="lm-rule mx-auto mb-5 w-24 opacity-60" />
+          <p className="text-pretty font-display text-lg italic leading-relaxed text-[var(--text-muted)] sm:text-xl">
+            « {data.quote.text} »
+          </p>
+          <footer className="lm-eyebrow mt-3">{data.quote.author}</footer>
         </blockquote>
       </motion.section>
 
-      {/* --- Tuiles d'indicateurs --- */}
-      <section className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+      {/*
+        --- Indicateurs ---
+        Grille de quatre colonnes plutot que six : chaque tuile gagne en surface,
+        le chiffre devient l'element dominant et la courbe passe en fond.
+      */}
+      <section className="grid grid-cols-2 gap-3 lg:grid-cols-3 xl:grid-cols-6">
         {tiles.map((tile, index) => (
           <motion.div
             key={tile.label}
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.35, delay: index * 0.04 }}
+            transition={{ duration: 0.5, delay: 0.15 + index * 0.05, ease: [0.16, 1, 0.3, 1] }}
           >
-            <Link href={tile.href} className="lm-card block p-4 transition-all hover:-translate-y-0.5 hover:border-[var(--border-strong)]">
-              <div className="flex items-start justify-between">
+            <Link href={tile.href} className="lm-card lm-card-hover group relative block overflow-hidden p-4">
+              {/* La courbe de tendance passe en filigrane au fond de la tuile. */}
+              {tile.trend && tile.trend.some((value) => value > 0) && (
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 opacity-25 transition-opacity duration-300 group-hover:opacity-50">
+                  <Sparkline values={tile.trend} color={tile.color} width={200} height={44} />
+                </div>
+              )}
+
+              <div className="relative">
                 <span
-                  className="grid size-8 place-items-center rounded-lg"
-                  style={{ background: `${tile.color}1f`, color: tile.color }}
+                  className="grid size-8 place-items-center rounded-xl transition-transform duration-300 group-hover:scale-110"
+                  style={{ background: `${tile.color}1a`, color: tile.color, boxShadow: `0 0 20px -10px ${tile.color}` }}
                 >
                   <Icon name={tile.icon} size={16} />
                 </span>
-                {tile.trend && tile.trend.some((value) => value > 0) && (
-                  <Sparkline values={tile.trend} color={tile.color} width={44} height={20} />
-                )}
+                <p className="lm-numeric mt-4 text-2xl font-medium text-[var(--text)]">{tile.value}</p>
+                <p className="mt-1 text-[11px] leading-tight text-[var(--text-faint)]">{tile.label}</p>
               </div>
-              <p className="mt-3 text-xl font-semibold text-[var(--text)]">{tile.value}</p>
-              <p className="mt-0.5 text-[11px] leading-tight text-[var(--text-faint)]">{tile.label}</p>
             </Link>
           </motion.div>
         ))}
@@ -285,7 +288,7 @@ export default function DashboardPage() {
             title={t('habits.title')}
             subtitle={`${habitsDone} ${t('common.of')} ${data.habits.length}`}
             icon="flame"
-            accent="#6e93a8"
+            accent="#e9b8d5"
             action={
               <Link href="/habits">
                 <Button variant="ghost" size="sm" icon="chevronRight" />
@@ -346,7 +349,7 @@ export default function DashboardPage() {
                       )}
                     </span>
 
-                    {habit.isNegative && <Badge color="#d99a63">à éviter</Badge>}
+                    {habit.isNegative && <Badge color="#ff9fbf">à éviter</Badge>}
                     <span className="text-[11px] font-medium text-[var(--text-faint)]">+{habit.xpReward} XP</span>
                   </button>
                 </li>
@@ -365,7 +368,7 @@ export default function DashboardPage() {
                 : undefined
             }
             icon="moon"
-            accent="#5e9c9b"
+            accent="#dcc7ea"
             action={
               <Link href="/prayers">
                 <Button variant="ghost" size="sm" icon="chevronRight" />
@@ -383,14 +386,14 @@ export default function DashboardPage() {
                     key={name}
                     className={cx(
                       'flex items-center justify-between rounded-lg px-3 py-2 text-sm transition-colors',
-                      isNext && 'bg-[#5e9c9b]/10',
+                      isNext && 'bg-[#dcc7ea]/10',
                     )}
                   >
-                    <span className={cx('flex items-center gap-2', isNext ? 'font-medium text-[#5e9c9b]' : 'text-[var(--text-muted)]')}>
-                      {logged?.status === 'done' && <Icon name="check" size={13} className="text-[#6fa394]" />}
+                    <span className={cx('flex items-center gap-2', isNext ? 'font-medium text-[#dcc7ea]' : 'text-[var(--text-muted)]')}>
+                      {logged?.status === 'done' && <Icon name="check" size={13} className="text-[#f6d9e4]" />}
                       {t(`prayers.${name.toLowerCase()}` as 'prayers.fajr')}
                     </span>
-                    <span className={cx('tabular-nums', isNext ? 'font-semibold text-[#5e9c9b]' : 'text-[var(--text)]')}>
+                    <span className={cx('tabular-nums', isNext ? 'font-semibold text-[#dcc7ea]' : 'text-[var(--text)]')}>
                       {data.prayers!.times[name]}
                     </span>
                   </li>
@@ -406,13 +409,13 @@ export default function DashboardPage() {
       <div className="grid gap-4 lg:grid-cols-3">
         {/* --- Semaine --- */}
         <Card className="lg:col-span-2">
-          <CardHeader title={t('dash.weekOverview')} subtitle={t('dash.last7days')} icon="chart" accent="#e9a76b" />
+          <CardHeader title={t('dash.weekOverview')} subtitle={t('dash.last7days')} icon="chart" accent="#fbc7da" />
           <BarChart
             data={week.map((day) => ({
               label: new Date(`${day.date}T12:00:00Z`).toLocaleDateString(locale, { weekday: 'narrow' }),
               value: day.disciplineScore,
             }))}
-            color="#e9a76b"
+            color="#fbc7da"
             unit="%"
             maxValue={100}
             height={160}
@@ -422,7 +425,7 @@ export default function DashboardPage() {
         {/* --- Progression & taches --- */}
         <div className="space-y-4">
           <Card>
-            <CardHeader title={t('dash.level')} icon="award" accent="#8592ad" />
+            <CardHeader title={t('dash.level')} icon="award" accent="#d9c7f0" />
             <div className="flex items-baseline gap-2">
               <span className="text-3xl font-semibold text-[var(--text)]">{data.progress.level}</span>
               <span className="text-sm text-[var(--text-faint)]">{n(data.progress.xp)} XP</span>
@@ -430,11 +433,11 @@ export default function DashboardPage() {
             <Progress value={data.progress.percent} color="var(--color-accent-500)" label={t('dash.xp')} />
             <div className="mt-3 flex items-center justify-between text-xs text-[var(--text-faint)]">
               <span className="flex items-center gap-1.5">
-                <Icon name="flame" size={13} className="text-[#d99a63]" />
+                <Icon name="flame" size={13} className="text-[#ff9fbf]" />
                 {data.user.currentStreak} {t('common.days')}
               </span>
               <span className="flex items-center gap-1.5">
-                <Icon name="award" size={13} className="text-[#d99a63]" />
+                <Icon name="award" size={13} className="text-[#ff9fbf]" />
                 {data.badgeCount} {t('dash.badges')}
               </span>
             </div>
@@ -444,7 +447,7 @@ export default function DashboardPage() {
             <CardHeader
               title={t('tasks.title')}
               icon="checkCircle"
-              accent="#5f9aa6"
+              accent="#e6e6e6"
               action={
                 <Link href="/tasks">
                   <Button variant="ghost" size="sm" icon="chevronRight" />
@@ -461,7 +464,7 @@ export default function DashboardPage() {
                       className="size-1.5 shrink-0 rounded-full"
                       style={{
                         background:
-                          task.priority === 'urgent' ? '#c97f63' : task.priority === 'high' ? '#d99a63' : '#7d8f95',
+                          task.priority === 'urgent' ? '#ff9fbf' : task.priority === 'high' ? '#ff9fbf' : '#b4b4b4',
                       }}
                     />
                     <span className="min-w-0 flex-1 truncate text-[var(--text-muted)]">{task.title}</span>

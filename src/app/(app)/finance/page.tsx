@@ -130,7 +130,7 @@ export default function FinancePage() {
         title={t('finance.title')}
         subtitle={t('finance.subtitle')}
         icon="wallet"
-        color="#7ba083"
+        color="#fbe3ec"
         actions={
           <>
             <div className="flex items-center gap-1 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-1">
@@ -163,9 +163,9 @@ export default function FinancePage() {
 
       <div className="mb-4 grid grid-cols-3 gap-3">
         {[
-          { label: t('finance.income'), value: data.summary.income, color: '#7ba083', icon: 'arrowUp' as const },
-          { label: t('finance.expense'), value: data.summary.expense, color: '#c97f63', icon: 'arrowDown' as const },
-          { label: t('finance.balance'), value: data.summary.balance, color: data.summary.balance >= 0 ? '#5f9aa6' : '#d99a63', icon: 'wallet' as const },
+          { label: t('finance.income'), value: data.summary.income, color: '#fbe3ec', icon: 'arrowUp' as const },
+          { label: t('finance.expense'), value: data.summary.expense, color: '#ff9fbf', icon: 'arrowDown' as const },
+          { label: t('finance.balance'), value: data.summary.balance, color: data.summary.balance >= 0 ? '#e6e6e6' : '#ff9fbf', icon: 'wallet' as const },
         ].map((tile) => (
           <Card key={tile.label}>
             <span
@@ -184,7 +184,7 @@ export default function FinancePage() {
 
       <div className="grid gap-4 lg:grid-cols-3">
         <Card className="lg:col-span-2">
-          <CardHeader title={t('finance.title')} subtitle={`${data.transactions.length} operations`} icon="wallet" accent="#7ba083" />
+          <CardHeader title={t('finance.title')} subtitle={`${data.transactions.length} operations`} icon="wallet" accent="#fbe3ec" />
 
           {data.transactions.length === 0 ? (
             <EmptyState
@@ -203,7 +203,7 @@ export default function FinancePage() {
                   <span
                     className={cx(
                       'grid size-8 shrink-0 place-items-center rounded-lg',
-                      transaction.type === 'income' ? 'bg-[#6fa394]/12 text-[#6fa394]' : 'bg-red-500/12 text-red-500',
+                      transaction.type === 'income' ? 'bg-[#f6d9e4]/12 text-[#f6d9e4]' : 'bg-red-500/12 text-red-500',
                     )}
                   >
                     <Icon name={transaction.type === 'income' ? 'arrowUp' : 'arrowDown'} size={14} />
@@ -212,7 +212,7 @@ export default function FinancePage() {
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm text-[var(--text)]">{transaction.label}</p>
                     <div className="mt-0.5 flex items-center gap-1.5">
-                      <Badge color="#7d8f95">{CATEGORY_LABELS[transaction.category] ?? transaction.category}</Badge>
+                      <Badge color="#b4b4b4">{CATEGORY_LABELS[transaction.category] ?? transaction.category}</Badge>
                       <span className="text-[11px] text-[var(--text-faint)]">
                         {new Date(`${transaction.date}T12:00:00Z`).toLocaleDateString(locale, { day: 'numeric', month: 'short' })}
                       </span>
@@ -223,7 +223,7 @@ export default function FinancePage() {
                   <span
                     className={cx(
                       'shrink-0 text-sm font-medium tabular-nums',
-                      transaction.type === 'income' ? 'text-[#6fa394]' : 'text-[var(--text)]',
+                      transaction.type === 'income' ? 'text-[#f6d9e4]' : 'text-[var(--text)]',
                     )}
                   >
                     {transaction.type === 'income' ? '+' : '−'}
@@ -245,7 +245,7 @@ export default function FinancePage() {
         </Card>
 
         <Card>
-          <CardHeader title={t('finance.byCategory')} icon="chart" accent="#7ba083" />
+          <CardHeader title={t('finance.byCategory')} icon="chart" accent="#fbe3ec" />
           {Object.keys(data.byCategory).length === 0 ? (
             <p className="py-8 text-center text-xs text-[var(--text-faint)]">{t('common.empty')}</p>
           ) : (
@@ -288,7 +288,7 @@ export default function FinancePage() {
                   'rounded-xl border py-3 text-sm transition-colors',
                   form.type === type
                     ? type === 'income'
-                      ? 'border-[#6fa394]/40 bg-[#6fa394]/8 text-[#6fa394]'
+                      ? 'border-[#f6d9e4]/40 bg-[#f6d9e4]/8 text-[#f6d9e4]'
                       : 'border-red-500/40 bg-red-500/8 text-red-500'
                     : 'border-[var(--border)] text-[var(--text-muted)]',
                 )}

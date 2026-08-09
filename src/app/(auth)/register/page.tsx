@@ -47,7 +47,7 @@ export default function RegisterPage() {
 
   const strength = useMemo(() => evaluatePassword(form.password), [form.password]);
   const strengthLabel = [t('auth.passwordWeak'), t('auth.passwordWeak'), t('auth.passwordMedium'), t('auth.passwordStrong'), t('auth.passwordStrong')][strength.score];
-  const strengthColor = ['#c97f63', '#c97f63', '#d99a63', '#7ba083', '#7ba083'][strength.score];
+  const strengthColor = ['#ff9fbf', '#ff9fbf', '#ff9fbf', '#fbe3ec', '#fbe3ec'][strength.score];
 
   const step1Valid =
     form.firstName.trim().length > 0 &&

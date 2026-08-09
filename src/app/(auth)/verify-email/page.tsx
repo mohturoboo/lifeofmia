@@ -24,9 +24,9 @@ function VerifyContent() {
   }, [token]);
 
   const view = {
-    pending: { icon: 'clock' as const, color: '#8592ad', title: t('auth.verifyEmail'), text: t('common.loading') },
-    success: { icon: 'checkCircle' as const, color: '#7ba083', title: t('auth.verifySuccess'), text: '' },
-    error: { icon: 'close' as const, color: '#c97f63', title: t('auth.verifyError'), text: '' },
+    pending: { icon: 'clock' as const, color: '#d9c7f0', title: t('auth.verifyEmail'), text: t('common.loading') },
+    success: { icon: 'checkCircle' as const, color: '#fbe3ec', title: t('auth.verifySuccess'), text: '' },
+    error: { icon: 'close' as const, color: '#ff9fbf', title: t('auth.verifyError'), text: '' },
   }[state];
 
   return (

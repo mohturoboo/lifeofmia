@@ -25,7 +25,7 @@ interface CalendarData {
   tasks: Array<{ id: string; title: string; dueDate: string; status: string; priority: string }>;
 }
 
-const COLORS = ['#6e93a8', '#e9a76b', '#6fa394', '#d99a63', '#8592ad', '#5f9aa6'];
+const COLORS = ['#e9b8d5', '#fbc7da', '#f6d9e4', '#ff9fbf', '#d9c7f0', '#e6e6e6'];
 
 export default function CalendarPage() {
   const { t, locale } = useI18n();
@@ -54,7 +54,7 @@ export default function CalendarPage() {
     startTime: '09:00',
     endTime: '10:00',
     location: '',
-    color: '#6e93a8',
+    color: '#e9b8d5',
   });
 
   const set = <K extends keyof typeof form>(key: K, value: string) =>
@@ -97,7 +97,7 @@ export default function CalendarPage() {
       push(task.dueDate.slice(0, 10), {
         id: task.id,
         title: task.title,
-        color: task.status === 'done' ? '#7d8f95' : '#5f9aa6',
+        color: task.status === 'done' ? '#b4b4b4' : '#e6e6e6',
         type: 'task',
       });
     }
@@ -143,7 +143,7 @@ export default function CalendarPage() {
         title={t('calendar.title')}
         subtitle={t('calendar.subtitle')}
         icon="calendar"
-        color="#9aa5bd"
+        color="#e4d9f5"
         actions={
           <>
             <div className="flex items-center gap-1 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-1">
@@ -274,7 +274,7 @@ export default function CalendarPage() {
 
       <Card className="mt-4">
         <div className="flex items-start gap-3">
-          <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-[#8592ad]/12 text-[#8592ad]">
+          <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-[#d9c7f0]/12 text-[#d9c7f0]">
             <Icon name="globe" size={17} />
           </span>
           <div>

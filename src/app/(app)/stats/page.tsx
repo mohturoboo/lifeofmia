@@ -28,10 +28,10 @@ interface StatsData {
 const PERIODS = ['7d', '30d', '3m', '6m', '1y'] as const;
 
 const TIER_COLORS: Record<string, string> = {
-  bronze: '#b8834f',
-  silver: '#97a8ad',
-  gold: '#d99a63',
-  platinum: '#9aa5bd',
+  bronze: '#f8b0c9',
+  silver: '#cfcfcf',
+  gold: '#ff9fbf',
+  platinum: '#e4d9f5',
 };
 
 export default function StatsPage() {
@@ -62,14 +62,14 @@ export default function StatsPage() {
   const { totals } = data;
 
   const tiles: Array<{ label: string; value: string; icon: IconName; color: string }> = [
-    { label: t('stats.avgDiscipline'), value: `${totals.avgDiscipline}%`, icon: 'shield', color: '#e9a76b' },
-    { label: t('habits.completion'), value: `${totals.habitCompletion}%`, icon: 'flame', color: '#6e93a8' },
-    { label: t('stats.activeDays'), value: `${totals.activeDays}/${totals.days}`, icon: 'calendar', color: '#5f9aa6' },
-    { label: t('dash.tasksDone'), value: n(totals.tasksDone), icon: 'checkCircle', color: '#7ba083' },
-    { label: t('sport.totalTime'), value: `${Math.round(totals.workoutMinutes / 60)} h`, icon: 'dumbbell', color: '#c97f63' },
-    { label: t('dash.focusTime'), value: `${Math.round(totals.focusMinutes / 60)} h`, icon: 'clock', color: '#8592ad' },
-    { label: t('prayers.title'), value: n(totals.prayersDone), icon: 'moon', color: '#5e9c9b' },
-    { label: t('dash.xp'), value: n(totals.xpEarned), icon: 'award', color: '#d99a63' },
+    { label: t('stats.avgDiscipline'), value: `${totals.avgDiscipline}%`, icon: 'shield', color: '#fbc7da' },
+    { label: t('habits.completion'), value: `${totals.habitCompletion}%`, icon: 'flame', color: '#e9b8d5' },
+    { label: t('stats.activeDays'), value: `${totals.activeDays}/${totals.days}`, icon: 'calendar', color: '#e6e6e6' },
+    { label: t('dash.tasksDone'), value: n(totals.tasksDone), icon: 'checkCircle', color: '#fbe3ec' },
+    { label: t('sport.totalTime'), value: `${Math.round(totals.workoutMinutes / 60)} h`, icon: 'dumbbell', color: '#ff9fbf' },
+    { label: t('dash.focusTime'), value: `${Math.round(totals.focusMinutes / 60)} h`, icon: 'clock', color: '#d9c7f0' },
+    { label: t('prayers.title'), value: n(totals.prayersDone), icon: 'moon', color: '#dcc7ea' },
+    { label: t('dash.xp'), value: n(totals.xpEarned), icon: 'award', color: '#ff9fbf' },
   ];
 
   const chartLabel = (date: string) =>
@@ -81,7 +81,7 @@ export default function StatsPage() {
         title={t('stats.title')}
         subtitle={t('stats.subtitle')}
         icon="chart"
-        color="#5f9aa6"
+        color="#e6e6e6"
         actions={
           <div className="flex gap-1 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-1">
             {PERIODS.map((value) => (
@@ -121,33 +121,33 @@ export default function StatsPage() {
 
       <div className="mb-4 grid gap-4 lg:grid-cols-3">
         <Card className="lg:col-span-2">
-          <CardHeader title={t('dash.disciplineScore')} subtitle={periodLabels[period]} icon="trending" accent="#e9a76b" />
+          <CardHeader title={t('dash.disciplineScore')} subtitle={periodLabels[period]} icon="trending" accent="#fbc7da" />
           <LineChart
             data={data.series.map((day) => ({ label: chartLabel(day.date), value: day.disciplineScore }))}
-            color="#e9a76b"
+            color="#fbc7da"
             unit="%"
             height={220}
           />
         </Card>
 
         <Card>
-          <CardHeader title={t('stats.radar')} icon="compare" accent="#8592ad" />
+          <CardHeader title={t('stats.radar')} icon="compare" accent="#d9c7f0" />
           <RadarChart
             data={data.radar.map((axis) => ({ label: t(axis.labelKey), value: axis.value }))}
             size={240}
-            color="#8592ad"
+            color="#d9c7f0"
           />
         </Card>
       </div>
 
       <Card className="mb-4">
-        <CardHeader title={t('stats.heatmap')} subtitle="Un carre par jour, plus il est vif plus la journee a ete disciplinee" icon="calendar" accent="#e9a76b" />
-        <Heatmap data={data.heatmap} color="#e9a76b" />
+        <CardHeader title={t('stats.heatmap')} subtitle="Un carre par jour, plus il est vif plus la journee a ete disciplinee" icon="calendar" accent="#fbc7da" />
+        <Heatmap data={data.heatmap} color="#fbc7da" />
       </Card>
 
       <div className="mb-4 grid gap-4 lg:grid-cols-2">
         <Card>
-          <CardHeader title={t('stats.byCategory')} icon="chart" accent="#6e93a8" />
+          <CardHeader title={t('stats.byCategory')} icon="chart" accent="#e9b8d5" />
           {Object.keys(data.byCategory).length === 0 ? (
             <p className="py-8 text-center text-xs text-[var(--text-faint)]">{t('common.empty')}</p>
           ) : (
@@ -163,7 +163,7 @@ export default function StatsPage() {
         </Card>
 
         <Card>
-          <CardHeader title={t('habits.title')} subtitle={t('habits.completion')} icon="flame" accent="#6e93a8" />
+          <CardHeader title={t('habits.title')} subtitle={t('habits.completion')} icon="flame" accent="#e9b8d5" />
           {data.perHabit.length === 0 ? (
             <p className="py-8 text-center text-xs text-[var(--text-faint)]">{t('habits.empty')}</p>
           ) : (
@@ -184,9 +184,9 @@ export default function StatsPage() {
 
       <div className="grid gap-4 lg:grid-cols-3">
         <Card>
-          <CardHeader title={t('dash.level')} icon="award" accent="#8592ad" />
+          <CardHeader title={t('dash.level')} icon="award" accent="#d9c7f0" />
           <div className="flex items-center gap-5">
-            <RingProgress value={data.progress.percent} size={100} color="#8592ad" sublabel={`Niv. ${data.progress.level}`} />
+            <RingProgress value={data.progress.percent} size={100} color="#d9c7f0" sublabel={`Niv. ${data.progress.level}`} />
             <dl className="space-y-1.5 text-sm">
               <div className="flex justify-between gap-6">
                 <dt className="text-[var(--text-muted)]">{t('dash.xp')}</dt>
@@ -205,7 +205,7 @@ export default function StatsPage() {
         </Card>
 
         <Card className="lg:col-span-2">
-          <CardHeader title={t('dash.badges')} subtitle={`${data.badges.length} debloques`} icon="crown" accent="#d99a63" />
+          <CardHeader title={t('dash.badges')} subtitle={`${data.badges.length} debloques`} icon="crown" accent="#ff9fbf" />
           {data.badges.length === 0 ? (
             <p className="py-8 text-center text-xs text-[var(--text-faint)]">
               Validez vos premieres habitudes pour debloquer des badges.
@@ -238,10 +238,10 @@ export default function StatsPage() {
       </div>
 
       <Card className="mt-4">
-        <CardHeader title={t('nutrition.title')} subtitle={periodLabels[period]} icon="apple" accent="#d99a63" />
+        <CardHeader title={t('nutrition.title')} subtitle={periodLabels[period]} icon="apple" accent="#ff9fbf" />
         <BarChart
           data={data.series.slice(-30).map((day) => ({ label: day.date.slice(8), value: day.calories }))}
-          color="#d99a63"
+          color="#ff9fbf"
           unit=" kcal"
           height={140}
         />

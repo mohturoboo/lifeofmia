@@ -42,7 +42,7 @@ interface SportData {
   monthly: Array<{ date: string; minutes: number }>;
 }
 
-const INTENSITY_COLORS: Record<string, string> = { low: '#5f9aa6', medium: '#d99a63', high: '#c97f63' };
+const INTENSITY_COLORS: Record<string, string> = { low: '#e6e6e6', medium: '#ff9fbf', high: '#ff9fbf' };
 
 const EMPTY_EXERCISE: Exercise = { name: '', sets: 3, reps: 10, weightKg: null, restSec: 60 };
 
@@ -128,7 +128,7 @@ export default function SportPage() {
         title={t('sport.title')}
         subtitle={t('sport.subtitle')}
         icon="dumbbell"
-        color="#c97f63"
+        color="#ff9fbf"
         actions={
           <Button icon="plus" onClick={() => setModalOpen(true)}>
             {t('sport.newSession')}
@@ -155,20 +155,20 @@ export default function SportPage() {
 
       <div className="mb-4 grid gap-4 lg:grid-cols-3">
         <Card className="lg:col-span-2">
-          <CardHeader title="30 derniers jours" icon="chart" accent="#c97f63" />
+          <CardHeader title="30 derniers jours" icon="chart" accent="#ff9fbf" />
           <BarChart
             data={data.monthly.map((day) => ({
               label: day.date.slice(8),
               value: day.minutes,
             }))}
-            color="#c97f63"
+            color="#ff9fbf"
             unit=" min"
             height={150}
           />
         </Card>
 
         <Card>
-          <CardHeader title="Repartition" icon="compare" accent="#c97f63" />
+          <CardHeader title="Repartition" icon="compare" accent="#ff9fbf" />
           {Object.keys(data.byType).length === 0 ? (
             <p className="py-6 text-center text-xs text-[var(--text-faint)]">{t('sport.empty')}</p>
           ) : (
@@ -182,7 +182,7 @@ export default function SportPage() {
       </div>
 
       <Card>
-        <CardHeader title={t('sport.title')} icon="clock" accent="#c97f63" />
+        <CardHeader title={t('sport.title')} icon="clock" accent="#ff9fbf" />
         {data.workouts.length === 0 ? (
           <EmptyState
             icon="dumbbell"
@@ -204,7 +204,7 @@ export default function SportPage() {
                       {workout.aiGenerated && <Icon name="sparkles" size={12} className="text-[var(--brand-text)]" />}
                     </p>
                     <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
-                      <Badge color="#c97f63">{typeLabel(workout.type)}</Badge>
+                      <Badge color="#ff9fbf">{typeLabel(workout.type)}</Badge>
                       <Badge color={INTENSITY_COLORS[workout.intensity]}>
                         {t(`sport.intensity${workout.intensity.charAt(0).toUpperCase()}${workout.intensity.slice(1)}` as 'sport.intensityLow')}
                       </Badge>

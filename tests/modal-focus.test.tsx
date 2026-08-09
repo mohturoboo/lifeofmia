@@ -64,10 +64,19 @@ function Formulaire({ onCloseCalled }: { onCloseCalled?: () => void } = {}) {
   );
 }
 
+/**
+ * Attend qu'une vraie frame d'animation soit passee.
+ *
+ * Un simple `setTimeout(10)` ne suffit pas : jsdom cadence
+ * `requestAnimationFrame` sur ~16 ms, si bien que le `focus()` d'ouverture du
+ * modal pouvait se declencher APRES l'assertion et rendre le test instable.
+ * On attend donc deux frames reelles, puis une macrotache pour laisser React
+ * appliquer ses effets.
+ */
 async function frame() {
-  // Laisse passer le requestAnimationFrame du piege de focus.
   await act(async () => {
-    await new Promise((resolve) => setTimeout(resolve, 10));
+    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve(null))));
+    await new Promise((resolve) => setTimeout(resolve, 0));
   });
 }
 

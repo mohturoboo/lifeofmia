@@ -19,7 +19,7 @@ export interface Point {
   value: number;
 }
 
-const PALETTE = ['#6e93a8', '#e9a76b', '#6fa394', '#d99a63', '#8592ad', '#5f9aa6', '#a98ba0', '#5e9c9b'];
+const PALETTE = ['#e9b8d5', '#fbc7da', '#f6d9e4', '#ff9fbf', '#d9c7f0', '#e6e6e6', '#efc4e2', '#dcc7ea'];
 
 /** Coordonnees polaires -> cartesiennes, utilisees par le radar et le donut. */
 function polar(cx0: number, cy0: number, radius: number, angleDeg: number) {
@@ -62,7 +62,7 @@ export interface LineChartProps {
 
 export function LineChart({
   data,
-  color = '#6e93a8',
+  color = '#e9b8d5',
   height = 200,
   unit = '',
   showArea = true,
@@ -225,7 +225,7 @@ export function LineChart({
 
 export function BarChart({
   data,
-  color = '#6e93a8',
+  color = '#e9b8d5',
   height = 180,
   unit = '',
   maxValue,
@@ -344,9 +344,9 @@ export function DonutChart({
 export function RadarChart({
   data,
   size = 260,
-  color = '#8592ad',
+  color = '#d9c7f0',
   compareData,
-  compareColor = '#e9a76b',
+  compareColor = '#fbc7da',
 }: {
   data: Point[]; // valeurs 0-100
   size?: number;
@@ -432,7 +432,7 @@ export function RadarChart({
 
 export function Heatmap({
   data,
-  color = '#e9a76b',
+  color = '#fbc7da',
   weekdayLabels = ['L', '', 'M', '', 'V', '', 'D'],
 }: {
   data: Array<{ date: string; value: number }>;
@@ -502,7 +502,7 @@ export function Heatmap({
 
 export function Sparkline({
   values,
-  color = '#6e93a8',
+  color = '#e9b8d5',
   width = 96,
   height = 28,
 }: {
@@ -533,7 +533,7 @@ export function RingProgress({
   value,
   size = 120,
   thickness = 10,
-  color = '#e9a76b',
+  color = '#fbc7da',
   label,
   sublabel,
 }: {
