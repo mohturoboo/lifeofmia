@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 import { route } from '@/lib/api/handler';
 import { created, ok } from '@/lib/api/response';
@@ -54,26 +55,57 @@ export const GET = route(async ({ user, searchParams }) => {
   });
 });
 
-/** POST /api/meals */
+/**
+ * Enregistre un modele reutilisable a partir des valeurs d'un repas.
+ *
+ * Un modele portant deja ce nom est mis a jour plutot que duplique : sans ca,
+ * recocher la case a chaque saisie du meme plat remplirait la liste de doublons
+ * impossibles a distinguer.
+ */
+async function saveTemplate(
+  userId: string,
+  date: string,
+  values: Omit<Prisma.MealUncheckedCreateInput, 'userId' | 'date' | 'isTemplate'>,
+) {
+  const existing = await prisma.meal.findFirst({
+    where: { userId, isTemplate: true, name: values.name },
+    select: { id: true },
+  });
+
+  if (existing) await prisma.meal.update({ where: { id: existing.id }, data: values });
+  else await prisma.meal.create({ data: { userId, date, isTemplate: true, ...values } });
+}
+
+/**
+ * POST /api/meals
+ *
+ * `saveAsTemplate` cree une copie reutilisable EN PLUS du repas, la ou
+ * `isTemplate` cree une ligne qui n'est qu'un modele. La case « Enregistrer
+ * comme modele » de l'interface pilote le premier : cocher la case ne doit pas
+ * faire disparaitre le repas de la journee.
+ */
 export const POST = route(
   async ({ user, body }) => {
+    const values = {
+      type: body.type,
+      name: body.name,
+      calories: body.calories,
+      protein: body.protein,
+      carbs: body.carbs,
+      fat: body.fat,
+      fiber: body.fiber,
+      quantity: body.quantity,
+      unit: body.unit,
+      notes: body.notes,
+    };
+
     const meal = await prisma.meal.create({
-      data: {
-        userId: user.id,
-        date: body.date,
-        type: body.type,
-        name: body.name,
-        calories: body.calories,
-        protein: body.protein,
-        carbs: body.carbs,
-        fat: body.fat,
-        fiber: body.fiber,
-        quantity: body.quantity,
-        unit: body.unit,
-        isTemplate: body.isTemplate,
-        notes: body.notes,
-      },
+      data: { userId: user.id, date: body.date, isTemplate: body.isTemplate, ...values },
     });
+
+    if (body.saveAsTemplate && !body.isTemplate) {
+      await saveTemplate(user.id, body.date, values);
+    }
 
     if (!body.isTemplate) {
       await recomputeDay(user.id, body.date);

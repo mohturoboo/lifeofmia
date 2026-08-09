@@ -6,6 +6,7 @@ import {
   optionalText,
   tagsSchema,
   timeSchema,
+  updatableFrom,
 } from '@/lib/validation/common';
 
 /**
@@ -43,7 +44,7 @@ export const habitCreateSchema = z.object({
   isNegative: z.boolean().default(false),
 });
 
-export const habitUpdateSchema = habitCreateSchema.partial().extend({
+export const habitUpdateSchema = updatableFrom(habitCreateSchema).extend({
   archived: z.boolean().optional(),
   position: z.number().int().min(0).optional(),
 });
@@ -78,7 +79,7 @@ export const taskCreateSchema = z.object({
   xpReward: z.number().int().min(0).max(100).default(5),
 });
 
-export const taskUpdateSchema = taskCreateSchema.partial();
+export const taskUpdateSchema = updatableFrom(taskCreateSchema);
 
 // --- Objectifs ---------------------------------------------------------------
 
@@ -107,7 +108,7 @@ export const goalCreateSchema = z.object({
   steps: z.array(z.string().trim().min(1).max(160)).max(50).default([]),
 });
 
-export const goalUpdateSchema = goalCreateSchema.partial().omit({ steps: true });
+export const goalUpdateSchema = updatableFrom(goalCreateSchema).omit({ steps: true });
 
 export const goalStepSchema = z.object({
   title: z.string().trim().min(1).max(160).optional(),
@@ -128,10 +129,24 @@ export const mealCreateSchema = z.object({
   quantity: z.number().min(0.1).max(50).default(1),
   unit: z.string().trim().max(20).default('portion'),
   isTemplate: z.boolean().default(false),
+  /**
+   * Enregistre EN PLUS une copie reutilisable, sans retirer le repas du jour.
+   *
+   * A distinguer de `isTemplate`, qui decrit la nature de la ligne creee. Les
+   * confondre revenait a faire disparaitre le repas de la journee : la case
+   * « Enregistrer comme modele » de l'interface basculait `isTemplate`, et le
+   * repas quittait le total du jour au lieu de s'y ajouter.
+   */
+  saveAsTemplate: z.boolean().default(false),
   notes: optionalText(500),
 });
 
-export const mealUpdateSchema = mealCreateSchema.partial();
+/**
+ * `isTemplate` est volontairement exclu : une modification ne doit jamais
+ * changer la nature d'une ligne. Basculer ce champ faisait sortir un repas
+ * de sa journee — les calories du jour tombaient a zero sans explication.
+ */
+export const mealUpdateSchema = updatableFrom(mealCreateSchema).omit({ isTemplate: true });
 
 export const waterLogSchema = z.object({
   date: dateKeySchema,
@@ -183,7 +198,7 @@ export const workoutCreateSchema = z.object({
   exercises: z.array(exerciseSchema).max(60).default([]),
 });
 
-export const workoutUpdateSchema = workoutCreateSchema.partial();
+export const workoutUpdateSchema = updatableFrom(workoutCreateSchema);
 
 export const focusSessionSchema = z.object({
   date: dateKeySchema,
@@ -245,7 +260,7 @@ export const transactionSchema = z.object({
   note: optionalText(500),
 });
 
-export const transactionUpdateSchema = transactionSchema.partial();
+export const transactionUpdateSchema = updatableFrom(transactionSchema);
 
 export const projectSchema = z.object({
   name: z.string().trim().min(1, 'Nom requis.').max(120),
@@ -256,7 +271,7 @@ export const projectSchema = z.object({
   progress: z.number().int().min(0).max(100).default(0),
 });
 
-export const projectUpdateSchema = projectSchema.partial();
+export const projectUpdateSchema = updatableFrom(projectSchema);
 
 export const noteSchema = z.object({
   title: z.string().trim().min(1, 'Titre requis.').max(160),
@@ -267,7 +282,7 @@ export const noteSchema = z.object({
   projectId: z.string().nullable().optional(),
 });
 
-export const noteUpdateSchema = noteSchema.partial();
+export const noteUpdateSchema = updatableFrom(noteSchema);
 
 export const calendarEventSchema = z.object({
   title: z.string().trim().min(1, 'Titre requis.').max(160),
@@ -279,7 +294,7 @@ export const calendarEventSchema = z.object({
   color: hexColorSchema.default('#e9b8d5'),
 });
 
-export const calendarEventUpdateSchema = calendarEventSchema.partial();
+export const calendarEventUpdateSchema = updatableFrom(calendarEventSchema);
 
 export type HabitCreateInput = z.infer<typeof habitCreateSchema>;
 export type TaskCreateInput = z.infer<typeof taskCreateSchema>;

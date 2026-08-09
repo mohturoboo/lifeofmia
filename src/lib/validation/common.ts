@@ -28,6 +28,28 @@ export const emailSchema = (message = 'Adresse email invalide.') =>
 
 export const tagsSchema = z.array(z.string().trim().min(1).max(32)).max(20).default([]);
 
+/**
+ * Derive un schema de mise a jour partielle a partir d'un schema de creation.
+ *
+ * `.partial()` ne suffit pas : une valeur par defaut y survit. Un champ absent
+ * n'est pas « non fourni » mais « fourni avec sa valeur par defaut », et la
+ * mise a jour l'ecrase. Renommer une habitude reinitialisait ainsi sa couleur,
+ * sa frequence et ses jours ; epingler une note effacait son contenu.
+ *
+ * Les valeurs par defaut sont donc retirees avant de rendre les champs
+ * optionnels : ce qui n'est pas envoye n'est pas touche.
+ */
+export function updatableFrom<Shape extends z.ZodRawShape>(schema: z.ZodObject<Shape>) {
+  const shape = Object.fromEntries(
+    Object.entries(schema.shape).map(([key, field]) => [
+      key,
+      field instanceof z.ZodDefault ? field.unwrap() : field,
+    ]),
+  ) as { [K in keyof Shape]: Shape[K] extends z.ZodDefault<infer Inner> ? Inner : Shape[K] };
+
+  return z.object(shape).partial();
+}
+
 export const LOCALES = ['fr', 'en', 'ar', 'es', 'de', 'it', 'pt', 'tr'] as const;
 export const localeSchema = z.enum(LOCALES);
 

@@ -47,7 +47,7 @@ const EMPTY_FORM = {
   fat: '',
   fiber: '',
   notes: '',
-  isTemplate: false,
+  saveAsTemplate: false,
 };
 
 export default function NutritionPage() {
@@ -99,7 +99,8 @@ export default function NutritionPage() {
       fat: String(meal.fat),
       fiber: String(meal.fiber),
       notes: meal.notes ?? '',
-      isTemplate: meal.isTemplate,
+      // La case propose d'enregistrer un modele : un modele en est deja un.
+      saveAsTemplate: false,
     });
     setModalOpen(true);
   }
@@ -134,7 +135,7 @@ export default function NutritionPage() {
       fat: Number(form.fat) || 0,
       fiber: Number(form.fiber) || 0,
       notes: form.notes || null,
-      isTemplate: form.isTemplate,
+      saveAsTemplate: form.saveAsTemplate,
     };
 
     try {
@@ -445,15 +446,17 @@ export default function NutritionPage() {
             <Textarea id="meal-notes" rows={2} value={form.notes} onChange={(event) => set('notes', event.target.value)} />
           </Field>
 
+          {!editing?.isTemplate && (
           <label className="flex items-center gap-2.5 text-[13px] text-[var(--text-muted)]">
             <input
               type="checkbox"
-              checked={form.isTemplate}
-              onChange={(event) => set('isTemplate', event.target.checked)}
+              checked={form.saveAsTemplate}
+              onChange={(event) => set('saveAsTemplate', event.target.checked)}
               className="size-[18px] rounded-md accent-brand-500"
             />
             {t('nutrition.saveTemplate')}
           </label>
+          )}
         </div>
       </Modal>
     </div>
