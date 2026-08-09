@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import { disciplineScore } from '@/lib/gamification';
+import { disciplineScore } from '@/lib/levels';
 import { lastNDays, weekDayOf, type DateKey } from '@/lib/date';
 import { parseNumberArray } from '@/lib/json';
 

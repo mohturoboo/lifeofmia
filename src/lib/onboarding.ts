@@ -1,7 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import { BADGE_DEFINITIONS } from '@/lib/gamification';
 import { stringifyJson } from '@/lib/json';
-import { FALLBACK_CITIES } from '@/lib/weather';
+import { FALLBACK_CITIES } from '@/lib/cities';
 
 /**
  * Mise en place de l'espace d'un nouvel utilisateur.

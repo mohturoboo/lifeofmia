@@ -6,7 +6,7 @@ import { Suspense, useMemo, useState, type FormEvent } from 'react';
 import { api, ApiClientError } from '@/lib/client/api';
 import { Button, Field, Input } from '@/components/ui/primitives';
 import { Icon } from '@/components/ui/icons';
-import { evaluatePassword } from '@/lib/auth/password';
+import { evaluatePassword } from '@/lib/auth/password-strength';
 import { useT } from '@/i18n/provider';
 
 function ResetForm() {

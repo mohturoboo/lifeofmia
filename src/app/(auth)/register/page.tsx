@@ -6,9 +6,9 @@ import { useMemo, useState, type FormEvent } from 'react';
 import { api, ApiClientError } from '@/lib/client/api';
 import { Button, Checkbox, Field, Input, Select, cx } from '@/components/ui/primitives';
 import { Icon } from '@/components/ui/icons';
-import { evaluatePassword } from '@/lib/auth/password';
+import { evaluatePassword } from '@/lib/auth/password-strength';
 import { LOCALES, LOCALE_META, type Locale } from '@/i18n/config';
-import { FALLBACK_CITIES } from '@/lib/weather';
+import { FALLBACK_CITIES } from '@/lib/cities';
 import { useT } from '@/i18n/provider';
 
 /**

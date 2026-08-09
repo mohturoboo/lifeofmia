@@ -10,7 +10,7 @@ import { BarChart, RingProgress, Sparkline } from '@/components/charts';
 import { useI18n } from '@/i18n/provider';
 import { formatFullDate } from '@/i18n';
 import type { DayStats } from '@/lib/stats';
-import type { LevelProgress } from '@/lib/gamification';
+import type { LevelProgress } from '@/lib/levels';
 
 /**
  * Tableau de bord — vue unique de la journee.

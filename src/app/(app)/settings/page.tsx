@@ -10,8 +10,8 @@ import { PageHeader } from '@/components/page-header';
 import { useI18n } from '@/i18n/provider';
 import { useTheme, type Theme } from '@/components/theme-provider';
 import { LOCALES, LOCALE_META, type Locale } from '@/i18n/config';
-import { FALLBACK_CITIES } from '@/lib/weather';
-import type { LevelProgress } from '@/lib/gamification';
+import { FALLBACK_CITIES } from '@/lib/cities';
+import type { LevelProgress } from '@/lib/levels';
 
 interface ProfileData {
   profile: {

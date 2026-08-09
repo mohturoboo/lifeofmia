@@ -10,7 +10,7 @@ import { ALL_NAV_ITEMS, MOBILE_NAV, NAV_SECTIONS } from '@/components/app-shell/
 import { useI18n } from '@/i18n/provider';
 import { useTheme } from '@/components/theme-provider';
 import { LOCALES, LOCALE_META, type Locale } from '@/i18n/config';
-import { levelProgress } from '@/lib/gamification';
+import { levelProgress } from '@/lib/levels';
 import { api } from '@/lib/client/api';
 
 /**

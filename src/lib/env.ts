@@ -15,15 +15,26 @@ const INSECURE_PLACEHOLDER = 'dev-secret-change-me-in-production-please-32-chars
 const MIN_SECRET_LENGTH = 32;
 
 /**
- * Variable obligatoire en production, tolerante en developpement.
+ * Secret obligatoire en production, tolerant en developpement.
  *
  * Le controle porte sur `process.env[name]` et non sur la valeur deja resolue :
  * une version precedente testait la valeur APRES application du repli, qui
  * n'est jamais vide — la verification de production etait donc inatteignable,
  * et une application deployee sans `AUTH_SECRET` demarrait silencieusement
  * avec la cle d'exemple.
+ *
+ * L'evaluation est PARESSEUSE (cf. le getter plus bas). Une version precedente
+ * la faisait a l'import du module : il suffisait qu'un composant client tire
+ * `lib/env` par transitivite pour que le navigateur, ou aucun secret n'est
+ * injecte, leve « AUTH_SECRET est absente » et casse l'hydratation de la page.
  */
 function required(name: string, devFallback: string): string {
+  if (typeof window !== 'undefined') {
+    throw new Error(
+      `${name} est un secret serveur : il ne doit jamais etre lu depuis le navigateur.`,
+    );
+  }
+
   const value = process.env[name]?.trim();
 
   if (process.env.NODE_ENV !== 'production') {
@@ -52,6 +63,9 @@ function optional(name: string, fallback = ''): string {
   return process.env[name] ?? fallback;
 }
 
+/** Le secret n'est valide qu'une fois, au premier acces. */
+let authSecretCache: string | null = null;
+
 export const env = {
   nodeEnv: optional('NODE_ENV', 'development'),
   isProduction: process.env.NODE_ENV === 'production',
@@ -60,7 +74,11 @@ export const env = {
   appUrl: optional('NEXT_PUBLIC_APP_URL', 'http://localhost:3000'),
   databaseUrl: optional('DATABASE_URL', 'file:./dev.db'),
 
-  authSecret: required('AUTH_SECRET', 'dev-secret-change-me-in-production-please-32-chars-min'),
+  /** Lu a la demande, jamais a l'import : voir `required()`. */
+  get authSecret(): string {
+    authSecretCache ??= required('AUTH_SECRET', INSECURE_PLACEHOLDER);
+    return authSecretCache;
+  },
   accessTokenTtl: optional('ACCESS_TOKEN_TTL', '15m'),
   refreshTokenTtlDays: Number(optional('REFRESH_TOKEN_TTL_DAYS', '30')),
   encryptionKey: optional('ENCRYPTION_KEY'),
