@@ -140,7 +140,19 @@
   }
 }
 
+/*
+ * Rangs d'empilement nommes.
+ *
+ * Les valeurs dispersees dans les classes utilitaires ne disaient pas leur
+ * ordre : rien n'indiquait que le `z-30` de la barre de navigation devait
+ * ceder devant une fenetre modale. Les nommer rend la hierarchie lisible et
+ * verifiable d'un coup d'oeil.
+ */
 :root {
+  --z-nav: 30;
+  --z-overlay: 40;
+  --z-dialog: 50;
+
   --bg: #ffffff;
   --bg-subtle: #fafafa;
   --surface: #ffffff;
@@ -273,6 +285,25 @@
 }
 
 @layer components {
+  /*
+   * La barre de navigation basse ne doit jamais intercepter les clics destines
+   * a une fenetre modale.
+   *
+   * Le panneau declarait pourtant un rang superieur : il etait rendu a
+   * l'interieur de la colonne de contenu, laquelle forme un contexte
+   * d'empilement a `z-index: 10`. Un rang eleve n'y ordonne que les elements
+   * FRERES — face a la nav, restee dehors en `z-index: 30`, toute la colonne
+   * passait dessous. `elementFromPoint` renvoyait un lien de la nav a
+   * l'emplacement du bouton « Enregistrer ».
+   *
+   * La fenetre est desormais rendue dans `document.body`, hors de ce contexte.
+   * Cette regle est la seconde ligne de defense : tant qu'une fenetre est
+   * ouverte, la nav ne recoit plus aucun evenement de pointeur.
+   */
+  body[data-dialog-open] .lm-mobile-nav {
+    pointer-events: none;
+  }
+
   .lm-modal-overlay {
     animation: lm-overlay-in 0.18s ease-out;
   }

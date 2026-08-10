@@ -69,14 +69,24 @@ describe('Modal — visible sans animation', () => {
   });
 
   it('place le panneau au-dessus du voile assombri', () => {
-    const { container } = ouvrir();
-    const voile = container.querySelector('[aria-hidden="true"]');
+    ouvrir();
+    // La fenetre est rendue dans `document.body` par un portail : elle n'est
+    // plus dans le conteneur retourne par `render`.
+    const voile = document.body.querySelector('[aria-hidden="true"]');
     const panneau = screen.getByRole('dialog');
 
-    // Le voile applique un `backdrop-filter` : sans rang explicite, le panneau
-    // ne devait son passage au premier plan qu'a l'ordre du DOM.
     expect(voile).toBeTruthy();
-    expect(panneau.className).toContain('z-10');
+    expect(panneau.style.zIndex).toBe('var(--z-dialog)');
+  });
+
+  it('sort de la colonne de contenu pour ne pas passer sous la navigation', () => {
+    // Rendue a l'endroit de l'appel, la fenetre restait prisonniere du contexte
+    // d'empilement de la colonne et passait sous la barre de navigation basse.
+    const { container } = ouvrir();
+
+    expect(container.querySelector('[role="dialog"]'), 'la fenetre ne doit pas etre rendue sur place').toBeNull();
+    expect(document.body.querySelector('[role="dialog"]')).toBeTruthy();
+    expect(document.body.dataset.dialogOpen).toBe('true');
   });
 
   it('place le focus sans attendre la moindre image d\'animation', () => {

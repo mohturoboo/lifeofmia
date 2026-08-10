@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 import { Icon } from '@/components/ui/icons';
 import { cx } from '@/components/ui/primitives';
 
@@ -53,6 +54,9 @@ export function Modal({ open, onClose, title, description, children, footer, siz
     const previouslyFocused = document.activeElement as HTMLElement | null;
     const { overflow } = document.body.style;
     document.body.style.overflow = 'hidden';
+    // Seconde ligne de defense, independante de l'empilement : voir la regle
+    // `body[data-dialog-open]` dans globals.css.
+    document.body.dataset.dialogOpen = 'true';
 
     const focusable = () =>
       Array.from(
@@ -109,21 +113,38 @@ export function Modal({ open, onClose, title, description, children, footer, siz
     return () => {
       document.removeEventListener('keydown', onKeyDown);
       document.body.style.overflow = overflow;
+      delete document.body.dataset.dialogOpen;
       previouslyFocused?.focus?.();
     };
   }, [open]);
 
-  if (!open) return null;
+  if (!open || typeof document === 'undefined') return null;
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center p-0 sm:items-center sm:p-4">
+  /*
+   * Rendu dans `document.body`, pas a l'endroit de l'appel.
+   *
+   * La colonne de contenu de l'application est un contexte d'empilement
+   * (`position: relative; z-index: 10`). Une fenetre rendue a l'interieur ne
+   * pouvait donc jamais passer devant la barre de navigation basse, restee
+   * dehors en `z-index: 30` : quel que soit son propre rang, elle etait peinte
+   * avec toute la colonne, en dessous. Sur mobile, le bouton « Enregistrer »
+   * tombait derriere la barre et devenait inatteignable.
+   *
+   * Le portail sort la fenetre de ce contexte ; les rangs nommes rendent
+   * l'ordre explicite : navigation 30, voile 40, panneau 50.
+   */
+  return createPortal(
+    <div
+      className="fixed inset-0 flex items-end justify-center p-0 sm:items-center sm:p-4"
+      style={{ zIndex: 'var(--z-overlay)' }}
+    >
       <div
         onClick={onClose}
         className="lm-modal-overlay absolute inset-0 bg-black/60 backdrop-blur-sm"
         aria-hidden="true"
       />
       {/*
-        `z-10` explicite : le voile applique un `backdrop-filter`, qui cree son
+        Rang explicite : le voile applique un `backdrop-filter`, qui cree son
         propre contexte d'empilement. Sans rang declare, le panneau dependait de
         l'ordre du DOM pour passer devant — une garantie trop fragile pour la
         seule chose qui rend la fonctionnalite utilisable.
@@ -135,8 +156,9 @@ export function Modal({ open, onClose, title, description, children, footer, siz
         aria-modal="true"
         aria-labelledby="lm-modal-title"
         aria-describedby={description ? 'lm-modal-description' : undefined}
+        style={{ zIndex: 'var(--z-dialog)' }}
         className={cx(
-          'lm-modal-panel relative z-10 flex max-h-[92vh] w-full flex-col overflow-hidden bg-[var(--surface)]',
+          'lm-modal-panel relative flex max-h-[92vh] w-full flex-col overflow-hidden bg-[var(--surface)]',
           'rounded-t-3xl border border-[var(--border)] shadow-2xl sm:rounded-3xl',
           SIZES[size],
         )}
@@ -168,6 +190,7 @@ export function Modal({ open, onClose, title, description, children, footer, siz
           <footer className="flex justify-end gap-2 border-t border-[var(--border)] px-5 py-3.5">{footer}</footer>
         )}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

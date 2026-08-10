@@ -298,7 +298,8 @@ export function AppShell({ user, children }: { user: ShellUser; children: ReactN
       {/* --- Navigation basse (mobile) --- */}
       <nav
         aria-label="Navigation rapide"
-        className="lm-card fixed inset-x-3 bottom-3 z-30 mb-[env(safe-area-inset-bottom)] flex overflow-hidden lg:hidden"
+        className="lm-mobile-nav lm-card fixed inset-x-3 bottom-3 mb-[env(safe-area-inset-bottom)] flex overflow-hidden lg:hidden"
+        style={{ zIndex: 'var(--z-nav)' }}
       >
         {MOBILE_NAV.map((item) => {
           const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
