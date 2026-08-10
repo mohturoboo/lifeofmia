@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { api, useResource } from '@/lib/client/api';
+import { useMutate } from '@/lib/client/mutate';
 import { Button, Card, CardHeader, Field, Input, Select, Skeleton, Textarea, cx } from '@/components/ui/primitives';
 import { Icon } from '@/components/ui/icons';
 import { Modal } from '@/components/ui/modal';
@@ -53,6 +54,7 @@ const EMPTY_FORM = {
 export default function NutritionPage() {
   const { t, locale, n } = useI18n();
   const toast = useToast();
+  const mutate = useMutate();
 
   const [date, setDate] = useState(() => dateKeyIn(Intl.DateTimeFormat().resolvedOptions().timeZone));
   const { data, loading, refresh, setData } = useResource<NutritionData>(`/api/meals?date=${date}`, [date]);
@@ -107,19 +109,20 @@ export default function NutritionPage() {
 
   /** Reprend un modele enregistre : evite de resaisir les macros a chaque fois. */
   async function applyTemplate(template: Meal) {
-    await api.post('/api/meals', {
-      date,
-      type: template.type,
-      name: template.name,
-      calories: template.calories,
-      protein: template.protein,
-      carbs: template.carbs,
-      fat: template.fat,
-      fiber: template.fiber,
-      notes: template.notes,
-    });
-    toast.success(t('common.success'));
-    void refresh();
+    const saved = await mutate(() =>
+      api.post('/api/meals', {
+        date,
+        type: template.type,
+        name: template.name,
+        calories: template.calories,
+        protein: template.protein,
+        carbs: template.carbs,
+        fat: template.fat,
+        fiber: template.fiber,
+        notes: template.notes,
+      }),
+    );
+    if (saved) void refresh();
   }
 
   async function save() {
@@ -163,8 +166,8 @@ export default function NutritionPage() {
   }
 
   async function remove(meal: Meal) {
-    await api.delete(`/api/meals/${meal.id}`).catch(() => toast.error(t('common.error')));
-    void refresh();
+    const deleted = await mutate(() => api.delete(`/api/meals/${meal.id}`));
+    if (deleted !== null) void refresh();
   }
 
   /**
@@ -184,13 +187,14 @@ export default function NutritionPage() {
       current ? { ...current, waterMl: Math.max(0, current.waterMl + amount) } : current,
     );
 
-    try {
-      const result = await api.post<{ waterMl: number }>('/api/water', { date, amountMl: amount });
-      setData((current) => (current ? { ...current, waterMl: result.waterMl } : current));
-    } catch {
-      setData((current) => (current ? { ...current, waterMl: previous } : current));
-      toast.error(t('common.error'));
-    }
+    const result = await mutate(() =>
+      api.post<{ waterMl: number }>('/api/water', { date, amountMl: amount }),
+    );
+
+    if (result) setData((current) => (current ? { ...current, waterMl: result.waterMl } : current));
+    // L'echec restaure la valeur d'avant le clic ; la notification est deja
+    // affichee par `mutate`.
+    else setData((current) => (current ? { ...current, waterMl: previous } : current));
   }
 
   if (loading || !data) {

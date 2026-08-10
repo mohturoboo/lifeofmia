@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { api, useResource } from '@/lib/client/api';
+import { useMutate } from '@/lib/client/mutate';
 import { Badge, Button, Card, EmptyState, Field, Input, Progress, Select, Skeleton, Textarea, cx } from '@/components/ui/primitives';
 import { Icon } from '@/components/ui/icons';
 import { Modal } from '@/components/ui/modal';
@@ -55,6 +56,7 @@ const EMPTY_FORM = {
 export default function GoalsPage() {
   const { t } = useI18n();
   const toast = useToast();
+  const mutate = useMutate();
   const { data, loading, refresh } = useResource<Goal[]>('/api/goals');
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -126,34 +128,43 @@ export default function GoalsPage() {
     }
   }
 
+  // Bascule frequente : pas de confirmation, mais un echec reste visible.
   async function toggleStep(goalId: string, step: GoalStep) {
-    await api.patch(`/api/goals/${goalId}/steps`, { stepId: step.id, done: !step.done });
-    void refresh();
+    const saved = await mutate(
+      () => api.patch(`/api/goals/${goalId}/steps`, { stepId: step.id, done: !step.done }),
+      { notifySuccess: false },
+    );
+    if (saved) void refresh();
   }
 
   async function addStep(goalId: string) {
     const title = (newStep[goalId] ?? '').trim();
     if (!title) return;
-    await api.post(`/api/goals/${goalId}/steps`, { title });
+    const saved = await mutate(() => api.post(`/api/goals/${goalId}/steps`, { title }));
+    if (!saved) return;
     setNewStep((current) => ({ ...current, [goalId]: '' }));
     void refresh();
   }
 
   async function removeStep(goalId: string, stepId: string) {
-    await api.patch(`/api/goals/${goalId}/steps`, { stepId, remove: true });
-    void refresh();
+    const saved = await mutate(() => api.patch(`/api/goals/${goalId}/steps`, { stepId, remove: true }));
+    if (saved) void refresh();
   }
 
   async function complete(goal: Goal) {
-    await api.patch(`/api/goals/${goal.id}`, { status: goal.status === 'done' ? 'active' : 'done' });
-    if (goal.status !== 'done') toast.success('Objectif atteint ! +200 XP');
+    const saved = await mutate(
+      () => api.patch(`/api/goals/${goal.id}`, { status: goal.status === 'done' ? 'active' : 'done' }),
+      { notifySuccess: goal.status === 'done' },
+    );
+    if (!saved) return;
+    if (goal.status !== 'done') toast.success(t('goals.reached'));
     void refresh();
   }
 
   async function remove(goal: Goal) {
     if (!window.confirm(t('common.deleteConfirm'))) return;
-    await api.delete(`/api/goals/${goal.id}`).catch(() => toast.error(t('common.error')));
-    void refresh();
+    const deleted = await mutate(() => api.delete(`/api/goals/${goal.id}`));
+    if (deleted !== null) void refresh();
   }
 
   const horizonLabel = { short: t('goals.shortTerm'), mid: t('goals.midTerm'), long: t('goals.longTerm') };

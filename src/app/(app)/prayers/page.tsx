@@ -2,10 +2,10 @@
 
 import { useState } from 'react';
 import { api, useResource } from '@/lib/client/api';
+import { useMutate } from '@/lib/client/mutate';
 import { Badge, Card, CardHeader, Progress, Select, Skeleton, cx } from '@/components/ui/primitives';
 import { Icon } from '@/components/ui/icons';
 import { PageHeader, DateNav } from '@/components/page-header';
-import { useToast } from '@/components/ui/toast';
 import { useI18n } from '@/i18n/provider';
 import { dateKeyIn } from '@/lib/date';
 
@@ -30,19 +30,24 @@ const OBLIGATORY = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
 
 export default function PrayersPage() {
   const { t, locale } = useI18n();
-  const toast = useToast();
+  const mutate = useMutate();
 
   const [date, setDate] = useState(() => dateKeyIn(Intl.DateTimeFormat().resolvedOptions().timeZone));
   const { data, loading, refresh } = useResource<PrayerData>(`/api/prayers?date=${date}`, [date]);
 
   async function mark(name: string, status: 'done' | 'late' | 'missed') {
-    await api.post('/api/prayers', { date, name, status }).catch(() => toast.error(t('common.error')));
-    void refresh();
+    const saved = await mutate(() => api.post('/api/prayers', { date, name, status }));
+    if (saved) void refresh();
   }
 
+  /**
+   * Les reglages de calcul ne rendaient compte de rien : ni reussite, ni echec.
+   * Une methode refusee par le serveur laissait l'utilisateur devant un choix
+   * qui semblait pris alors qu'il ne l'etait pas.
+   */
   async function updateSettings(patch: Record<string, number | boolean>) {
-    await api.patch('/api/prayers', patch);
-    void refresh();
+    const saved = await mutate(() => api.patch('/api/prayers', patch));
+    if (saved) void refresh();
   }
 
   if (loading || !data) {

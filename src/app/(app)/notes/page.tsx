@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { api, useResource } from '@/lib/client/api';
+import { useMutate } from '@/lib/client/mutate';
 import { Button, Card, EmptyState, Field, Input, Skeleton, Textarea, cx } from '@/components/ui/primitives';
 import { Icon } from '@/components/ui/icons';
 import { Modal } from '@/components/ui/modal';
@@ -25,6 +26,7 @@ const COLORS = ['#b4b4b4', '#e9b8d5', '#fbc7da', '#f6d9e4', '#ff9fbf', '#d9c7f0'
 export default function NotesPage() {
   const { t, locale } = useI18n();
   const toast = useToast();
+  const mutate = useMutate();
 
   const [query, setQuery] = useState('');
   const { data, loading, refresh } = useResource<Note[]>(
@@ -69,9 +71,13 @@ export default function NotesPage() {
     }
   }
 
+  // Epinglage : geste rapide et repete, on ne confirme pas la reussite.
   async function togglePin(note: Note) {
-    await api.patch(`/api/notes/${note.id}`, { pinned: !note.pinned });
-    void refresh();
+    const saved = await mutate(
+      () => api.patch(`/api/notes/${note.id}`, { pinned: !note.pinned }),
+      { notifySuccess: false },
+    );
+    if (saved) void refresh();
   }
 
   async function remove(note: Note) {

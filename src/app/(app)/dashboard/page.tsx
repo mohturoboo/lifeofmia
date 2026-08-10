@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useMemo } from 'react';
 import { api, useResource } from '@/lib/client/api';
+import { useMutate } from '@/lib/client/mutate';
 import { Badge, Button, Card, CardHeader, EmptyState, Progress, Skeleton, cx } from '@/components/ui/primitives';
 import { Icon, type IconName } from '@/components/ui/icons';
 import { BarChart, RingProgress, Sparkline } from '@/components/charts';
@@ -85,6 +86,7 @@ const WEATHER_ICONS: Record<string, IconName> = {
 
 export default function DashboardPage() {
   const { t, locale, n } = useI18n();
+  const mutate = useMutate();
   const { data, loading, refresh, setData } = useResource<DashboardData>('/api/dashboard');
 
   const greetingKey = useMemo(() => {
@@ -108,15 +110,18 @@ export default function DashboardPage() {
       ),
     });
 
-    try {
-      await api.post(`/api/habits/${habitId}/log`, {
-        date: data.today,
-        count: done ? 0 : undefined,
-        status: done ? 'skipped' : 'done',
-      });
-    } finally {
-      void refresh();
-    }
+    // `try/finally` sans `catch` laissait le rejet remonter sans etre traite :
+    // la case revenait a son etat initial au rafraichissement, sans explication.
+    await mutate(
+      () =>
+        api.post(`/api/habits/${habitId}/log`, {
+          date: data.today,
+          count: done ? 0 : undefined,
+          status: done ? 'skipped' : 'done',
+        }),
+      { notifySuccess: false },
+    );
+    void refresh();
   }
 
   if (loading || !data) {

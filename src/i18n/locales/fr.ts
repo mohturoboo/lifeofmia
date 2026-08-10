@@ -199,6 +199,7 @@ export const fr = {
   'goals.title': 'Objectifs',
   'goals.subtitle': 'Court, moyen et long terme : la direction avant la vitesse.',
   'goals.new': 'Nouvel objectif',
+  'goals.reached': "Objectif atteint ! +200 XP",
   'goals.shortTerm': 'Court terme',
   'goals.midTerm': 'Moyen terme',
   'goals.longTerm': 'Long terme',

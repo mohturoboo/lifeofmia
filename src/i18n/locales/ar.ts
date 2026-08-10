@@ -190,6 +190,7 @@ export const ar: Dictionary = {
   'goals.title': 'الأهداف',
   'goals.subtitle': 'قصير ومتوسط وطويل المدى: الاتجاه قبل السرعة.',
   'goals.new': 'هدف جديد',
+  'goals.reached': "تم تحقيق الهدف! ‎+200 نقطة خبرة",
   'goals.shortTerm': 'قصير المدى',
   'goals.midTerm': 'متوسط المدى',
   'goals.longTerm': 'طويل المدى',

@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 import { api, useResource } from '@/lib/client/api';
+import { useMutate } from '@/lib/client/mutate';
 import { Badge, Button, Card, EmptyState, Field, Input, Select, Skeleton, Textarea, cx } from '@/components/ui/primitives';
 import { Icon } from '@/components/ui/icons';
 import { Modal } from '@/components/ui/modal';
@@ -43,6 +44,7 @@ const EMPTY_FORM = {
 export default function TasksPage() {
   const { t, locale } = useI18n();
   const toast = useToast();
+  const mutate = useMutate();
 
   const [scope, setScope] = useState<(typeof SCOPES)[number]>('today');
   const [showDone, setShowDone] = useState(false);
@@ -100,23 +102,22 @@ export default function TasksPage() {
       ...(parentId ? { parentId } : {}),
     };
 
-    try {
-      if (editing) await api.patch(`/api/tasks/${editing.id}`, payload);
-      else await api.post('/api/tasks', payload);
-      toast.success(t('common.success'));
-      setModalOpen(false);
-      void refresh();
-    } catch {
-      toast.error(t('common.error'));
-    } finally {
-      setSaving(false);
-    }
+    // Le message d'echec vient du serveur quand il en fournit un : « Titre
+    // requis » est plus utile qu'un « Une erreur est survenue » generique.
+    const saved = await mutate(() =>
+      editing ? api.patch(`/api/tasks/${editing.id}`, payload) : api.post('/api/tasks', payload),
+    );
+    setSaving(false);
+    if (!saved) return;
+    setModalOpen(false);
+    void refresh();
   }
 
   async function toggle(task: Task) {
-    await api
-      .patch(`/api/tasks/${task.id}`, { status: task.status === 'done' ? 'todo' : 'done' })
-      .catch(() => toast.error(t('common.error')));
+    await mutate(
+      () => api.patch(`/api/tasks/${task.id}`, { status: task.status === 'done' ? 'todo' : 'done' }),
+      { notifySuccess: false },
+    );
     void refresh();
   }
 

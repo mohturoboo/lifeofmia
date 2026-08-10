@@ -189,6 +189,7 @@ export const de: Dictionary = {
   'goals.title': 'Ziele',
   'goals.subtitle': 'Kurz-, mittel- und langfristig: Richtung vor Geschwindigkeit.',
   'goals.new': 'Neues Ziel',
+  'goals.reached': "Ziel erreicht! +200 XP",
   'goals.shortTerm': 'Kurzfristig',
   'goals.midTerm': 'Mittelfristig',
   'goals.longTerm': 'Langfristig',

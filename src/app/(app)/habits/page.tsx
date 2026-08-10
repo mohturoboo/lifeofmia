@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { api, useResource } from '@/lib/client/api';
+import { useMutate } from '@/lib/client/mutate';
 import { Badge, Button, Card, EmptyState, Field, Input, Select, Skeleton, Textarea, Toggle, cx } from '@/components/ui/primitives';
 import { HABIT_ICONS, Icon, type IconName } from '@/components/ui/icons';
 import { Modal } from '@/components/ui/modal';
@@ -51,6 +52,7 @@ const EMPTY_FORM = {
 export default function HabitsPage() {
   const { t } = useI18n();
   const toast = useToast();
+  const mutate = useMutate();
   const [showArchived, setShowArchived] = useState(false);
   const { data, loading, refresh } = useResource<Habit[]>(
     `/api/habits?archived=${showArchived}`,
@@ -116,40 +118,42 @@ export default function HabitsPage() {
 
   async function toggle(habit: Habit) {
     const done = habit.todayLog?.status === 'done';
-    try {
-      await api.post(`/api/habits/${habit.id}/log`, {
-        date: today,
-        count: done ? 0 : habit.targetPerDay,
-        status: done ? 'skipped' : 'done',
-      });
-    } finally {
-      void refresh();
-    }
+    await mutate(
+      () =>
+        api.post(`/api/habits/${habit.id}/log`, {
+          date: today,
+          count: done ? 0 : habit.targetPerDay,
+          status: done ? 'skipped' : 'done',
+        }),
+      { notifySuccess: false },
+    );
+    void refresh();
   }
 
   /** Incremente une habitude a objectif multiple (ex. 8 verres d'eau). */
   async function increment(habit: Habit) {
     const next = Math.min(habit.targetPerDay, (habit.todayLog?.count ?? 0) + 1);
-    try {
-      await api.post(`/api/habits/${habit.id}/log`, {
-        date: today,
-        count: next,
-        status: next >= habit.targetPerDay ? 'done' : 'skipped',
-      });
-    } finally {
-      void refresh();
-    }
+    await mutate(
+      () =>
+        api.post(`/api/habits/${habit.id}/log`, {
+          date: today,
+          count: next,
+          status: next >= habit.targetPerDay ? 'done' : 'skipped',
+        }),
+      { notifySuccess: false },
+    );
+    void refresh();
   }
 
   async function remove(habit: Habit) {
     if (!window.confirm(t('common.deleteConfirm'))) return;
-    await api.delete(`/api/habits/${habit.id}`).catch(() => toast.error(t('common.error')));
-    void refresh();
+    const deleted = await mutate(() => api.delete(`/api/habits/${habit.id}`));
+    if (deleted !== null) void refresh();
   }
 
   async function archive(habit: Habit) {
-    await api.patch(`/api/habits/${habit.id}`, { archived: !habit.archived });
-    void refresh();
+    const saved = await mutate(() => api.patch(`/api/habits/${habit.id}`, { archived: !habit.archived }));
+    if (saved) void refresh();
   }
 
   return (

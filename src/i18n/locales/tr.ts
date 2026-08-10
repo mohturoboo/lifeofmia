@@ -189,6 +189,7 @@ export const tr: Dictionary = {
   'goals.title': 'Hedefler',
   'goals.subtitle': 'Kisa, orta ve uzun vade: hizdan once yon.',
   'goals.new': 'Yeni hedef',
+  'goals.reached': "Hedefe ulasildi! +200 XP",
   'goals.shortTerm': 'Kisa vade',
   'goals.midTerm': 'Orta vade',
   'goals.longTerm': 'Uzun vade',

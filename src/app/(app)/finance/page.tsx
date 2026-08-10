@@ -2,11 +2,11 @@
 
 import { useState } from 'react';
 import { api, useResource } from '@/lib/client/api';
+import { useMutate } from '@/lib/client/mutate';
 import { Badge, Button, Card, CardHeader, EmptyState, Field, Input, Select, Skeleton, cx } from '@/components/ui/primitives';
 import { Icon } from '@/components/ui/icons';
 import { Modal } from '@/components/ui/modal';
 import { DonutChart } from '@/components/charts';
-import { useToast } from '@/components/ui/toast';
 import { PageHeader } from '@/components/page-header';
 import { useI18n } from '@/i18n/provider';
 
@@ -50,7 +50,7 @@ const CATEGORY_LABELS: Record<string, string> = {
 
 export default function FinancePage() {
   const { t, locale, n } = useI18n();
-  const toast = useToast();
+  const mutate = useMutate();
 
   const [month, setMonth] = useState(() => new Date().toISOString().slice(0, 7));
   const { data, loading, refresh } = useResource<FinanceData>(`/api/transactions?month=${month}`, [month]);
@@ -80,8 +80,8 @@ export default function FinancePage() {
     if (form.label.trim().length === 0 || !Number.isFinite(amount) || amount <= 0) return;
 
     setSaving(true);
-    try {
-      await api.post('/api/transactions', {
+    const saved = await mutate(() =>
+      api.post('/api/transactions', {
         date: form.date,
         type: form.type,
         category: form.category,
@@ -89,22 +89,20 @@ export default function FinancePage() {
         amount,
         currency: 'EUR',
         recurring: form.recurring,
-      });
-      toast.success(t('common.success'));
-      setModalOpen(false);
-      set('label', '');
-      set('amount', '');
-      void refresh();
-    } catch {
-      toast.error(t('common.error'));
-    } finally {
-      setSaving(false);
-    }
+      }),
+    );
+    setSaving(false);
+    if (!saved) return;
+
+    setModalOpen(false);
+    set('label', '');
+    set('amount', '');
+    void refresh();
   }
 
   async function remove(transaction: Transaction) {
-    await api.delete(`/api/transactions/${transaction.id}`).catch(() => toast.error(t('common.error')));
-    void refresh();
+    const deleted = await mutate(() => api.delete(`/api/transactions/${transaction.id}`));
+    if (deleted !== null) void refresh();
   }
 
   const money = (value: number) =>
