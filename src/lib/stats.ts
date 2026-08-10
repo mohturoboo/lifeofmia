@@ -196,6 +196,30 @@ export async function readRange(userId: string, dates: DateKey[]): Promise<DaySt
   });
 }
 
+/**
+ * Une journee compte comme active des qu'elle porte une trace d'usage.
+ *
+ * Le decompte ne regardait que les habitudes et les taches : une journee ou
+ * l'utilisateur avait fait ses cinq prieres, enregistre ses repas, bu deux
+ * litres, fait une heure de sport et ecrit dans son journal etait comptee
+ * comme inactive. Les statistiques affichaient « 0 jour actif » a quelqu'un
+ * qui venait de renseigner sa journee entiere.
+ */
+export function isActiveDay(day: DayStats): boolean {
+  return (
+    day.habitsDone > 0 ||
+    day.tasksDone > 0 ||
+    day.prayersDone > 0 ||
+    day.calories > 0 ||
+    day.waterMl > 0 ||
+    day.workoutMinutes > 0 ||
+    day.focusMinutes > 0 ||
+    day.readingMinutes > 0 ||
+    day.weightKg !== null ||
+    day.mood !== null
+  );
+}
+
 export interface Aggregate {
   days: number;
   activeDays: number;
@@ -233,7 +257,7 @@ export function aggregate(days: DayStats[]): Aggregate {
 
   return {
     days: days.length,
-    activeDays: days.filter((day) => day.habitsDone > 0 || day.tasksDone > 0).length,
+    activeDays: days.filter(isActiveDay).length,
     habitsDone,
     habitCompletion: habitsTotal > 0 ? Math.round((habitsDone / habitsTotal) * 100) : 0,
     tasksDone: sum((day) => day.tasksDone),

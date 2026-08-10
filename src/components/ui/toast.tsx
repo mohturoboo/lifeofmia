@@ -1,6 +1,5 @@
 'use client';
 
-import { AnimatePresence, motion } from 'framer-motion';
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react';
 import { Icon, type IconName } from '@/components/ui/icons';
 
@@ -58,27 +57,26 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         aria-live="polite"
         className="pointer-events-none fixed inset-x-0 bottom-4 z-[60] flex flex-col items-center gap-2 px-4 sm:bottom-6"
       >
-        <AnimatePresence initial={false}>
-          {toasts.map((item) => {
-            const style = STYLES[item.kind];
-            return (
-              <motion.div
-                key={item.id}
-                layout
-                initial={{ opacity: 0, y: 20, scale: 0.96 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.96 }}
-                transition={{ type: 'spring', damping: 24, stiffness: 350 }}
-                className="pointer-events-auto flex max-w-md items-center gap-2.5 rounded-2xl border border-[var(--border)] bg-[var(--surface)] py-3 ps-3.5 pe-4 shadow-xl"
-              >
-                <span style={{ color: style.color }}>
-                  <Icon name={style.icon} size={17} />
-                </span>
-                <span className="text-sm text-[var(--text)]">{item.message}</span>
-              </motion.div>
-            );
-          })}
-        </AnimatePresence>
+        {/*
+          Meme regle que pour les fenetres modales : seule la position est
+          animee, jamais l'opacite. Un message d'erreur dont l'affichage depend
+          d'une animation peut rester invisible — et une action qui echoue passe
+          alors pour une action qui ne fait rien.
+        */}
+        {toasts.map((item) => {
+          const style = STYLES[item.kind];
+          return (
+            <div
+              key={item.id}
+              className="lm-toast-in pointer-events-auto flex max-w-md items-center gap-2.5 rounded-2xl border border-[var(--border)] bg-[var(--surface)] py-3 ps-3.5 pe-4 shadow-xl"
+            >
+              <span style={{ color: style.color }}>
+                <Icon name={style.icon} size={17} />
+              </span>
+              <span className="text-sm text-[var(--text)]">{item.message}</span>
+            </div>
+          );
+        })}
       </div>
     </ToastContext.Provider>
   );

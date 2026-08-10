@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { aggregate, bmi, bmiCategory, projectWeight, type DayStats } from '@/lib/stats';
+import { aggregate, bmi, bmiCategory, isActiveDay, projectWeight, type DayStats } from '@/lib/stats';
 
 function day(overrides: Partial<DayStats> = {}): DayStats {
   return {
@@ -135,5 +135,54 @@ describe('IMC', () => {
     expect(bmiCategory(18.5)).toBe('normal');
     expect(bmiCategory(25)).toBe('overweight');
     expect(bmiCategory(30)).toBe('obese');
+  });
+});
+
+/**
+ * Non-regression : « 0 jour actif » malgre une journee remplie.
+ *
+ * Le decompte ne regardait que les habitudes et les taches. Une journee ou
+ * l'utilisateur avait fait ses prieres, bu ses deux litres, enregistre ses
+ * repas ou fait du sport etait comptee comme inactive : les statistiques
+ * affichaient « 0/30 jours actifs » a quelqu'un qui venait de tout renseigner.
+ */
+describe('journee active', () => {
+  const journeeVide: DayStats = {
+    date: '2026-08-10',
+    habitsDone: 0,
+    habitsTotal: 5,
+    tasksDone: 0,
+    tasksTotal: 0,
+    prayersDone: 0,
+    calories: 0,
+    proteinG: 0,
+    waterMl: 0,
+    weightKg: null,
+    workoutMinutes: 0,
+    focusMinutes: 0,
+    readingMinutes: 0,
+    mood: null,
+    xpEarned: 0,
+    disciplineScore: 0,
+    completionRate: 0,
+  };
+
+  it('ne compte pas une journee sans aucune trace', () => {
+    expect(isActiveDay(journeeVide)).toBe(false);
+  });
+
+  it.each([
+    ['une habitude validee', { habitsDone: 1 }],
+    ['une tache terminee', { tasksDone: 1 }],
+    ['une priere accomplie', { prayersDone: 1 }],
+    ['un repas enregistre', { calories: 420 }],
+    ['un verre d\'eau', { waterMl: 250 }],
+    ['une seance de sport', { workoutMinutes: 45 }],
+    ['du temps de concentration', { focusMinutes: 25 }],
+    ['de la lecture', { readingMinutes: 20 }],
+    ['une pesee', { weightKg: 72 }],
+    ['une humeur notee', { mood: 4 }],
+  ])('compte la journee active avec %s', (_libelle, champs) => {
+    expect(isActiveDay({ ...journeeVide, ...champs })).toBe(true);
   });
 });

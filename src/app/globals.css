@@ -91,6 +91,12 @@
   }
 }
 
+@keyframes lm-toast-in {
+  from {
+    transform: translateY(20px) scale(0.96);
+  }
+}
+
 /*
  * Le voile, lui, peut fondre : figé a l'etat de depart, il se voit seulement
  * moins. Rien ne devient inaccessible.
@@ -273,6 +279,10 @@
 
   .lm-modal-panel {
     animation: lm-modal-in 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .lm-toast-in {
+    animation: lm-toast-in 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   /*
