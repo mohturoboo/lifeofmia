@@ -45,3 +45,5 @@ yarn-error.log*
 /blob-report/
 
 e2e/.auth/
+
+*.tmp.mjs
