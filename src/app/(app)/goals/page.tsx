@@ -166,7 +166,7 @@ export default function GoalsPage() {
         icon="target"
         color="#d9c7f0"
         actions={
-          <Button icon="plus" onClick={openCreate}>
+          <Button icon="plus" disabled={loading} onClick={openCreate}>
             {t('goals.new')}
           </Button>
         }

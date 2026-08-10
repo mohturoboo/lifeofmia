@@ -231,7 +231,7 @@ export default function TasksPage() {
         icon="checkCircle"
         color="#e6e6e6"
         actions={
-          <Button icon="plus" onClick={() => openCreate()}>
+          <Button icon="plus" disabled={loading} onClick={() => openCreate()}>
             {t('tasks.new')}
           </Button>
         }

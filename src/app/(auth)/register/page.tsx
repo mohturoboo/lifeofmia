@@ -42,23 +42,52 @@ export default function RegisterPage() {
     acceptTerms: false,
   });
 
-  const set = <K extends keyof typeof form>(key: K, value: (typeof form)[K]) =>
+  const set = <K extends keyof typeof form>(key: K, value: (typeof form)[K]) => {
     setForm((current) => ({ ...current, [key]: value }));
+    // Le message disparait des que l'utilisateur reprend le champ fautif :
+    // le laisser affiche pendant la correction donne l'impression que la
+    // saisie est toujours refusee.
+    setFields((current) => (current[key] ? { ...current, [key]: '' } : current));
+  };
 
   const strength = useMemo(() => evaluatePassword(form.password), [form.password]);
   const strengthLabel = [t('auth.passwordWeak'), t('auth.passwordWeak'), t('auth.passwordMedium'), t('auth.passwordStrong'), t('auth.passwordStrong')][strength.score];
   const strengthColor = ['#ff9fbf', '#ff9fbf', '#ff9fbf', '#fbe3ec', '#fbe3ec'][strength.score];
 
-  const step1Valid =
-    form.firstName.trim().length > 0 &&
-    form.lastName.trim().length > 0 &&
-    /\S+@\S+\.\S+/.test(form.email) &&
-    strength.score >= 2;
+  /**
+   * Controle de la premiere etape, aligne sur les regles du serveur.
+   *
+   * Renvoie un message PAR champ fautif. Le bouton « Suivant » etait
+   * simplement desactive tant que la saisie n'etait pas valide, et le
+   * formulaire porte `noValidate` : l'utilisateur cliquait sur un bouton inerte
+   * sans qu'aucun texte ne lui dise ce qui n'allait pas.
+   */
+  function validateStep1(): Record<string, string> {
+    const errors: Record<string, string> = {};
+
+    if (form.firstName.trim().length === 0) errors.firstName = t('auth.fieldRequired');
+    if (form.lastName.trim().length === 0) errors.lastName = t('auth.fieldRequired');
+
+    if (form.email.trim().length === 0) errors.email = t('auth.fieldRequired');
+    else if (!/^\S+@\S+\.\S+$/.test(form.email.trim())) errors.email = t('auth.emailInvalid');
+
+    if (form.password.length === 0) errors.password = t('auth.fieldRequired');
+    else if (form.password.length < 8) errors.password = t('auth.passwordTooShort');
+    else if (!/[a-z]/.test(form.password) || !/[A-Z]/.test(form.password) || !/\d/.test(form.password)) {
+      // Memes exigences que `passwordSchema` : minuscule, majuscule, chiffre.
+      errors.password = t('auth.passwordTooWeak');
+    }
+
+    return errors;
+  }
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
     if (step === 1) {
-      if (step1Valid) setStep(2);
+      const errors = validateStep1();
+      setFields(errors);
+      setError(null);
+      if (Object.keys(errors).length === 0) setStep(2);
       return;
     }
 
@@ -178,7 +207,7 @@ export default function RegisterPage() {
               )}
             </Field>
 
-            <Button type="submit" fullWidth size="lg" disabled={!step1Valid}>
+            <Button type="submit" fullWidth size="lg">
               {t('common.next')}
               <Icon name="chevronRight" size={17} className="rtl:rotate-180" />
             </Button>

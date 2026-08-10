@@ -161,10 +161,10 @@ export default function HabitsPage() {
         color="#e9b8d5"
         actions={
           <>
-            <Button variant="secondary" size="sm" onClick={() => setShowArchived((value) => !value)}>
+            <Button variant="secondary" size="sm" disabled={loading} onClick={() => setShowArchived((value) => !value)}>
               {showArchived ? t('common.all') : t('habits.archived')}
             </Button>
-            <Button icon="plus" onClick={openCreate}>
+            <Button icon="plus" disabled={loading} onClick={openCreate}>
               {t('habits.new')}
             </Button>
           </>

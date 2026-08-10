@@ -79,6 +79,22 @@ describe('Modal — visible sans animation', () => {
     expect(panneau.className).toContain('z-10');
   });
 
+  it('place le focus sans attendre la moindre image d\'animation', () => {
+    // Le placement passait par requestAnimationFrame. Tout ce que l'utilisateur
+    // tapait avant cette image partait vers le bouton qui venait d'ouvrir la
+    // fenetre, et etait perdu sans le moindre signe.
+    vi.spyOn(window, 'requestAnimationFrame').mockImplementation(() => 0);
+
+    render(
+      <Modal open onClose={() => {}} title="Enregistrer mon poids">
+        <input aria-label="Poids" />
+        <input aria-label="Note" />
+      </Modal>,
+    );
+
+    expect(document.activeElement).toBe(screen.getByLabelText('Poids'));
+  });
+
   it('disparait immediatement a la fermeture', () => {
     const { rerender } = ouvrir();
     expect(screen.queryByRole('dialog')).toBeTruthy();

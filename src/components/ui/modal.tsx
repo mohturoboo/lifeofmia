@@ -67,14 +67,21 @@ export function Modal({ open, onClose, title, description, children, footer, siz
      * contenu dans le DOM. Sans cette distinction, le `autoFocus` pose par les
      * formulaires sur leur premier champ etait systematiquement ecrase, et
      * l'utilisateur devait cliquer avant de pouvoir ecrire.
+     *
+     * Le placement est SYNCHRONE. Il attendait une image d'animation, qui
+     * arrive au mieux 16 ms plus tard et bien plus tard si la boucle est
+     * ralentie : tout ce que l'utilisateur tapait dans cet intervalle partait
+     * vers l'element focalise auparavant — le bouton qui venait d'ouvrir la
+     * fenetre — et etait perdu sans le moindre signe.
+     *
+     * Le panneau et son contenu sont deja montes quand cet effet s'execute :
+     * rien ne justifie d'attendre.
      */
-    const frame = requestAnimationFrame(() => {
-      const elements = focusable();
-      const firstField = elements.find((element) =>
-        ['INPUT', 'TEXTAREA', 'SELECT'].includes(element.tagName),
-      );
-      (firstField ?? elements[0] ?? panelRef.current)?.focus();
-    });
+    const elements = focusable();
+    const firstField = elements.find((element) =>
+      ['INPUT', 'TEXTAREA', 'SELECT'].includes(element.tagName),
+    );
+    (firstField ?? elements[0] ?? panelRef.current)?.focus();
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
@@ -100,9 +107,6 @@ export function Modal({ open, onClose, title, description, children, footer, siz
 
     document.addEventListener('keydown', onKeyDown);
     return () => {
-      // La frame est annulee : sans cela, une fermeture immediate laisserait un
-      // `focus()` differe s'executer sur un panneau deja demonte.
-      cancelAnimationFrame(frame);
       document.removeEventListener('keydown', onKeyDown);
       document.body.style.overflow = overflow;
       previouslyFocused?.focus?.();
