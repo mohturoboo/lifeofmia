@@ -69,8 +69,9 @@ describe('modification d\'un repas', () => {
  * frequence et ses jours ; epingler une note effacait son contenu.
  */
 describe('mises a jour partielles — tous les modules', () => {
-  const schemas = Object.entries(modules).filter(
-    (entry): entry is [string, z.ZodObject<z.ZodRawShape>] =>
+  // Le module exporte aussi des listes de constantes : on ne garde que les schemas.
+  const schemas = (Object.entries(modules) as Array<[string, unknown]>).filter(
+    (entry): entry is [string, z.ZodObject] =>
       entry[0].endsWith('UpdateSchema') && entry[1] instanceof z.ZodObject,
   );
 

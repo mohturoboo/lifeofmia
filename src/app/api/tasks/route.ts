@@ -42,7 +42,23 @@ export const GET = route(async ({ user, searchParams }) => {
       ...(status ? { status } : {}),
       ...(goalId ? { goalId } : {}),
       ...(projectId ? { projectId } : {}),
-      ...(ranges[scope] ? { dueDate: ranges[scope] } : {}),
+      /*
+       * Une tache SANS echeance reste visible dans « aujourd'hui », « semaine »
+       * et « mois ».
+       *
+       * Le filtre portait uniquement sur `dueDate`, et la date est facultative
+       * dans le formulaire : une tache creee sans echeance n'apparaissait donc
+       * dans aucun onglet sauf « Tout ». Elle etait bien enregistree, mais la
+       * liste restait vide juste apres l'avoir ajoutee — le bouton
+       * « Enregistrer » semblait ne rien faire.
+       *
+       * « En retard » garde l'exclusion : sans echeance, on ne peut pas l'etre.
+       */
+      ...(ranges[scope]
+        ? scope === 'overdue'
+          ? { dueDate: ranges[scope] }
+          : { OR: [{ dueDate: ranges[scope] }, { dueDate: null }] }
+        : {}),
       ...(scope === 'overdue' ? { status: { in: ['todo', 'doing'] } } : {}),
     },
     orderBy: [{ status: 'asc' }, { dueDate: 'asc' }, { position: 'asc' }],

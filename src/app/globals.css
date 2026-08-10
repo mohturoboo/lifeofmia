@@ -71,6 +71,32 @@
   }
 }
 
+/*
+ * Ouverture des fenetres modales.
+ *
+ * L'animation part de l'etat masque pour arriver a l'etat NORMAL de l'element :
+ * le repos, c'est visible. Si l'animation ne se joue pas — onglet en arriere-plan
+ * au moment de l'ouverture, images throttlees, mouvement reduit —, la fenetre
+ * s'affiche simplement sans effet.
+ *
+ * La version precedente s'appuyait sur framer-motion, dont l'etat initial est
+ * `opacity: 0` en style en ligne : quand la boucle d'animation ne tournait pas,
+ * le panneau restait invisible alors qu'il etait bien present et focusable.
+ * La fonctionnalite devenait inaccessible a la souris.
+ */
+@keyframes lm-modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.98);
+  }
+}
+
+@keyframes lm-overlay-in {
+  from {
+    opacity: 0;
+  }
+}
+
 @keyframes shimmer {
   from {
     background-position: -200% 0;
@@ -237,6 +263,14 @@
 }
 
 @layer components {
+  .lm-modal-overlay {
+    animation: lm-overlay-in 0.18s ease-out;
+  }
+
+  .lm-modal-panel {
+    animation: lm-modal-in 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
   /*
    * Carte en verre depoli : un voile clair tres dilue plutot qu'un gris opaque,
    * pour que le fond noir transparaisse et que les bords accrochent la lumiere.
