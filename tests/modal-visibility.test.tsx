@@ -1,6 +1,8 @@
 // @vitest-environment jsdom
 import { describe, expect, it, afterEach, vi } from 'vitest';
 import { cleanup, render, screen } from '@testing-library/react';
+import { readFile } from 'node:fs/promises';
+import { resolve } from 'node:path';
 import { Modal } from '@/components/ui/modal';
 
 /**
@@ -53,6 +55,17 @@ describe('Modal — visible sans animation', () => {
     expect(style.transform).toBe('');
     expect(style.visibility).toBe('');
     expect(style.display).toBe('');
+  });
+
+  it('n\'anime jamais l\'opacite du panneau', async () => {
+    // Une animation figee maintient son image de depart. Animer l'opacite
+    // depuis 0 rendrait donc l'affichage tributaire de son bon deroulement.
+    const css = await readFile(resolve(process.cwd(), 'src/app/globals.css'), 'utf8');
+    const keyframes = css.slice(css.indexOf('@keyframes lm-modal-in'));
+    const bloc = keyframes.slice(0, keyframes.indexOf('}', keyframes.indexOf('}') + 1) + 1);
+
+    expect(bloc).toContain('transform');
+    expect(bloc).not.toContain('opacity');
   });
 
   it('place le panneau au-dessus du voile assombri', () => {

@@ -74,23 +74,27 @@
 /*
  * Ouverture des fenetres modales.
  *
- * L'animation part de l'etat masque pour arriver a l'etat NORMAL de l'element :
- * le repos, c'est visible. Si l'animation ne se joue pas — onglet en arriere-plan
- * au moment de l'ouverture, images throttlees, mouvement reduit —, la fenetre
- * s'affiche simplement sans effet.
+ * Le panneau n'anime QUE sa position. Son opacite n'est jamais touchee, et
+ * c'est deliberé : une animation qui ne progresse pas maintient son image de
+ * depart, donc animer l'opacite depuis 0 revient a rendre l'affichage du
+ * formulaire tributaire du bon deroulement de l'animation. Une boucle
+ * d'animation figee — onglet passe en arriere-plan, images throttlees par le
+ * navigateur — laissait le panneau totalement transparent : present dans le
+ * DOM, focusable au clavier, mais jamais peint.
  *
- * La version precedente s'appuyait sur framer-motion, dont l'etat initial est
- * `opacity: 0` en style en ligne : quand la boucle d'animation ne tournait pas,
- * le panneau restait invisible alors qu'il etait bien present et focusable.
- * La fonctionnalite devenait inaccessible a la souris.
+ * Au pire, la fenetre s'affiche ici decalee de 24 px et a 98 % de sa taille.
+ * Elle reste lisible et cliquable.
  */
 @keyframes lm-modal-in {
   from {
-    opacity: 0;
     transform: translateY(24px) scale(0.98);
   }
 }
 
+/*
+ * Le voile, lui, peut fondre : figé a l'etat de depart, il se voit seulement
+ * moins. Rien ne devient inaccessible.
+ */
 @keyframes lm-overlay-in {
   from {
     opacity: 0;
