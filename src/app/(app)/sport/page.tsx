@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { api, useResource } from '@/lib/client/api';
+import { useMutate } from '@/lib/client/mutate';
 import { Badge, Button, Card, CardHeader, EmptyState, Field, Input, Select, Skeleton, Textarea } from '@/components/ui/primitives';
 import { Icon } from '@/components/ui/icons';
 import { Modal } from '@/components/ui/modal';
@@ -49,6 +50,7 @@ const EMPTY_EXERCISE: Exercise = { name: '', sets: 3, reps: 10, weightKg: null, 
 export default function SportPage() {
   const { t, locale, n } = useI18n();
   const toast = useToast();
+  const { run: mutate, fields: erreurs, clearField } = useMutate();
   const { data, loading, refresh } = useResource<SportData>('/api/workouts');
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -65,8 +67,11 @@ export default function SportPage() {
     exercises: [{ ...EMPTY_EXERCISE }] as Exercise[],
   });
 
-  const set = <K extends keyof typeof form>(key: K, value: (typeof form)[K]) =>
+  const set = <K extends keyof typeof form>(key: K, value: (typeof form)[K]) => {
     setForm((current) => ({ ...current, [key]: value }));
+    // Reprendre un champ efface son message d'erreur.
+    clearField(String(key));
+  };
 
   const typeLabel = (type: string) =>
     t(`sport.type${type.charAt(0).toUpperCase()}${type.slice(1)}` as 'sport.typeOther');
@@ -83,8 +88,9 @@ export default function SportPage() {
     if (form.name.trim().length === 0) return;
     setSaving(true);
 
-    try {
-      await api.post('/api/workouts', {
+    // Le detail par champ renvoye par le serveur s'affiche sous le champ
+    // fautif ; la saisie reste en place pour etre corrigee.
+    const saved = await mutate(() => api.post('/api/workouts', {
         date: form.date,
         name: form.name,
         type: form.type,
@@ -94,17 +100,15 @@ export default function SportPage() {
         intensity: form.intensity,
         notes: form.notes || null,
         exercises: isStrength ? form.exercises.filter((exercise) => exercise.name.trim().length > 0) : [],
-      });
-      toast.success(t('common.success'));
+      }), { notifySuccess: false });
+    setSaving(false);
+    if (!saved) return;
+
+    toast.success(t('common.success'));
       setModalOpen(false);
       set('name', '');
       set('exercises', [{ ...EMPTY_EXERCISE }]);
       void refresh();
-    } catch {
-      toast.error(t('common.error'));
-    } finally {
-      setSaving(false);
-    }
   }
 
   async function remove(workout: Workout) {
@@ -264,10 +268,10 @@ export default function SportPage() {
       >
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
-            <Field label={t('common.name')} htmlFor="workout-name" required>
+            <Field label={t('common.name')} htmlFor="workout-name" error={erreurs.name} required>
               <Input id="workout-name" value={form.name} onChange={(event) => set('name', event.target.value)} autoFocus />
             </Field>
-            <Field label={t('common.date')} htmlFor="workout-date">
+            <Field label={t('common.date')} htmlFor="workout-date" error={erreurs.date}>
               <Input id="workout-date" type="date" value={form.date} onChange={(event) => set('date', event.target.value)} />
             </Field>
           </div>
@@ -282,10 +286,10 @@ export default function SportPage() {
                 ))}
               </Select>
             </Field>
-            <Field label={`${t('sport.duration')} (min)`} htmlFor="workout-duration">
+            <Field label={`${t('sport.duration')} (min)`} htmlFor="workout-duration" error={erreurs.durationMin}>
               <Input id="workout-duration" type="number" min={0} value={form.durationMin} onChange={(event) => set('durationMin', event.target.value)} />
             </Field>
-            <Field label={`${t('sport.distance')} (km)`} htmlFor="workout-distance">
+            <Field label={`${t('sport.distance')} (km)`} htmlFor="workout-distance" error={erreurs.distanceKm}>
               <Input id="workout-distance" type="number" step="0.1" value={form.distanceKm} onChange={(event) => set('distanceKm', event.target.value)} />
             </Field>
             <Field label={t('sport.intensity')} htmlFor="workout-intensity">
@@ -355,7 +359,7 @@ export default function SportPage() {
             </Field>
           )}
 
-          <Field label={t('common.notes')} htmlFor="workout-notes">
+          <Field label={t('common.notes')} htmlFor="workout-notes" error={erreurs.notes}>
             <Textarea id="workout-notes" rows={2} value={form.notes} onChange={(event) => set('notes', event.target.value)} />
           </Field>
         </div>

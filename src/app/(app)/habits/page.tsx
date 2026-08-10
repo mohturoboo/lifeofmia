@@ -7,7 +7,6 @@ import { useMutate } from '@/lib/client/mutate';
 import { Badge, Button, Card, EmptyState, Field, Input, Select, Skeleton, Textarea, Toggle, cx } from '@/components/ui/primitives';
 import { HABIT_ICONS, Icon, type IconName } from '@/components/ui/icons';
 import { Modal } from '@/components/ui/modal';
-import { useToast } from '@/components/ui/toast';
 import { PageHeader } from '@/components/page-header';
 import { useI18n } from '@/i18n/provider';
 import { HABIT_CATEGORIES } from '@/lib/validation/modules';
@@ -51,8 +50,7 @@ const EMPTY_FORM = {
 
 export default function HabitsPage() {
   const { t } = useI18n();
-  const toast = useToast();
-  const mutate = useMutate();
+  const { run: mutate, fields: erreurs, clearField } = useMutate();
   const [showArchived, setShowArchived] = useState(false);
   const { data, loading, refresh } = useResource<Habit[]>(
     `/api/habits?archived=${showArchived}`,
@@ -66,8 +64,11 @@ export default function HabitsPage() {
 
   const today = dateKeyIn(Intl.DateTimeFormat().resolvedOptions().timeZone);
 
-  const set = <K extends keyof typeof form>(key: K, value: (typeof form)[K]) =>
+  const set = <K extends keyof typeof form>(key: K, value: (typeof form)[K]) => {
     setForm((current) => ({ ...current, [key]: value }));
+    // Reprendre un champ efface son message d'erreur.
+    clearField(String(key));
+  };
 
   function openCreate() {
     setEditing(null);
@@ -103,17 +104,14 @@ export default function HabitsPage() {
       reminderAt: form.reminderAt || null,
     };
 
-    try {
-      if (editing) await api.patch(`/api/habits/${editing.id}`, payload);
-      else await api.post('/api/habits', payload);
-      toast.success(t('common.success'));
-      setModalOpen(false);
-      void refresh();
-    } catch {
-      toast.error(t('common.error'));
-    } finally {
-      setSaving(false);
-    }
+    // Le detail par champ renvoye par le serveur s'affiche sous le champ
+    // fautif ; la fenetre reste ouverte pour que la saisie soit corrigible.
+    const saved = await mutate(() => (editing ? api.patch(`/api/habits/${editing.id}`, payload) : api.post('/api/habits', payload)));
+    setSaving(false);
+    if (!saved) return;
+
+    setModalOpen(false);
+    void refresh();
   }
 
   async function toggle(habit: Habit) {
@@ -319,9 +317,11 @@ export default function HabitsPage() {
         }
       >
         <div className="space-y-4">
-          <Field label={t('common.name')} htmlFor="habit-name" required>
+          <Field label={t('common.name')} htmlFor="habit-name" error={erreurs.name} hint={`${form.name.length}/80`} required>
             <Input
               id="habit-name"
+              invalid={Boolean(erreurs.name)}
+              maxLength={80}
               value={form.name}
               onChange={(event) => set('name', event.target.value)}
               placeholder="Ex : lire 20 minutes"
@@ -329,7 +329,7 @@ export default function HabitsPage() {
             />
           </Field>
 
-          <Field label={t('common.notes')} htmlFor="habit-description">
+          <Field label={t('common.notes')} htmlFor="habit-description" error={erreurs.description}>
             <Textarea
               id="habit-description"
               rows={2}
@@ -390,7 +390,7 @@ export default function HabitsPage() {
                 ))}
               </Select>
             </Field>
-            <Field label={t('habits.timesPerDay')} htmlFor="habit-target">
+            <Field label={t('habits.timesPerDay')} htmlFor="habit-target" error={erreurs.targetPerDay}>
               <Input
                 id="habit-target"
                 type="number"
@@ -403,15 +403,15 @@ export default function HabitsPage() {
           </div>
 
           <div className="grid grid-cols-2 gap-3">
-            <Field label="Unite" htmlFor="habit-unit" hint={t('common.optional')}>
+            <Field label="Unite" htmlFor="habit-unit" error={erreurs.unit} hint={t('common.optional')}>
               <Input id="habit-unit" value={form.unit} onChange={(event) => set('unit', event.target.value)} placeholder="verres, pages..." />
             </Field>
-            <Field label={t('habits.reminder')} htmlFor="habit-reminder" hint={t('common.optional')}>
+            <Field label={t('habits.reminder')} htmlFor="habit-reminder" error={erreurs.reminderAt} hint={t('common.optional')}>
               <Input id="habit-reminder" type="time" value={form.reminderAt} onChange={(event) => set('reminderAt', event.target.value)} />
             </Field>
           </div>
 
-          <Field label={`${t('dash.xp')} (${form.xpReward})`} htmlFor="habit-xp">
+          <Field label={`${t('dash.xp')} (${form.xpReward})`} htmlFor="habit-xp" error={erreurs.xpReward}>
             <input
               id="habit-xp"
               type="range"

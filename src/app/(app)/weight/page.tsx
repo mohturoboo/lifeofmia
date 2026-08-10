@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { api, useResource } from '@/lib/client/api';
+import { useMutate } from '@/lib/client/mutate';
 import { Badge, Button, Card, CardHeader, EmptyState, Field, Input, Skeleton, Textarea } from '@/components/ui/primitives';
 import { Icon } from '@/components/ui/icons';
 import { Modal } from '@/components/ui/modal';
@@ -40,6 +41,7 @@ const BMI_COLORS = {
 export default function WeightPage() {
   const { t, locale } = useI18n();
   const toast = useToast();
+  const { run: mutate, fields: erreurs, clearField } = useMutate();
   const { data, loading, refresh } = useResource<WeightData>('/api/weight');
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -52,31 +54,33 @@ export default function WeightPage() {
     note: '',
   });
 
-  const set = <K extends keyof typeof form>(key: K, value: string) =>
+  const set = <K extends keyof typeof form>(key: K, value: string) => {
     setForm((current) => ({ ...current, [key]: value }));
+    // Reprendre un champ efface son message d'erreur.
+    clearField(String(key));
+  };
 
   async function save() {
     const weight = Number(form.weightKg);
     if (!Number.isFinite(weight) || weight <= 0) return;
 
     setSaving(true);
-    try {
-      await api.post('/api/weight', {
+    // Le detail par champ renvoye par le serveur s'affiche sous le champ
+    // fautif ; la saisie reste en place pour etre corrigee.
+    const saved = await mutate(() => api.post('/api/weight', {
         date: form.date,
         weightKg: weight,
         bodyFat: form.bodyFat ? Number(form.bodyFat) : null,
         muscleKg: form.muscleKg ? Number(form.muscleKg) : null,
         note: form.note || null,
-      });
-      toast.success(t('common.success'));
+      }), { notifySuccess: false });
+    setSaving(false);
+    if (!saved) return;
+
+    toast.success(t('common.success'));
       setModalOpen(false);
       setForm((current) => ({ ...current, weightKg: '', bodyFat: '', muscleKg: '', note: '' }));
       void refresh();
-    } catch {
-      toast.error(t('common.error'));
-    } finally {
-      setSaving(false);
-    }
   }
 
   async function remove(entry: WeightEntry) {
@@ -257,10 +261,10 @@ export default function WeightPage() {
       >
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
-            <Field label={t('common.date')} htmlFor="weight-date">
+            <Field label={t('common.date')} htmlFor="weight-date" error={erreurs.date}>
               <Input id="weight-date" type="date" value={form.date} onChange={(event) => set('date', event.target.value)} />
             </Field>
-            <Field label={`${t('weight.current')} (kg)`} htmlFor="weight-kg" required>
+            <Field label={`${t('weight.current')} (kg)`} htmlFor="weight-kg" error={erreurs.weightKg} required>
               <Input
                 id="weight-kg"
                 type="number"
@@ -275,15 +279,15 @@ export default function WeightPage() {
           </div>
 
           <div className="grid grid-cols-2 gap-3">
-            <Field label={`${t('weight.bodyFat')} (%)`} htmlFor="weight-fat" hint={t('common.optional')}>
+            <Field label={`${t('weight.bodyFat')} (%)`} htmlFor="weight-fat" error={erreurs.bodyFat} hint={t('common.optional')}>
               <Input id="weight-fat" type="number" step="0.1" value={form.bodyFat} onChange={(event) => set('bodyFat', event.target.value)} />
             </Field>
-            <Field label={`${t('weight.muscle')} (kg)`} htmlFor="weight-muscle" hint={t('common.optional')}>
+            <Field label={`${t('weight.muscle')} (kg)`} htmlFor="weight-muscle" error={erreurs.muscleKg} hint={t('common.optional')}>
               <Input id="weight-muscle" type="number" step="0.1" value={form.muscleKg} onChange={(event) => set('muscleKg', event.target.value)} />
             </Field>
           </div>
 
-          <Field label={t('common.notes')} htmlFor="weight-note">
+          <Field label={t('common.notes')} htmlFor="weight-note" error={erreurs.note}>
             <Textarea id="weight-note" rows={2} value={form.note} onChange={(event) => set('note', event.target.value)} />
           </Field>
         </div>

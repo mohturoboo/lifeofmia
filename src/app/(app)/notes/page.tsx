@@ -26,7 +26,7 @@ const COLORS = ['#b4b4b4', '#e9b8d5', '#fbc7da', '#f6d9e4', '#ff9fbf', '#d9c7f0'
 export default function NotesPage() {
   const { t, locale } = useI18n();
   const toast = useToast();
-  const mutate = useMutate();
+  const { run: mutate, fields: erreurs, clearField } = useMutate();
 
   const [query, setQuery] = useState('');
   const { data, loading, refresh } = useResource<Note[]>(
@@ -39,8 +39,11 @@ export default function NotesPage() {
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({ title: '', content: '', color: '#b4b4b4' });
 
-  const set = <K extends keyof typeof form>(key: K, value: string) =>
+  const set = <K extends keyof typeof form>(key: K, value: string) => {
     setForm((current) => ({ ...current, [key]: value }));
+    // Reprendre un champ efface son message d'erreur.
+    clearField(String(key));
+  };
 
   function openCreate() {
     setEditing(null);
@@ -209,11 +212,11 @@ export default function NotesPage() {
         }
       >
         <div className="space-y-4">
-          <Field label="Titre" htmlFor="note-title" required>
+          <Field label="Titre" htmlFor="note-title" error={erreurs.title} required>
             <Input id="note-title" value={form.title} onChange={(event) => set('title', event.target.value)} autoFocus />
           </Field>
 
-          <Field label={t('common.notes')} htmlFor="note-content">
+          <Field label={t('common.notes')} htmlFor="note-content" error={erreurs.content}>
             <Textarea
               id="note-content"
               rows={12}

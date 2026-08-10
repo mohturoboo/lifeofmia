@@ -44,7 +44,7 @@ const EMPTY_FORM = {
 export default function TasksPage() {
   const { t, locale } = useI18n();
   const toast = useToast();
-  const mutate = useMutate();
+  const { run: mutate, fields: erreurs, clearField } = useMutate();
 
   const [scope, setScope] = useState<(typeof SCOPES)[number]>('today');
   const [showDone, setShowDone] = useState(false);
@@ -56,8 +56,11 @@ export default function TasksPage() {
   const [form, setForm] = useState(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
 
-  const set = <K extends keyof typeof form>(key: K, value: (typeof form)[K]) =>
+  const set = <K extends keyof typeof form>(key: K, value: (typeof form)[K]) => {
     setForm((current) => ({ ...current, [key]: value }));
+    // Reprendre un champ efface son message d'erreur.
+    clearField(String(key));
+  };
 
   const visible = (data ?? []).filter((task) => showDone || task.status !== 'done');
 
@@ -303,11 +306,11 @@ export default function TasksPage() {
         }
       >
         <div className="space-y-4">
-          <Field label="Titre" htmlFor="task-title" required>
+          <Field label="Titre" htmlFor="task-title" error={erreurs.title} required>
             <Input id="task-title" value={form.title} onChange={(event) => set('title', event.target.value)} autoFocus />
           </Field>
 
-          <Field label={t('common.notes')} htmlFor="task-description">
+          <Field label={t('common.notes')} htmlFor="task-description" error={erreurs.description}>
             <Textarea id="task-description" rows={3} value={form.description} onChange={(event) => set('description', event.target.value)} />
           </Field>
 
@@ -320,12 +323,12 @@ export default function TasksPage() {
                 <option value="urgent">{t('tasks.priorityUrgent')}</option>
               </Select>
             </Field>
-            <Field label={t('tasks.dueDate')} htmlFor="task-due">
+            <Field label={t('tasks.dueDate')} htmlFor="task-due" error={erreurs.dueDate}>
               <Input id="task-due" type="date" value={form.dueDate} onChange={(event) => set('dueDate', event.target.value)} />
             </Field>
           </div>
 
-          <Field label={t('tasks.estimate')} htmlFor="task-estimate" hint={t('common.optional')}>
+          <Field label={t('tasks.estimate')} htmlFor="task-estimate" error={erreurs.estimateMin} hint={t('common.optional')}>
             <Input
               id="task-estimate"
               type="number"

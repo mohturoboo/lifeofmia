@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { api, useResource } from '@/lib/client/api';
+import { useMutate } from '@/lib/client/mutate';
 import { Button, Card, Field, Input, Skeleton, Textarea, cx } from '@/components/ui/primitives';
 import { Icon } from '@/components/ui/icons';
 import { Modal } from '@/components/ui/modal';
@@ -30,6 +31,7 @@ const COLORS = ['#e9b8d5', '#fbc7da', '#f6d9e4', '#ff9fbf', '#d9c7f0', '#e6e6e6'
 export default function CalendarPage() {
   const { t, locale } = useI18n();
   const toast = useToast();
+  const { run: mutate, fields: erreurs, clearField } = useMutate();
 
   const [cursor, setCursor] = useState(() => new Date());
   const [selected, setSelected] = useState<string | null>(null);
@@ -57,8 +59,11 @@ export default function CalendarPage() {
     color: '#e9b8d5',
   });
 
-  const set = <K extends keyof typeof form>(key: K, value: string) =>
+  const set = <K extends keyof typeof form>(key: K, value: string) => {
     setForm((current) => ({ ...current, [key]: value }));
+    // Reprendre un champ efface son message d'erreur.
+    clearField(String(key));
+  };
 
   /**
    * Grille du mois : 6 semaines de 7 jours, commencant un lundi.
@@ -107,8 +112,9 @@ export default function CalendarPage() {
   async function save() {
     if (form.title.trim().length === 0) return;
     setSaving(true);
-    try {
-      await api.post('/api/events', {
+    // Le detail par champ renvoye par le serveur s'affiche sous le champ
+    // fautif ; la saisie reste en place pour etre corrigee.
+    const saved = await mutate(() => api.post('/api/events', {
         title: form.title,
         description: form.description || null,
         startAt: `${form.date}T${form.startTime}:00`,
@@ -116,16 +122,14 @@ export default function CalendarPage() {
         location: form.location || null,
         color: form.color,
         allDay: false,
-      });
-      toast.success(t('common.success'));
+      }), { notifySuccess: false });
+    setSaving(false);
+    if (!saved) return;
+
+    toast.success(t('common.success'));
       setModalOpen(false);
       set('title', '');
       void refresh();
-    } catch {
-      toast.error(t('common.error'));
-    } finally {
-      setSaving(false);
-    }
   }
 
   async function remove(id: string) {
@@ -300,7 +304,7 @@ export default function CalendarPage() {
         }
       >
         <div className="space-y-4">
-          <Field label="Titre" htmlFor="event-title" required>
+          <Field label="Titre" htmlFor="event-title" error={erreurs.title} required>
             <Input id="event-title" value={form.title} onChange={(event) => set('title', event.target.value)} autoFocus />
           </Field>
 
@@ -308,19 +312,19 @@ export default function CalendarPage() {
             <Field label={t('common.date')} htmlFor="event-date">
               <Input id="event-date" type="date" value={form.date} onChange={(event) => set('date', event.target.value)} />
             </Field>
-            <Field label="Debut" htmlFor="event-start">
+            <Field label="Debut" htmlFor="event-start" error={erreurs.startAt}>
               <Input id="event-start" type="time" value={form.startTime} onChange={(event) => set('startTime', event.target.value)} />
             </Field>
-            <Field label="Fin" htmlFor="event-end">
+            <Field label="Fin" htmlFor="event-end" error={erreurs.endAt}>
               <Input id="event-end" type="time" value={form.endTime} onChange={(event) => set('endTime', event.target.value)} />
             </Field>
           </div>
 
-          <Field label={t('calendar.location')} htmlFor="event-location">
+          <Field label={t('calendar.location')} htmlFor="event-location" error={erreurs.location}>
             <Input id="event-location" value={form.location} onChange={(event) => set('location', event.target.value)} />
           </Field>
 
-          <Field label={t('common.notes')} htmlFor="event-description">
+          <Field label={t('common.notes')} htmlFor="event-description" error={erreurs.description}>
             <Textarea id="event-description" rows={2} value={form.description} onChange={(event) => set('description', event.target.value)} />
           </Field>
 

@@ -54,7 +54,7 @@ const EMPTY_FORM = {
 export default function NutritionPage() {
   const { t, locale, n } = useI18n();
   const toast = useToast();
-  const mutate = useMutate();
+  const { run: mutate, fields: erreurs, clearField } = useMutate();
 
   const [date, setDate] = useState(() => dateKeyIn(Intl.DateTimeFormat().resolvedOptions().timeZone));
   const { data, loading, refresh, setData } = useResource<NutritionData>(`/api/meals?date=${date}`, [date]);
@@ -65,8 +65,11 @@ export default function NutritionPage() {
   /** Repas en cours de modification ; `null` signifie « creation ». */
   const [editing, setEditing] = useState<Meal | null>(null);
 
-  const set = <K extends keyof typeof form>(key: K, value: (typeof form)[K]) =>
+  const set = <K extends keyof typeof form>(key: K, value: (typeof form)[K]) => {
     setForm((current) => ({ ...current, [key]: value }));
+    // Reprendre un champ efface son message d'erreur.
+    clearField(String(key));
+  };
 
   const typeLabels: Record<Meal['type'], string> = {
     breakfast: t('nutrition.breakfast'),
@@ -418,7 +421,7 @@ export default function NutritionPage() {
                 ))}
               </Select>
             </Field>
-            <Field label={t('common.name')} htmlFor="meal-name" required>
+            <Field label={t('common.name')} htmlFor="meal-name" error={erreurs.name} required>
               <Input id="meal-name" value={form.name} onChange={(event) => set('name', event.target.value)} autoFocus />
             </Field>
           </div>
@@ -446,7 +449,7 @@ export default function NutritionPage() {
             ))}
           </div>
 
-          <Field label={t('common.notes')} htmlFor="meal-notes">
+          <Field label={t('common.notes')} htmlFor="meal-notes" error={erreurs.notes}>
             <Textarea id="meal-notes" rows={2} value={form.notes} onChange={(event) => set('notes', event.target.value)} />
           </Field>
 

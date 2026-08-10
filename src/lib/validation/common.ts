@@ -2,6 +2,20 @@ import { z } from 'zod';
 
 /** Briques de validation reutilisees par tous les modules. */
 
+/*
+ * Messages d'erreur en francais pour TOUS les schemas.
+ *
+ * Seuls les champs ecrits a la main portaient un message : partout ailleurs,
+ * l'utilisateur recevait le texte par defaut de la bibliotheque — « Invalid
+ * input », « Too big: expected string to have <=80 characters ». Un nom
+ * d'habitude trop long produisait donc une erreur en anglais, dans une
+ * application traduite en huit langues.
+ *
+ * Ce reglage est global et s'applique des l'import de ce module, que tous les
+ * schemas chargent. Les messages explicites restent prioritaires.
+ */
+z.config(z.locales.fr());
+
 export const dateKeySchema = z
   .string()
   .regex(/^\d{4}-\d{2}-\d{2}$/, 'Format de date attendu : YYYY-MM-DD');

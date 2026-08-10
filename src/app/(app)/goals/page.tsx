@@ -56,7 +56,7 @@ const EMPTY_FORM = {
 export default function GoalsPage() {
   const { t } = useI18n();
   const toast = useToast();
-  const mutate = useMutate();
+  const { run: mutate, fields: erreurs, clearField } = useMutate();
   const { data, loading, refresh } = useResource<Goal[]>('/api/goals');
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -65,8 +65,11 @@ export default function GoalsPage() {
   const [saving, setSaving] = useState(false);
   const [newStep, setNewStep] = useState<Record<string, string>>({});
 
-  const set = <K extends keyof typeof form>(key: K, value: (typeof form)[K]) =>
+  const set = <K extends keyof typeof form>(key: K, value: (typeof form)[K]) => {
     setForm((current) => ({ ...current, [key]: value }));
+    // Reprendre un champ efface son message d'erreur.
+    clearField(String(key));
+  };
 
   function openCreate() {
     setEditing(null);
@@ -109,23 +112,17 @@ export default function GoalsPage() {
       color: form.color,
     };
 
-    try {
-      if (editing) {
-        await api.patch(`/api/goals/${editing.id}`, payload);
-      } else {
-        await api.post('/api/goals', {
+    // Le detail par champ renvoye par le serveur s'affiche sous le champ
+    // fautif ; la fenetre reste ouverte pour que la saisie soit corrigible.
+    const saved = await mutate(() => (editing ? api.patch(`/api/goals/${editing.id}`, payload) : api.post('/api/goals', {
           ...payload,
           steps: form.steps.map((step) => step.trim()).filter(Boolean),
-        });
-      }
-      toast.success(t('common.success'));
-      setModalOpen(false);
-      void refresh();
-    } catch {
-      toast.error(t('common.error'));
-    } finally {
-      setSaving(false);
-    }
+        })));
+    setSaving(false);
+    if (!saved) return;
+
+    setModalOpen(false);
+    void refresh();
   }
 
   // Bascule frequente : pas de confirmation, mais un echec reste visible.
@@ -380,11 +377,11 @@ export default function GoalsPage() {
         }
       >
         <div className="space-y-4">
-          <Field label="Titre" htmlFor="goal-title" required>
+          <Field label="Titre" htmlFor="goal-title" error={erreurs.title} required>
             <Input id="goal-title" value={form.title} onChange={(event) => set('title', event.target.value)} autoFocus />
           </Field>
 
-          <Field label={t('common.notes')} htmlFor="goal-description">
+          <Field label={t('common.notes')} htmlFor="goal-description" error={erreurs.description}>
             <Textarea id="goal-description" rows={2} value={form.description} onChange={(event) => set('description', event.target.value)} />
           </Field>
 
@@ -408,18 +405,18 @@ export default function GoalsPage() {
           </div>
 
           <div className="grid grid-cols-3 gap-3">
-            <Field label="Actuel" htmlFor="goal-current">
+            <Field label="Actuel" htmlFor="goal-current" error={erreurs.currentValue}>
               <Input id="goal-current" type="number" value={form.currentValue} onChange={(event) => set('currentValue', event.target.value)} />
             </Field>
-            <Field label="Cible" htmlFor="goal-target">
+            <Field label="Cible" htmlFor="goal-target" error={erreurs.targetValue}>
               <Input id="goal-target" type="number" value={form.targetValue} onChange={(event) => set('targetValue', event.target.value)} />
             </Field>
-            <Field label="Unite" htmlFor="goal-unit">
+            <Field label="Unite" htmlFor="goal-unit" error={erreurs.unit}>
               <Input id="goal-unit" value={form.unit} onChange={(event) => set('unit', event.target.value)} placeholder="kg" />
             </Field>
           </div>
 
-          <Field label={t('goals.deadline')} htmlFor="goal-deadline">
+          <Field label={t('goals.deadline')} htmlFor="goal-deadline" error={erreurs.deadline}>
             <Input id="goal-deadline" type="date" value={form.deadline} onChange={(event) => set('deadline', event.target.value)} />
           </Field>
 

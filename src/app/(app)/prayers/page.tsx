@@ -30,7 +30,8 @@ const OBLIGATORY = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
 
 export default function PrayersPage() {
   const { t, locale } = useI18n();
-  const mutate = useMutate();
+  // Aucun formulaire sur cette page : seul le lancement d'ecriture est utile.
+  const { run: mutate } = useMutate();
 
   const [date, setDate] = useState(() => dateKeyIn(Intl.DateTimeFormat().resolvedOptions().timeZone));
   const { data, loading, refresh } = useResource<PrayerData>(`/api/prayers?date=${date}`, [date]);

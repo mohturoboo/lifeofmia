@@ -54,7 +54,12 @@ export const updateProfileSchema = z.object({
   units: unitsSchema.optional(),
   birthDate: z.string().nullable().optional(),
   gender: z.enum(['male', 'female', 'other']).nullable().optional(),
-  heightCm: z.number().min(50).max(280).nullable().optional(),
+  heightCm: z
+    .number()
+    .min(50, 'Taille attendue entre 50 et 250 cm.')
+    .max(250, 'Taille attendue entre 50 et 250 cm.')
+    .nullable()
+    .optional(),
   mainGoal: z.string().trim().max(200).nullable().optional(),
   marketingOptIn: z.boolean().optional(),
 });

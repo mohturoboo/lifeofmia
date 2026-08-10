@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { api, ApiClientError, useResource } from '@/lib/client/api';
+import { useMutate } from '@/lib/client/mutate';
 import { Badge, Button, Card, CardHeader, Field, Input, Select, Skeleton, cx } from '@/components/ui/primitives';
 import { Icon } from '@/components/ui/icons';
 import { useToast } from '@/components/ui/toast';
@@ -44,6 +45,7 @@ export default function SettingsPage() {
   const { t, locale, setLocale, n } = useI18n();
   const { theme, setTheme } = useTheme();
   const toast = useToast();
+  const { run: mutate, fields: erreurs, clearField } = useMutate();
   const router = useRouter();
 
   const { data, loading, refresh } = useResource<ProfileData>('/api/profile');
@@ -85,13 +87,17 @@ export default function SettingsPage() {
     });
   }, [data]);
 
-  const set = <K extends keyof typeof form>(key: K, value: (typeof form)[K]) =>
+  const set = <K extends keyof typeof form>(key: K, value: (typeof form)[K]) => {
     setForm((current) => ({ ...current, [key]: value }));
+    // Reprendre un champ efface son message d'erreur.
+    clearField(String(key));
+  };
 
   async function saveProfile() {
     setSaving(true);
-    try {
-      await api.patch('/api/profile', {
+    // Le detail par champ renvoye par le serveur s'affiche sous le champ
+    // fautif ; la saisie reste en place pour etre corrigee.
+    const saved = await mutate(() => api.patch('/api/profile', {
         firstName: form.firstName,
         lastName: form.lastName,
         city: form.city,
@@ -103,15 +109,13 @@ export default function SettingsPage() {
         mainGoal: form.mainGoal || null,
         timeFormat: form.timeFormat,
         units: form.units,
-      });
-      toast.success(t('settings.saved'));
+      }), { notifySuccess: false });
+    setSaving(false);
+    if (!saved) return;
+
+    toast.success(t('settings.saved'));
       router.refresh();
       void refresh();
-    } catch {
-      toast.error(t('common.error'));
-    } finally {
-      setSaving(false);
-    }
   }
 
   async function changePassword() {
@@ -184,10 +188,10 @@ export default function SettingsPage() {
           <CardHeader title={t('settings.profile')} icon="user" accent="#b4b4b4" />
           <div className="space-y-4">
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-              <Field label={t('auth.firstName')} htmlFor="first-name">
+              <Field label={t('auth.firstName')} htmlFor="first-name" error={erreurs.firstName}>
                 <Input id="first-name" value={form.firstName} onChange={(event) => set('firstName', event.target.value)} />
               </Field>
-              <Field label={t('auth.lastName')} htmlFor="last-name">
+              <Field label={t('auth.lastName')} htmlFor="last-name" error={erreurs.lastName}>
                 <Input id="last-name" value={form.lastName} onChange={(event) => set('lastName', event.target.value)} />
               </Field>
             </div>
@@ -197,7 +201,7 @@ export default function SettingsPage() {
             </Field>
 
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-              <Field label={t('auth.birthDate')} htmlFor="birth-date">
+              <Field label={t('auth.birthDate')} htmlFor="birth-date" error={erreurs.birthDate}>
                 <Input id="birth-date" type="date" value={form.birthDate} onChange={(event) => set('birthDate', event.target.value)} />
               </Field>
               <Field label={t('auth.gender')} htmlFor="gender">
@@ -208,12 +212,20 @@ export default function SettingsPage() {
                   <option value="other">{t('auth.genderOther')}</option>
                 </Select>
               </Field>
-              <Field label={`${t('settings.height')} (cm)`} htmlFor="height" hint="Necessaire pour l'IMC">
-                <Input id="height" type="number" min={50} max={280} value={form.heightCm} onChange={(event) => set('heightCm', event.target.value)} />
+              <Field label={`${t('settings.height')} (cm)`} htmlFor="height" error={erreurs.heightCm} hint="Necessaire pour l'IMC">
+                <Input
+                  id="height"
+                  type="number"
+                  invalid={Boolean(erreurs.heightCm)}
+                  min={50}
+                  max={250}
+                  value={form.heightCm}
+                  onChange={(event) => set('heightCm', event.target.value)}
+                />
               </Field>
             </div>
 
-            <Field label={t('auth.mainGoal')} htmlFor="main-goal">
+            <Field label={t('auth.mainGoal')} htmlFor="main-goal" error={erreurs.mainGoal}>
               <Input
                 id="main-goal"
                 value={form.mainGoal}
@@ -261,7 +273,7 @@ export default function SettingsPage() {
             </Field>
 
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-              <Field label={t('auth.city')} htmlFor="city">
+              <Field label={t('auth.city')} htmlFor="city" error={erreurs.city}>
                 <Input id="city" list="cities" value={form.city} onChange={(event) => set('city', event.target.value)} />
                 <datalist id="cities">
                   {Object.keys(FALLBACK_CITIES).map((city) => (
@@ -269,7 +281,7 @@ export default function SettingsPage() {
                   ))}
                 </datalist>
               </Field>
-              <Field label={t('auth.country')} htmlFor="country">
+              <Field label={t('auth.country')} htmlFor="country" error={erreurs.country}>
                 <Input id="country" value={form.country} onChange={(event) => set('country', event.target.value)} />
               </Field>
             </div>

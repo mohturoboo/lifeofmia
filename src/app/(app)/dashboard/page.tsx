@@ -86,7 +86,8 @@ const WEATHER_ICONS: Record<string, IconName> = {
 
 export default function DashboardPage() {
   const { t, locale, n } = useI18n();
-  const mutate = useMutate();
+  // Aucun formulaire sur cette page : seul le lancement d'ecriture est utile.
+  const { run: mutate } = useMutate();
   const { data, loading, refresh, setData } = useResource<DashboardData>('/api/dashboard');
 
   const greetingKey = useMemo(() => {

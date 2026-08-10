@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { api, useResource } from '@/lib/client/api';
+import { useMutate } from '@/lib/client/mutate';
 import { Button, Card, CardHeader, Field, Input, Skeleton, Textarea, cx } from '@/components/ui/primitives';
 import { useToast } from '@/components/ui/toast';
 import { PageHeader, DateNav } from '@/components/page-header';
@@ -30,6 +31,7 @@ const MOOD_EMOJIS = ['😞', '😕', '😐', '🙂', '😄'];
 export default function JournalPage() {
   const { t, locale } = useI18n();
   const toast = useToast();
+  const { run: mutate, fields: erreurs, clearField } = useMutate();
 
   const [date, setDate] = useState(() => dateKeyIn(Intl.DateTimeFormat().resolvedOptions().timeZone));
   const { data, loading, refresh } = useResource<DayResponse>(`/api/journal?date=${date}`, [date]);
@@ -55,12 +57,15 @@ export default function JournalPage() {
   const set = <K extends keyof typeof form>(key: K, value: (typeof form)[K]) => {
     setForm((current) => ({ ...current, [key]: value }));
     setDirty(true);
+    // Reprendre un champ efface son message d'erreur.
+    clearField(String(key));
   };
 
   async function save() {
     setSaving(true);
-    try {
-      await api.put('/api/journal', {
+    // Le detail par champ renvoye par le serveur s'affiche sous le champ
+    // fautif ; la saisie reste en place pour etre corrigee.
+    const saved = await mutate(() => api.put('/api/journal', {
         date,
         mood: form.mood,
         energy: form.energy,
@@ -69,15 +74,13 @@ export default function JournalPage() {
         gratitude: form.gratitude || null,
         tags: [],
         media: [],
-      });
-      toast.success(t('common.success'));
+      }), { notifySuccess: false });
+    setSaving(false);
+    if (!saved) return;
+
+    toast.success(t('common.success'));
       setDirty(false);
       void refresh();
-    } catch {
-      toast.error(t('common.error'));
-    } finally {
-      setSaving(false);
-    }
   }
 
   const moodLabels = [
@@ -152,7 +155,7 @@ export default function JournalPage() {
           </Card>
 
           <Card>
-            <Field label="Titre" htmlFor="journal-title" className="mb-4">
+            <Field label="Titre" htmlFor="journal-title" error={erreurs.title} className="mb-4">
               <Input
                 id="journal-title"
                 value={form.title}
@@ -161,7 +164,7 @@ export default function JournalPage() {
               />
             </Field>
 
-            <Field label={t('journal.thoughts')} htmlFor="journal-content">
+            <Field label={t('journal.thoughts')} htmlFor="journal-content" error={erreurs.content}>
               <Textarea
                 id="journal-content"
                 rows={12}

@@ -50,7 +50,7 @@ const CATEGORY_LABELS: Record<string, string> = {
 
 export default function FinancePage() {
   const { t, locale, n } = useI18n();
-  const mutate = useMutate();
+  const { run: mutate, fields: erreurs, clearField } = useMutate();
 
   const [month, setMonth] = useState(() => new Date().toISOString().slice(0, 7));
   const { data, loading, refresh } = useResource<FinanceData>(`/api/transactions?month=${month}`, [month]);
@@ -66,8 +66,11 @@ export default function FinancePage() {
     recurring: false,
   });
 
-  const set = <K extends keyof typeof form>(key: K, value: (typeof form)[K]) =>
+  const set = <K extends keyof typeof form>(key: K, value: (typeof form)[K]) => {
     setForm((current) => ({ ...current, [key]: value }));
+    // Reprendre un champ efface son message d'erreur.
+    clearField(String(key));
+  };
 
   const shiftMonth = (delta: number) => {
     const [year, monthIndex] = month.split('-').map(Number);
@@ -296,12 +299,12 @@ export default function FinancePage() {
             ))}
           </div>
 
-          <Field label={t('finance.label')} htmlFor="transaction-label" required>
+          <Field label={t('finance.label')} htmlFor="transaction-label" error={erreurs.label} required>
             <Input id="transaction-label" value={form.label} onChange={(event) => set('label', event.target.value)} autoFocus />
           </Field>
 
           <div className="grid grid-cols-2 gap-3">
-            <Field label={`${t('finance.amount')} (€)`} htmlFor="transaction-amount" required>
+            <Field label={`${t('finance.amount')} (€)`} htmlFor="transaction-amount" error={erreurs.amount} required>
               <Input
                 id="transaction-amount"
                 type="number"
@@ -311,7 +314,7 @@ export default function FinancePage() {
                 onChange={(event) => set('amount', event.target.value)}
               />
             </Field>
-            <Field label={t('common.date')} htmlFor="transaction-date">
+            <Field label={t('common.date')} htmlFor="transaction-date" error={erreurs.date}>
               <Input id="transaction-date" type="date" value={form.date} onChange={(event) => set('date', event.target.value)} />
             </Field>
           </div>
