@@ -399,6 +399,7 @@ export const it: Dictionary = {
   'settings.themeSystem': 'Sistema',
   'settings.timeFormat': 'Formato orario',
   'settings.units': 'Unita',
+  'settings.glassSize': "Capacita del bicchiere (ml)",
   'settings.unitsMetric': 'Metrico (kg, cm)',
   'settings.unitsImperial': 'Imperiale (lb, in)',
   'settings.height': 'Altezza',

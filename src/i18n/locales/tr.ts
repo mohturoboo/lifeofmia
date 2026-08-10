@@ -399,6 +399,7 @@ export const tr: Dictionary = {
   'settings.themeSystem': 'Sistem',
   'settings.timeFormat': 'Saat bicimi',
   'settings.units': 'Birimler',
+  'settings.glassSize': "Bardak hacmi (ml)",
   'settings.unitsMetric': 'Metrik (kg, cm)',
   'settings.unitsImperial': 'Imperial (lb, in)',
   'settings.height': 'Boy',

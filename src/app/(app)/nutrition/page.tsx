@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { api, useResource } from '@/lib/client/api';
 import { useMutate } from '@/lib/client/mutate';
+import { useHydrated } from '@/lib/client/hydrated';
 import { Button, Card, CardHeader, Field, Input, Select, Skeleton, Textarea, cx } from '@/components/ui/primitives';
 import { Icon } from '@/components/ui/icons';
 import { Modal } from '@/components/ui/modal';
@@ -11,6 +12,7 @@ import { useToast } from '@/components/ui/toast';
 import { PageHeader, DateNav } from '@/components/page-header';
 import { useI18n } from '@/i18n/provider';
 import { dateKeyIn } from '@/lib/date';
+import { formatWater } from '@/lib/hydration';
 
 interface Meal {
   id: string;
@@ -29,6 +31,8 @@ interface Meal {
 
 interface NutritionData {
   date: string;
+  /** Contenance d'un verre, telle que reglee dans le profil. */
+  glassMl?: number;
   meals: Meal[];
   templates: Meal[];
   waterMl: number;
@@ -37,7 +41,8 @@ interface NutritionData {
 
 const MEAL_TYPES = ['breakfast', 'lunch', 'dinner', 'snack'] as const;
 const WATER_GOAL_ML = 2000;
-const GLASS_ML = 250;
+/** Repli si le profil ne dit rien : un verre standard. */
+const GLASS_ML_DEFAUT = 250;
 
 const EMPTY_FORM = {
   type: 'breakfast' as Meal['type'],
@@ -55,9 +60,14 @@ export default function NutritionPage() {
   const { t, locale, n } = useI18n();
   const toast = useToast();
   const { run: mutate, fields: erreurs, clearField } = useMutate();
+  // Ces boutons sont rendus des le serveur : sans cette garde, un clic passe
+  // avant l'hydratation est perdu sans le moindre signe.
+  const pret = useHydrated();
 
   const [date, setDate] = useState(() => dateKeyIn(Intl.DateTimeFormat().resolvedOptions().timeZone));
   const { data, loading, refresh, setData } = useResource<NutritionData>(`/api/meals?date=${date}`, [date]);
+
+  const verreMl = data?.glassMl ?? GLASS_ML_DEFAUT;
 
   const [modalOpen, setModalOpen] = useState(false);
   const [form, setForm] = useState(EMPTY_FORM);
@@ -260,31 +270,30 @@ export default function NutritionPage() {
         <Card>
           <CardHeader title={t('nutrition.water')} icon="droplet" accent="#e6e6e6" />
           <div className="text-center">
-            <p className="text-3xl font-semibold text-[var(--text)]">
-              {(data.waterMl / 1000).toFixed(1)}
-              <span className="ms-1 text-sm font-normal text-[var(--text-faint)]">L</span>
+            <p data-testid="hydratation-total" className="text-3xl font-semibold text-[var(--text)]">
+              {formatWater(data.waterMl, locale)}
             </p>
             <p className="mt-0.5 text-xs text-[var(--text-faint)]">
               {t('nutrition.waterGoal')} : {WATER_GOAL_ML / 1000} L
             </p>
 
             <div className="mt-4 flex justify-center gap-1.5">
-              {Array.from({ length: WATER_GOAL_ML / GLASS_ML }).map((_, index) => (
+              {Array.from({ length: WATER_GOAL_ML / verreMl }).map((_, index) => (
                 <span
                   key={index}
                   className={cx(
                     'h-8 w-3 rounded-sm transition-colors',
-                    index * GLASS_ML < data.waterMl ? 'bg-[#e6e6e6]' : 'bg-[var(--surface-2)]',
+                    index * verreMl < data.waterMl ? 'bg-[#e6e6e6]' : 'bg-[var(--surface-2)]',
                   )}
                 />
               ))}
             </div>
 
             <div className="mt-4 flex justify-center gap-2">
-              <Button variant="secondary" size="sm" onClick={() => addWater(-GLASS_ML)} aria-label="Retirer un verre">
+              <Button variant="secondary" size="sm" loading={!pret} onClick={() => addWater(-verreMl)} aria-label="Retirer un verre">
                 <Icon name="minus" size={15} />
               </Button>
-              <Button size="sm" icon="plus" onClick={() => addWater(GLASS_ML)}>
+              <Button size="sm" icon="plus" loading={!pret} onClick={() => addWater(verreMl)}>
                 {t('nutrition.addGlass')}
               </Button>
             </div>

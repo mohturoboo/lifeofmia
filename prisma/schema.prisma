@@ -41,6 +41,7 @@ model User {
   theme      String  @default("dark") // dark | light | system
   timeFormat String  @default("24h") // 12h | 24h
   units      String  @default("metric") // metric | imperial
+  glassMl    Int     @default(250) // contenance d'un verre, pour le suivi d'hydratation
 
   // Profil personnel
   birthDate DateTime?

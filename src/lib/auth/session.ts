@@ -25,6 +25,7 @@ export type SessionUser = Pick<
   | 'latitude'
   | 'longitude'
   | 'units'
+  | 'glassMl'
   | 'mainGoal'
   | 'xp'
   | 'level'
@@ -51,6 +52,7 @@ const SESSION_USER_SELECT = {
   latitude: true,
   longitude: true,
   units: true,
+  glassMl: true,
   mainGoal: true,
   xp: true,
   level: true,

@@ -399,6 +399,7 @@ export const es: Dictionary = {
   'settings.themeSystem': 'Sistema',
   'settings.timeFormat': 'Formato horario',
   'settings.units': 'Unidades',
+  'settings.glassSize': "Tamano del vaso (ml)",
   'settings.unitsMetric': 'Metrico (kg, cm)',
   'settings.unitsImperial': 'Imperial (lb, in)',
   'settings.height': 'Altura',

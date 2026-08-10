@@ -400,6 +400,7 @@ export const ar: Dictionary = {
   'settings.themeSystem': 'النظام',
   'settings.timeFormat': 'صيغة الوقت',
   'settings.units': 'الوحدات',
+  'settings.glassSize': "حجم الكوب (مل)",
   'settings.unitsMetric': 'متري (كجم، سم)',
   'settings.unitsImperial': 'إمبراطوري (رطل، بوصة)',
   'settings.height': 'الطول',

@@ -27,6 +27,7 @@ interface ProfileData {
     theme: Theme;
     timeFormat: '12h' | '24h';
     units: 'metric' | 'imperial';
+    glassMl: number;
     birthDate: string | null;
     gender: string | null;
     heightCm: number | null;
@@ -64,6 +65,7 @@ export default function SettingsPage() {
     mainGoal: '',
     timeFormat: '24h' as '12h' | '24h',
     units: 'metric' as 'metric' | 'imperial',
+    glassMl: '250',
   });
 
   const [passwords, setPasswords] = useState({ current: '', next: '' });
@@ -84,6 +86,7 @@ export default function SettingsPage() {
       mainGoal: profile.mainGoal ?? '',
       timeFormat: profile.timeFormat,
       units: profile.units,
+      glassMl: String(profile.glassMl ?? 250),
     });
   }, [data]);
 
@@ -109,6 +112,7 @@ export default function SettingsPage() {
         mainGoal: form.mainGoal || null,
         timeFormat: form.timeFormat,
         units: form.units,
+        glassMl: Number(form.glassMl) || 250,
       }), { notifySuccess: false });
     setSaving(false);
     if (!saved) return;
@@ -296,6 +300,20 @@ export default function SettingsPage() {
                   <option value="12h">12 h (AM/PM)</option>
                 </Select>
               </Field>
+              {/* Contenance d'un verre : sert au suivi d'hydratation. */}
+              <Field label={t('settings.glassSize')} error={erreurs.glassMl} htmlFor="glass-size">
+                <Input
+                  id="glass-size"
+                  type="number"
+                  invalid={Boolean(erreurs.glassMl)}
+                  min={50}
+                  max={1000}
+                  step={10}
+                  value={form.glassMl}
+                  onChange={(event) => set('glassMl', event.target.value)}
+                />
+              </Field>
+
               <Field label={t('settings.units')} htmlFor="units">
                 <Select id="units" value={form.units} onChange={(event) => set('units', event.target.value as 'metric' | 'imperial')}>
                   <option value="metric">{t('settings.unitsMetric')}</option>

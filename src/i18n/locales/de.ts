@@ -399,6 +399,7 @@ export const de: Dictionary = {
   'settings.themeSystem': 'System',
   'settings.timeFormat': 'Zeitformat',
   'settings.units': 'Einheiten',
+  'settings.glassSize': "Glasgrosse (ml)",
   'settings.unitsMetric': 'Metrisch (kg, cm)',
   'settings.unitsImperial': 'Imperial (lb, in)',
   'settings.height': 'Grosse',

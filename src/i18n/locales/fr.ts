@@ -418,6 +418,7 @@ export const fr = {
   'settings.themeSystem': 'Systeme',
   'settings.timeFormat': 'Format horaire',
   'settings.units': 'Unites',
+  'settings.glassSize': "Contenance d'un verre (ml)",
   'settings.unitsMetric': 'Metrique (kg, cm)',
   'settings.unitsImperial': 'Imperial (lb, in)',
   'settings.height': 'Taille',

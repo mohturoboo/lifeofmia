@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
 
 /**
  * Les cinq flux de creation signales comme « non persistants ».
@@ -81,17 +81,40 @@ test('un repas ajoute survit au rechargement', async ({ page }) => {
   await expect(page.getByText('420 kcal').first()).toBeVisible();
 });
 
+/**
+ * Remet l'hydratation du jour a zero.
+ *
+ * Tous les tests partagent un meme compte : sans cette remise a plat, le total
+ * depend de l'ordre d'execution des fichiers, et un test qui suppose « 0 ml au
+ * depart » echoue selon ce qui a tourne avant lui.
+ *
+ * La date est calculee DANS la page : l'application utilise le fuseau du
+ * navigateur, qui ne coincide pas forcement avec celui de la machine de test.
+ */
+async function remettreAZero(page: Page) {
+  await page.goto('/nutrition');
+  const jour = await page.evaluate(() => new Date().toLocaleDateString('sv'));
+  const journee = await page.request.get(`/api/meals?date=${jour}`);
+  const { data } = (await journee.json()) as { data?: { waterMl?: number } };
+  const restant = data?.waterMl ?? 0;
+  if (restant !== 0) {
+    await page.request.post('/api/water', { data: { date: jour, amountMl: -restant } });
+  }
+}
+
 test('un verre d\'eau ajoute survit au rechargement', async ({ page }) => {
   await page.goto('/nutrition');
 
-  const total = page.locator('p').filter({ hasText: /^[\d.,]+\s*L$/ }).first();
-  await expect(total).toHaveText(/0[.,]0\s*L/);
+  await remettreAZero(page);
+
+  const total = page.getByTestId('hydratation-total');
+  await expect(total).toHaveText('0 ml');
 
   await page.getByRole('button', { name: 'Ajouter un verre' }).click();
-  await expect(total).toHaveText(/0[.,]3\s*L/);
+  await expect(total).toHaveText('250 ml');
 
   await page.reload();
-  await expect(total).toHaveText(/0[.,]3\s*L/);
+  await expect(total).toHaveText('250 ml');
 });
 
 test('une priere marquee accomplie survit au rechargement', async ({ page }) => {

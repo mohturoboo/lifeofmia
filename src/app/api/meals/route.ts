@@ -45,6 +45,8 @@ export const GET = route(async ({ user, searchParams }) => {
     meals,
     templates,
     waterMl: water._sum.amountMl ?? 0,
+    // Evite une requete de plus cote client pour une seule valeur de reglage.
+    glassMl: user.glassMl,
     totals: {
       calories: Math.round(totals.calories),
       protein: Math.round(totals.protein),

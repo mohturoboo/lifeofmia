@@ -148,10 +148,20 @@ export const mealCreateSchema = z.object({
  */
 export const mealUpdateSchema = updatableFrom(mealCreateSchema).omit({ isTemplate: true });
 
-export const waterLogSchema = z.object({
-  date: dateKeySchema,
-  amountMl: z.number().int().min(-3000).max(3000).default(250),
-});
+/*
+ * `.strict()` : un champ inconnu fait echouer la requete au lieu d'etre ignore.
+ *
+ * Sans cela, un envoi de `{ amount: 250 }` — nom de champ errone — repondait
+ * 200 en appliquant simplement la valeur par defaut de `amountMl`. Le client
+ * croyait son appel correct, le serveur enregistrait autre chose que ce qui
+ * etait demande, et le diagnostic partait dans la mauvaise direction.
+ */
+export const waterLogSchema = z
+  .object({
+    date: dateKeySchema,
+    amountMl: z.number().int().min(-3000).max(3000).default(250),
+  })
+  .strict();
 
 // --- Poids -------------------------------------------------------------------
 

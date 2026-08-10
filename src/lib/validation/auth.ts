@@ -54,6 +54,9 @@ export const updateProfileSchema = z.object({
   units: unitsSchema.optional(),
   birthDate: z.string().nullable().optional(),
   gender: z.enum(['male', 'female', 'other']).nullable().optional(),
+  // Un verre courant fait 150 a 500 ml ; hors de ces bornes, c'est une
+  // erreur de saisie plutot qu'un choix.
+  glassMl: z.number().int().min(50, 'Entre 50 et 1000 ml.').max(1000, 'Entre 50 et 1000 ml.').optional(),
   heightCm: z
     .number()
     .min(50, 'Taille attendue entre 50 et 250 cm.')

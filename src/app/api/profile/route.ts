@@ -16,7 +16,7 @@ export const GET = route(async ({ user }) => {
       select: {
         id: true, email: true, firstName: true, lastName: true, avatarUrl: true,
         country: true, city: true, latitude: true, longitude: true, timezone: true,
-        locale: true, theme: true, timeFormat: true, units: true,
+        locale: true, theme: true, timeFormat: true, units: true, glassMl: true,
         birthDate: true, gender: true, heightCm: true, mainGoal: true,
         twoFactorEnabled: true, marketingOptIn: true,
         xp: true, level: true, currentStreak: true, longestStreak: true, createdAt: true,
@@ -56,7 +56,7 @@ export const PATCH = route(
 
     for (const key of [
       'firstName', 'lastName', 'avatarUrl', 'country', 'timezone', 'locale',
-      'theme', 'timeFormat', 'units', 'gender', 'heightCm', 'mainGoal', 'marketingOptIn',
+      'theme', 'timeFormat', 'units', 'glassMl', 'gender', 'heightCm', 'mainGoal', 'marketingOptIn',
     ] as const) {
       if (body[key] !== undefined) data[key] = body[key];
     }
@@ -94,7 +94,7 @@ export const PATCH = route(
       select: {
         id: true, firstName: true, lastName: true, city: true, country: true,
         latitude: true, longitude: true, timezone: true, locale: true, theme: true,
-        timeFormat: true, units: true, heightCm: true, mainGoal: true, avatarUrl: true,
+        timeFormat: true, units: true, glassMl: true, heightCm: true, mainGoal: true, avatarUrl: true,
       },
     });
 

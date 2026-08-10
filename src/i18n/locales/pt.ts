@@ -399,6 +399,7 @@ export const pt: Dictionary = {
   'settings.themeSystem': 'Sistema',
   'settings.timeFormat': 'Formato horario',
   'settings.units': 'Unidades',
+  'settings.glassSize': "Capacidade do copo (ml)",
   'settings.unitsMetric': 'Metrico (kg, cm)',
   'settings.unitsImperial': 'Imperial (lb, in)',
   'settings.height': 'Altura',
