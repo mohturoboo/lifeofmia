@@ -1,4 +1,4 @@
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 
 /**
  * Les cinq flux de creation signales comme « non persistants ».
@@ -11,36 +11,11 @@ import { test, expect, type Page } from '@playwright/test';
  * ce qui revient reellement du serveur.
  */
 
-const MOT_DE_PASSE = 'MotDePasse1';
-
-/** Cree un compte neuf et ouvre la session, par l'API pour aller au fait. */
-async function connecterCompteNeuf(page: Page): Promise<string> {
-  const email = `e2e-${Date.now()}-${Math.random().toString(36).slice(2, 7)}@lifeofm.test`;
-
-  const reponse = await page.request.post('/api/auth/register', {
-    data: {
-      email,
-      password: MOT_DE_PASSE,
-      firstName: 'Test',
-      lastName: 'E2E',
-      country: 'France',
-      city: 'Paris',
-      timezone: 'Europe/Paris',
-      locale: 'fr',
-      acceptTerms: true,
-    },
-  });
-  expect(reponse.status(), await reponse.text()).toBe(201);
-  return email;
-}
-
-/** Supprime le compte de test et tout ce qui en depend. */
-async function supprimerCompte(page: Page) {
-  await page.request.delete('/api/profile').catch(() => undefined);
-}
-
+/*
+ * La session vient du projet « compte » (voir playwright.config.ts) : un compte
+ * neuf par execution, partage par tous les tests, supprime a la fin.
+ */
 test.beforeEach(async ({ page }) => {
-  await connecterCompteNeuf(page);
   // Toute reponse d'erreur du serveur est remontee dans le rapport : sans ca,
   // un 400 silencieux ressemblerait a un simple probleme d'affichage.
   page.on('response', (r) => {
@@ -48,10 +23,6 @@ test.beforeEach(async ({ page }) => {
       console.error(`  reponse ${r.status()} sur ${new URL(r.url()).pathname}`);
     }
   });
-});
-
-test.afterEach(async ({ page }) => {
-  await supprimerCompte(page);
 });
 
 test('une tache creee survit au rechargement', async ({ page }) => {

@@ -29,7 +29,18 @@ export default defineConfig({
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
   },
-  projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
+  projects: [
+    // Un seul compte pour toute l'execution : la protection anti-abus sur
+    // l'inscription refuse une sixieme tentative dans l'heure, et une suite ne
+    // doit pas echouer pour une raison etrangere a ce qu'elle mesure.
+    { name: 'compte', testMatch: /compte\.setup\.ts/, teardown: 'nettoyage' },
+    { name: 'nettoyage', testMatch: /compte\.teardown\.ts/, use: { storageState: './e2e/.auth/session.json' } },
+    {
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'], storageState: './e2e/.auth/session.json' },
+      dependencies: ['compte'],
+    },
+  ],
   webServer: process.env.E2E_BASE_URL
     ? undefined
     : {
