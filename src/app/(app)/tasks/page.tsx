@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 import { api, useResource } from '@/lib/client/api';
 import { useMutate } from '@/lib/client/mutate';
@@ -135,12 +135,8 @@ export default function TasksPage() {
     const overdue = task.dueDate && !done && new Date(task.dueDate) < new Date();
 
     return (
-      <motion.li
+      <li
         key={task.id}
-        layout
-        initial={{ opacity: 0, x: -8 }}
-        animate={{ opacity: 1, x: 0 }}
-        exit={{ opacity: 0, height: 0 }}
         style={{ marginInlineStart: depth * 24 }}
       >
         <div
@@ -190,7 +186,7 @@ export default function TasksPage() {
             </div>
           </div>
 
-          <div className="flex shrink-0 gap-0.5 opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100">
+          <div className="flex shrink-0 gap-0.5 transition-opacity sm:opacity-0 sm:group-hover:opacity-100 sm:focus-within:opacity-100">
             {depth === 0 && (
               <button
                 type="button"
@@ -223,12 +219,12 @@ export default function TasksPage() {
         {task.subtasks.length > 0 && (
           <ul className="mt-1.5 space-y-1.5">{task.subtasks.map((subtask) => renderTask(subtask, depth + 1))}</ul>
         )}
-      </motion.li>
+      </li>
     );
   };
 
   return (
-    <div className="mx-auto max-w-4xl">
+    <div className="lm-entree mx-auto max-w-4xl">
       <PageHeader
         title={t('tasks.title')}
         subtitle={t('tasks.subtitle')}

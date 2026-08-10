@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { api, useResource } from '@/lib/client/api';
 import { useMutate } from '@/lib/client/mutate';
@@ -155,7 +154,7 @@ export default function HabitsPage() {
   }
 
   return (
-    <div className="mx-auto max-w-6xl">
+    <div className="lm-entree mx-auto max-w-6xl">
       <PageHeader
         title={t('habits.title')}
         subtitle={t('habits.subtitle')}
@@ -194,17 +193,14 @@ export default function HabitsPage() {
         </Card>
       ) : (
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          {data.map((habit, index) => {
+          {data.map((habit) => {
             const done = habit.todayLog?.status === 'done';
             const count = habit.todayLog?.count ?? 0;
             const multi = habit.targetPerDay > 1;
 
             return (
-              <motion.div
+              <div
                 key={habit.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: index * 0.03 }}
               >
                 <Card className={cx('h-full', habit.archived && 'opacity-60')}>
                   <div className="flex items-start gap-3">
@@ -295,7 +291,7 @@ export default function HabitsPage() {
                     </div>
                   </div>
                 </Card>
-              </motion.div>
+              </div>
             );
           })}
         </div>

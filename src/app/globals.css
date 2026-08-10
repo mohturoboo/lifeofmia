@@ -98,6 +98,26 @@
 }
 
 /*
+ * Entree du contenu d'une page.
+ *
+ * UNE animation par conteneur, jamais une par element. Chaque carte portait la
+ * sienne, avec un decalage croissant : sur le tableau de bord, le vingtieme
+ * element n'apparaissait qu'apres 1,15 s, et le navigateur devait suivre des
+ * dizaines d'animations simultanees.
+ *
+ * L'opacite n'est PAS animee. Une animation qui ne progresse pas maintient son
+ * image de depart : un `from { opacity: 0 }` laisserait le contenu invisible
+ * pour de bon des que la boucle d'animation ne tourne pas — onglet en
+ * arriere-plan, images throttlees. C'est ce qui se produisait, mesure a
+ * l'appui : sept elements du tableau de bord restaient a `opacity: 0`.
+ */
+@keyframes lm-entree {
+  from {
+    transform: translateY(8px);
+  }
+}
+
+/*
  * Le voile, lui, peut fondre : figé a l'etat de depart, il se voit seulement
  * moins. Rien ne devient inaccessible.
  */
@@ -316,6 +336,11 @@
     animation: lm-toast-in 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
+  /* A poser sur un conteneur, pas sur ses enfants. 180 ms, une seule fois. */
+  .lm-entree {
+    animation: lm-entree 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
   /*
    * Carte en verre depoli : un voile clair tres dilue plutot qu'un gris opaque,
    * pour que le fond noir transparaisse et que les bords accrochent la lumiere.
@@ -332,9 +357,20 @@
       box-shadow 0.35s ease;
   }
 
+  /*
+   * Pas de `backdrop-filter` ici.
+   *
+   * Il etait applique a CHAQUE carte : une douzaine par page, chacune imposant
+   * au GPU de rechantillonner le fond derriere elle a chaque image. C'est l'un
+   * des effets les plus couteux du navigateur, et le seul a etre repete autant
+   * de fois. Le degrade seul donne le meme verre depoli sur un fond noir, pour
+   * un cout nul.
+   *
+   * Le flou reste la ou il compte et ou il est unique : la capsule d'en-tete,
+   * le voile des fenetres modales, le tiroir de navigation.
+   */
   .dark .lm-card {
     background: linear-gradient(160deg, rgb(255 255 255 / 0.045), rgb(255 255 255 / 0.012));
-    backdrop-filter: blur(14px);
   }
 
   /* Filet clair sur l'arete haute — la lumiere semble tomber d'en haut. */

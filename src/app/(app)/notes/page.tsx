@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { api, useResource } from '@/lib/client/api';
 import { useMutate } from '@/lib/client/mutate';
@@ -90,7 +89,7 @@ export default function NotesPage() {
   }
 
   return (
-    <div className="mx-auto max-w-5xl">
+    <div className="lm-entree mx-auto max-w-5xl">
       <PageHeader
         title={t('notes.title')}
         subtitle={t('notes.subtitle')}
@@ -140,12 +139,9 @@ export default function NotesPage() {
         </Card>
       ) : (
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {data.map((note, index) => (
-            <motion.article
+          {data.map((note) => (
+            <article
               key={note.id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.28, delay: index * 0.03 }}
               className="lm-card group relative flex h-48 flex-col overflow-hidden p-4"
               style={{ borderTopColor: note.color, borderTopWidth: 3 }}
             >
@@ -161,7 +157,7 @@ export default function NotesPage() {
                       'grid size-7 place-items-center rounded-lg transition-colors',
                       note.pinned
                         ? 'text-[#ff9fbf]'
-                        : 'text-[var(--text-faint)] opacity-0 group-hover:opacity-100 hover:text-[var(--text)]',
+                        : 'text-[var(--text-faint)] sm:opacity-0 sm:group-hover:opacity-100 hover:text-[var(--text)]',
                     )}
                   >
                     <Icon name="award" size={13} />
@@ -170,7 +166,7 @@ export default function NotesPage() {
                     type="button"
                     onClick={() => remove(note)}
                     aria-label={t('common.delete')}
-                    className="grid size-7 place-items-center rounded-lg text-[var(--text-faint)] opacity-0 transition-opacity hover:text-red-500 group-hover:opacity-100"
+                    className="grid size-7 place-items-center rounded-lg text-[var(--text-faint)] transition-opacity sm:opacity-0 hover:text-red-500 sm:group-hover:opacity-100"
                   >
                     <Icon name="trash" size={13} />
                   </button>
@@ -190,7 +186,7 @@ export default function NotesPage() {
               <p className="mt-2 shrink-0 text-[10px] text-[var(--text-faint)]">
                 {new Date(note.updatedAt).toLocaleDateString(locale, { day: 'numeric', month: 'short' })}
               </p>
-            </motion.article>
+            </article>
           ))}
         </div>
       )}

@@ -76,7 +76,7 @@ export default function StatsPage() {
     new Date(`${date}T12:00:00Z`).toLocaleDateString(locale, { day: 'numeric', month: 'short' });
 
   return (
-    <div className="mx-auto max-w-6xl">
+    <div className="lm-entree mx-auto max-w-6xl">
       <PageHeader
         title={t('stats.title')}
         subtitle={t('stats.subtitle')}

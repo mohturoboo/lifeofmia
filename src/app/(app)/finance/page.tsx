@@ -126,7 +126,7 @@ export default function FinancePage() {
   });
 
   return (
-    <div className="mx-auto max-w-4xl">
+    <div className="lm-entree mx-auto max-w-4xl">
       <PageHeader
         title={t('finance.title')}
         subtitle={t('finance.subtitle')}
@@ -235,7 +235,7 @@ export default function FinancePage() {
                     type="button"
                     onClick={() => remove(transaction)}
                     aria-label={t('common.delete')}
-                    className="grid size-7 shrink-0 place-items-center rounded-lg text-[var(--text-faint)] opacity-0 transition-opacity hover:text-red-500 group-hover:opacity-100"
+                    className="grid size-7 shrink-0 place-items-center rounded-lg text-[var(--text-faint)] transition-opacity sm:opacity-0 hover:text-red-500 sm:group-hover:opacity-100"
                   >
                     <Icon name="trash" size={13} />
                   </button>

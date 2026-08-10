@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import { motion } from 'framer-motion';
 import { useMemo } from 'react';
 import { api, useResource } from '@/lib/client/api';
 import { useMutate } from '@/lib/client/mutate';
@@ -191,7 +190,7 @@ export default function DashboardPage() {
   ];
 
   return (
-    <div className="mx-auto max-w-7xl space-y-5">
+    <div className="lm-entree mx-auto max-w-7xl space-y-5">
       {/*
         --- Ouverture ---
         L'accueil n'est plus une carte : le titre respire directement sur le
@@ -199,10 +198,7 @@ export default function DashboardPage() {
         meteo et le lieu descendent en une ligne unique de metadonnees, ce qui
         libere tout le haut de page pour la seule information qui compte.
       */}
-      <motion.section
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+      <section
         className="relative flex flex-col items-center px-4 pb-2 pt-6 text-center sm:pt-10"
       >
         <RingProgress value={stats.completionRate} size={104} thickness={5} color="#fbc7da" />
@@ -249,7 +245,7 @@ export default function DashboardPage() {
           </p>
           <footer className="lm-eyebrow mt-3">{data.quote.author}</footer>
         </blockquote>
-      </motion.section>
+      </section>
 
       {/*
         --- Indicateurs ---
@@ -257,12 +253,9 @@ export default function DashboardPage() {
         le chiffre devient l'element dominant et la courbe passe en fond.
       */}
       <section className="grid grid-cols-2 gap-3 lg:grid-cols-3 xl:grid-cols-6">
-        {tiles.map((tile, index) => (
-          <motion.div
+        {tiles.map((tile) => (
+          <div
             key={tile.label}
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.15 + index * 0.05, ease: [0.16, 1, 0.3, 1] }}
           >
             <Link href={tile.href} className="lm-card lm-card-hover group relative block overflow-hidden p-4">
               {/* La courbe de tendance passe en filigrane au fond de la tuile. */}
@@ -283,7 +276,7 @@ export default function DashboardPage() {
                 <p className="mt-1 text-[11px] leading-tight text-[var(--text-faint)]">{tile.label}</p>
               </div>
             </Link>
-          </motion.div>
+          </div>
         ))}
       </section>
 

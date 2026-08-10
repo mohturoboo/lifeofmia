@@ -216,7 +216,7 @@ export default function NutritionPage() {
   ];
 
   return (
-    <div className="mx-auto max-w-5xl">
+    <div className="lm-entree mx-auto max-w-5xl">
       <PageHeader
         title={t('nutrition.title')}
         subtitle={t('nutrition.subtitle')}

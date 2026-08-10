@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { api, useResource } from '@/lib/client/api';
 import { useMutate } from '@/lib/client/mutate';
@@ -167,7 +166,7 @@ export default function GoalsPage() {
   const horizonLabel = { short: t('goals.shortTerm'), mid: t('goals.midTerm'), long: t('goals.longTerm') };
 
   return (
-    <div className="mx-auto max-w-5xl">
+    <div className="lm-entree mx-auto max-w-5xl">
       <PageHeader
         title={t('goals.title')}
         subtitle={t('goals.subtitle')}
@@ -212,17 +211,14 @@ export default function GoalsPage() {
                 </h2>
 
                 <div className="space-y-3">
-                  {goals.map((goal, index) => {
+                  {goals.map((goal) => {
                     const daysLeft = goal.deadline
                       ? Math.ceil((new Date(goal.deadline).getTime() - Date.now()) / 86_400_000)
                       : null;
 
                     return (
-                      <motion.div
+                      <div
                         key={goal.id}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.3, delay: index * 0.04 }}
                       >
                         <Card className={cx(goal.status === 'done' && 'opacity-70')}>
                           <div className="flex items-start justify-between gap-3">
@@ -329,7 +325,7 @@ export default function GoalsPage() {
                                   type="button"
                                   onClick={() => removeStep(goal.id, step.id)}
                                   aria-label={t('common.delete')}
-                                  className="grid size-6 shrink-0 place-items-center rounded text-[var(--text-faint)] opacity-0 transition-opacity hover:text-red-500 group-hover:opacity-100"
+                                  className="grid size-6 shrink-0 place-items-center rounded text-[var(--text-faint)] transition-opacity sm:opacity-0 hover:text-red-500 sm:group-hover:opacity-100"
                                 >
                                   <Icon name="close" size={12} />
                                 </button>
@@ -350,7 +346,7 @@ export default function GoalsPage() {
                             </div>
                           </div>
                         </Card>
-                      </motion.div>
+                      </div>
                     );
                   })}
                 </div>
