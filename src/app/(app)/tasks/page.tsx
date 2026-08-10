@@ -3,6 +3,7 @@
 import { AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 import { api, useResource } from '@/lib/client/api';
+import { useHydrated } from '@/lib/client/hydrated';
 import { useMutate } from '@/lib/client/mutate';
 import { Badge, Button, Card, EmptyState, Field, Input, Select, Skeleton, Textarea, cx } from '@/components/ui/primitives';
 import { Icon } from '@/components/ui/icons';
@@ -45,6 +46,8 @@ export default function TasksPage() {
   const { t, locale } = useI18n();
   const toast = useToast();
   const { run: mutate, fields: erreurs, clearField } = useMutate();
+  // Ouvrir un formulaire de creation ne demande aucune donnee.
+  const pret = useHydrated();
 
   const [scope, setScope] = useState<(typeof SCOPES)[number]>('today');
   const [showDone, setShowDone] = useState(false);
@@ -231,7 +234,7 @@ export default function TasksPage() {
         icon="checkCircle"
         color="#e6e6e6"
         actions={
-          <Button icon="plus" disabled={loading} onClick={() => openCreate()}>
+          <Button icon="plus" loading={!pret} onClick={() => openCreate()}>
             {t('tasks.new')}
           </Button>
         }

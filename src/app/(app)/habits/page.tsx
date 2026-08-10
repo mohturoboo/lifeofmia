@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { api, useResource } from '@/lib/client/api';
+import { useHydrated } from '@/lib/client/hydrated';
 import { useMutate } from '@/lib/client/mutate';
 import { Badge, Button, Card, EmptyState, Field, Input, Select, Skeleton, Textarea, Toggle, cx } from '@/components/ui/primitives';
 import { HABIT_ICONS, Icon, type IconName } from '@/components/ui/icons';
@@ -50,6 +51,8 @@ const EMPTY_FORM = {
 export default function HabitsPage() {
   const { t } = useI18n();
   const { run: mutate, fields: erreurs, clearField } = useMutate();
+  // Ouvrir un formulaire de creation ne demande aucune donnee.
+  const pret = useHydrated();
   const [showArchived, setShowArchived] = useState(false);
   const { data, loading, refresh } = useResource<Habit[]>(
     `/api/habits?archived=${showArchived}`,
@@ -162,10 +165,10 @@ export default function HabitsPage() {
         color="#e9b8d5"
         actions={
           <>
-            <Button variant="secondary" size="sm" disabled={loading} onClick={() => setShowArchived((value) => !value)}>
+            <Button variant="secondary" size="sm" loading={!pret} onClick={() => setShowArchived((value) => !value)}>
               {showArchived ? t('common.all') : t('habits.archived')}
             </Button>
-            <Button icon="plus" disabled={loading} onClick={openCreate}>
+            <Button icon="plus" loading={!pret} onClick={openCreate}>
               {t('habits.new')}
             </Button>
           </>

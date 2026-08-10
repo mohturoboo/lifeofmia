@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { api, useResource } from '@/lib/client/api';
+import { useHydrated } from '@/lib/client/hydrated';
 import { useMutate } from '@/lib/client/mutate';
 import { Badge, Button, Card, EmptyState, Field, Input, Progress, Select, Skeleton, Textarea, cx } from '@/components/ui/primitives';
 import { Icon } from '@/components/ui/icons';
@@ -56,6 +57,8 @@ export default function GoalsPage() {
   const { t } = useI18n();
   const toast = useToast();
   const { run: mutate, fields: erreurs, clearField } = useMutate();
+  // Ouvrir un formulaire de creation ne demande aucune donnee.
+  const pret = useHydrated();
   const { data, loading, refresh } = useResource<Goal[]>('/api/goals');
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -173,7 +176,7 @@ export default function GoalsPage() {
         icon="target"
         color="#d9c7f0"
         actions={
-          <Button icon="plus" disabled={loading} onClick={openCreate}>
+          <Button icon="plus" loading={!pret} onClick={openCreate}>
             {t('goals.new')}
           </Button>
         }
