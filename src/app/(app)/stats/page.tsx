@@ -83,7 +83,9 @@ export default function StatsPage() {
         icon="chart"
         color="#e6e6e6"
         actions={
-          <div className="flex gap-1 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-1">
+          // Cinq periodes en toutes lettres font 389 px : sans repli, ce
+          // selecteur debordait de tout ecran de moins de 390 px.
+          <div className="flex flex-wrap justify-center gap-1 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-1">
             {PERIODS.map((value) => (
               <button
                 key={value}

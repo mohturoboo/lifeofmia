@@ -238,7 +238,13 @@ export function Card({
   className?: string;
   padded?: boolean;
 }) {
-  return <div className={cx('lm-card', padded && 'p-6', className)}>{children}</div>;
+  /*
+   * La marge interieure s'allege sur petit ecran. A 320 px, trois tuiles de
+   * synthese cote a cote font 91 px chacune : avec 24 px de marge de chaque
+   * cote il ne restait que 43 px de texte, et un mot comme « Depenses » (46 px)
+   * se retrouvait coupe.
+   */
+  return <div className={cx('lm-card', padded && 'p-4 sm:p-6', className)}>{children}</div>;
 }
 
 export function CardHeader({

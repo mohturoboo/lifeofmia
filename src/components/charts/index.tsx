@@ -242,8 +242,18 @@ export function BarChart({
     return <div className="grid h-32 place-items-center text-xs text-[var(--text-faint)]">—</div>;
   }
 
+  /*
+   * La marge laterale reserve la place des infobulles. Elles sont larges — 3 px sur trente jours affiches en
+   * 320 px — et debordent donc sur les cotes. Sans cette reserve, celle de la
+   * derniere barre poussait la PAGE entiere : defilement horizontal.
+   */
   return (
-    <div className="flex w-full items-end gap-1.5" style={{ height }} role="img" aria-label={`Histogramme de ${data.length} valeurs`}>
+    <div
+      className="flex w-full items-end gap-1.5 px-4"
+      style={{ height }}
+      role="img"
+      aria-label={`Histogramme de ${data.length} valeurs`}
+    >
       {data.map((point, index) => {
         const ratio = Math.max(0, Math.min(1, point.value / max));
         return (
@@ -256,7 +266,14 @@ export function BarChart({
                   background: `linear-gradient(180deg, ${color}, ${color}66)`,
                 }}
               />
-              <span className="pointer-events-none absolute inset-x-0 -top-5 text-center text-[10px] font-medium text-[var(--text)] opacity-0 transition-opacity group-hover:opacity-100">
+              {/*
+                `whitespace-nowrap` : l'infobulle est aussi large que sa barre,
+                soit environ 5 px sur trente jours affiches en 390 px. Sans
+                cette regle, « 420 kcal » se repliait en quatre lignes d'un
+                caractere, illisibles. Elle deborde desormais sur les cotes,
+                ce qui est le comportement attendu d'une infobulle.
+              */}
+              <span className="pointer-events-none absolute inset-x-0 -top-5 whitespace-nowrap text-center text-[10px] font-medium text-[var(--text)] opacity-0 transition-opacity group-hover:opacity-100">
                 {Math.round(point.value)}
                 {unit}
               </span>
@@ -468,8 +485,15 @@ export function Heatmap({
     return 1;
   };
 
+  /*
+   * `min-w-0` est indispensable : une annee de carres fait environ 780 px de
+   * large, largeur fixe par nature. Sans cette regle, ce conteneur — enfant
+   * d'un `flex`/`grid` dont la taille minimale vaut par defaut le contenu —
+   * refusait de retrecir sous 780 px, et c'est la PAGE ENTIERE qui se mettait
+   * a defiler horizontalement au lieu de la seule frise.
+   */
   return (
-    <div className="overflow-x-auto pb-1">
+    <div className="min-w-0 overflow-x-auto pb-1">
       <div className="flex gap-[3px]" role="img" aria-label={`Regularite sur ${data.length} jours`}>
         <div className="mr-1 flex flex-col gap-[3px]">
           {weekdayLabels.map((label, index) => (
