@@ -153,7 +153,7 @@ export default function SportPage() {
         ))}
       </div>
 
-      <div className="mb-4 grid gap-4 lg:grid-cols-3">
+      <div className="mb-4 grid grid-cols-1 gap-4 lg:grid-cols-3">
         <Card className="lg:col-span-2">
           <CardHeader title="30 derniers jours" icon="chart" accent="#ff9fbf" />
           <BarChart

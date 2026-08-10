@@ -14,7 +14,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
     <ThemeProvider initialTheme="dark">
       <I18nProvider initialLocale="fr">
         <ToastProvider>
-          <div className="grid min-h-dvh lg:grid-cols-2">
+          <div className="grid grid-cols-1 min-h-dvh lg:grid-cols-2">
             <div className="relative flex flex-col px-5 py-8 sm:px-10">
               <Link href="/" className="inline-flex w-fit items-center gap-2.5">
                 <span className="grid size-9 place-items-center rounded-xl lm-gradient-bg text-[var(--on-pink)]">

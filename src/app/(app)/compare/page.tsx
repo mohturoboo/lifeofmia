@@ -76,7 +76,7 @@ export default function ComparePage() {
         }
       />
 
-      <div className="mb-4 grid gap-3 sm:grid-cols-2">
+      <div className="mb-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
         <Card className="border-[var(--border)]">
           <p className="text-[11px] uppercase tracking-wide text-[var(--text-faint)]">{t('compare.periodA')}</p>
           <p className="mt-1 text-sm font-medium text-[var(--text-muted)]">
@@ -148,7 +148,7 @@ export default function ComparePage() {
         </div>
       </Card>
 
-      <div className="grid gap-4 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         <Card className="lg:col-span-2">
           <CardHeader title={t('dash.disciplineScore')} subtitle={periodLabels[period]} icon="trending" accent="#fbc7da" />
           <LineChart

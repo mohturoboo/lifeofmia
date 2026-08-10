@@ -183,7 +183,7 @@ export default function SettingsPage() {
         <Card>
           <CardHeader title={t('settings.profile')} icon="user" accent="#b4b4b4" />
           <div className="space-y-4">
-            <div className="grid gap-3 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <Field label={t('auth.firstName')} htmlFor="first-name">
                 <Input id="first-name" value={form.firstName} onChange={(event) => set('firstName', event.target.value)} />
               </Field>
@@ -196,7 +196,7 @@ export default function SettingsPage() {
               <Input id="email" value={data.profile.email} disabled />
             </Field>
 
-            <div className="grid gap-3 sm:grid-cols-3">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
               <Field label={t('auth.birthDate')} htmlFor="birth-date">
                 <Input id="birth-date" type="date" value={form.birthDate} onChange={(event) => set('birthDate', event.target.value)} />
               </Field>
@@ -260,7 +260,7 @@ export default function SettingsPage() {
               </div>
             </Field>
 
-            <div className="grid gap-3 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <Field label={t('auth.city')} htmlFor="city">
                 <Input id="city" list="cities" value={form.city} onChange={(event) => set('city', event.target.value)} />
                 <datalist id="cities">
@@ -274,7 +274,7 @@ export default function SettingsPage() {
               </Field>
             </div>
 
-            <div className="grid gap-3 sm:grid-cols-3">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
               <Field label={t('auth.timezone')} htmlFor="timezone">
                 <Input id="timezone" value={form.timezone} onChange={(event) => set('timezone', event.target.value)} />
               </Field>

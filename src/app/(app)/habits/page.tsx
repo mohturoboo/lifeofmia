@@ -172,7 +172,7 @@ export default function HabitsPage() {
       />
 
       {loading ? (
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {[0, 1, 2, 3].map((index) => (
             <Skeleton key={index} className="h-32 rounded-2xl" />
           ))}
@@ -191,7 +191,7 @@ export default function HabitsPage() {
           />
         </Card>
       ) : (
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {data.map((habit, index) => {
             const done = habit.todayLog?.status === 'done';
             const count = habit.todayLog?.count ?? 0;

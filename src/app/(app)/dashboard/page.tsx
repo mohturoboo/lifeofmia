@@ -123,7 +123,7 @@ export default function DashboardPage() {
     return (
       <div className="mx-auto max-w-7xl space-y-4">
         <Skeleton className="h-28 rounded-3xl" />
-        <div className="grid gap-4 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
           <Skeleton className="h-64 rounded-2xl lg:col-span-2" />
           <Skeleton className="h-64 rounded-2xl" />
         </div>
@@ -281,7 +281,7 @@ export default function DashboardPage() {
         ))}
       </section>
 
-      <div className="grid gap-4 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         {/* --- Habitudes du jour --- */}
         <Card className="lg:col-span-2">
           <CardHeader
@@ -406,7 +406,7 @@ export default function DashboardPage() {
         </Card>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         {/* --- Semaine --- */}
         <Card className="lg:col-span-2">
           <CardHeader title={t('dash.weekOverview')} subtitle={t('dash.last7days')} icon="chart" accent="#fbc7da" />

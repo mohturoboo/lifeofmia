@@ -51,7 +51,7 @@ export default function StatsPage() {
     return (
       <div className="mx-auto max-w-6xl space-y-4">
         <Skeleton className="h-24 rounded-2xl" />
-        <div className="grid gap-4 lg:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
           <Skeleton className="h-72 rounded-2xl" />
           <Skeleton className="h-72 rounded-2xl" />
         </div>
@@ -119,7 +119,7 @@ export default function StatsPage() {
         ))}
       </section>
 
-      <div className="mb-4 grid gap-4 lg:grid-cols-3">
+      <div className="mb-4 grid grid-cols-1 gap-4 lg:grid-cols-3">
         <Card className="lg:col-span-2">
           <CardHeader title={t('dash.disciplineScore')} subtitle={periodLabels[period]} icon="trending" accent="#fbc7da" />
           <LineChart
@@ -145,7 +145,7 @@ export default function StatsPage() {
         <Heatmap data={data.heatmap} color="#fbc7da" />
       </Card>
 
-      <div className="mb-4 grid gap-4 lg:grid-cols-2">
+      <div className="mb-4 grid grid-cols-1 gap-4 lg:grid-cols-2">
         <Card>
           <CardHeader title={t('stats.byCategory')} icon="chart" accent="#e9b8d5" />
           {Object.keys(data.byCategory).length === 0 ? (
@@ -182,7 +182,7 @@ export default function StatsPage() {
         </Card>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         <Card>
           <CardHeader title={t('dash.level')} icon="award" accent="#d9c7f0" />
           <div className="flex items-center gap-5">

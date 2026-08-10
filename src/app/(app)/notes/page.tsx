@@ -111,7 +111,7 @@ export default function NotesPage() {
       />
 
       {loading ? (
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {[0, 1, 2, 3, 4, 5].map((index) => (
             <Skeleton key={index} className="h-40 rounded-2xl" />
           ))}
@@ -130,7 +130,7 @@ export default function NotesPage() {
           />
         </Card>
       ) : (
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {data.map((note, index) => (
             <motion.article
               key={note.id}

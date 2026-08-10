@@ -120,11 +120,15 @@ export default function AiPage() {
             <span className="grid size-14 place-items-center rounded-2xl bg-[#ff9fbf]/12 text-[#ff9fbf]">
               <Icon name="lock" size={24} />
             </span>
+            {/*
+              Aucun detail d'infrastructure ici. Le nom de la variable
+              d'environnement et le format de la cle etaient affiches en clair a
+              tout utilisateur connecte : c'est une consigne d'administration,
+              qui n'a rien a faire dans l'interface. Elle reste dans le README
+              et dans `.env.example`, a destination de qui deploie.
+            */}
             <p className="text-sm font-medium text-[var(--text)]">{t('ai.disabled')}</p>
             <p className="max-w-md text-xs leading-relaxed text-[var(--text-faint)]">{t('ai.disabledHint')}</p>
-            <code className="mt-2 rounded-lg bg-[var(--surface-2)] px-3 py-2 text-[11px] text-[var(--text-muted)]">
-              ANTHROPIC_API_KEY=sk-ant-...
-            </code>
           </div>
         </Card>
       </div>
@@ -165,7 +169,7 @@ export default function AiPage() {
                 <p className="mt-1 max-w-md text-sm text-[var(--text-muted)]">{t('ai.privacyNote')}</p>
               </div>
 
-              <div className="grid w-full max-w-lg gap-2 sm:grid-cols-2">
+              <div className="grid grid-cols-1 w-full max-w-lg gap-2 sm:grid-cols-2">
                 {suggestions.map((suggestion) => (
                   <button
                     key={suggestion}

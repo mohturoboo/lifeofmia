@@ -182,7 +182,7 @@ export default function FinancePage() {
         ))}
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         <Card className="lg:col-span-2">
           <CardHeader title={t('finance.title')} subtitle={`${data.transactions.length} operations`} icon="wallet" accent="#fbe3ec" />
 

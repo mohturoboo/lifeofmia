@@ -218,10 +218,10 @@ export default function NutritionPage() {
         actions={<DateNav date={date} onChange={setDate} locale={locale} />}
       />
 
-      <div className="mb-4 grid gap-4 lg:grid-cols-3">
+      <div className="mb-4 grid grid-cols-1 gap-4 lg:grid-cols-3">
         <Card className="lg:col-span-2">
           <CardHeader title={t('nutrition.macros')} icon="chart" accent="#ff9fbf" />
-          <div className="grid gap-5 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             <DonutChart
               data={macros}
               size={150}
@@ -285,7 +285,7 @@ export default function NutritionPage() {
         </Card>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         {MEAL_TYPES.map((type) => {
           const meals = data.meals.filter((meal) => meal.type === type);
           const calories = meals.reduce((sum, meal) => sum + meal.calories * meal.quantity, 0);

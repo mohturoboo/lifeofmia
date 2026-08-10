@@ -52,7 +52,9 @@ export const GET = route(async ({ user, searchParams }) => {
 export const POST = route(
   async ({ user, body }) => {
     if (!isAiEnabled()) {
-      return fail('AI_DISABLED', "L'agent IA n'est pas active. Ajoutez ANTHROPIC_API_KEY dans .env.");
+      // Message rendu tel quel a l'utilisateur : pas de nom de variable ni de
+      // detail de configuration serveur. La marche a suivre est dans le README.
+      return fail('AI_DISABLED', "Life AI n'est pas encore disponible.");
     }
 
     // Conversation existante (verifiee comme appartenant a l'utilisateur) ou nouvelle.
