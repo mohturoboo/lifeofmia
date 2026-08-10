@@ -324,6 +324,19 @@
     pointer-events: none;
   }
 
+  /*
+   * Transition des controles : couleurs, ombre et echelle. JAMAIS l'opacite.
+   *
+   * L'opacite d'un bouton ou d'un champ change avec son etat `disabled`.
+   * L'animer transforme un changement d'etat en transition, qui peut rester
+   * orpheline et figer l'element sur sa valeur de depart — un bouton gris,
+   * pourtant fonctionnel. Le changement d'etat doit etre instantane.
+   */
+  .lm-transition-ui {
+    transition-property: color, background-color, border-color, box-shadow, transform, filter;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
   .lm-modal-overlay {
     animation: lm-overlay-in 0.18s ease-out;
   }
@@ -336,9 +349,20 @@
     animation: lm-toast-in 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  /* A poser sur un conteneur, pas sur ses enfants. 180 ms, une seule fois. */
+  /*
+   * A poser sur un conteneur, pas sur ses enfants. 180 ms, une seule fois.
+   *
+   * `animation-fill-mode: none` est explicite : l'animation ne doit laisser
+   * AUCUNE trace une fois terminee. Avec un remplissage `backwards` ou `both`,
+   * une animation interrompue fige l'element sur son image de depart — c'est
+   * ainsi qu'un bouton parfaitement fonctionnel peut rester gris.
+   *
+   * Elle n'anime que la position du conteneur : aucun descendant n'est touche,
+   * et aucune propriete d'etat (opacite, couleur) n'entre en jeu.
+   */
   .lm-entree {
     animation: lm-entree 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+    animation-fill-mode: none;
   }
 
   /*

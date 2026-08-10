@@ -68,8 +68,22 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       disabled={disabled || loading}
       aria-busy={loading || undefined}
       className={cx(
-        'inline-flex items-center justify-center font-medium transition-all duration-150',
-        'disabled:opacity-50 disabled:pointer-events-none select-none whitespace-nowrap',
+        /*
+         * Transitions ciblees, jamais `transition-all`.
+         *
+         * `transition-all` inclut l'opacite, et l'opacite de ce bouton change
+         * avec son etat `disabled`. Le passage de desactive a actif devient
+         * alors une transition de 0,5 vers 1 — une animation de plus, qui peut
+         * se retrouver orpheline et figer le bouton sur sa valeur de DEPART.
+         * Il reste alors gris alors qu'il est parfaitement fonctionnel : rien
+         * n'est plus dissuasif qu'un bouton qui a l'air mort.
+         *
+         * L'opacite est donc exclue de la liste : elle bascule d'un coup, ce
+         * qui est le comportement attendu d'un changement d'etat.
+         */
+        'inline-flex items-center justify-center font-medium select-none whitespace-nowrap',
+        'lm-transition-ui duration-150',
+        'disabled:opacity-50 disabled:pointer-events-none',
         BUTTON_VARIANTS[variant],
         BUTTON_SIZES[size],
         fullWidth && 'w-full',
@@ -126,7 +140,10 @@ export function Field({ label, hint, error, required, htmlFor, children, classNa
 
 const CONTROL_BASE =
   'w-full bg-[var(--surface-2)] border border-[var(--border)] rounded-xl px-4 text-sm text-[var(--text)] ' +
-  'placeholder:text-[var(--text-faint)] transition-all duration-200 ' +
+  'placeholder:text-[var(--text-faint)] ' +
+  // Meme regle que le bouton : l'opacite change avec `disabled`, elle
+  // ne doit pas etre animee.
+  'lm-transition-ui duration-200 ' +
   // Au focus, le champ s'entoure d'un halo rose plutot que d'un simple liseret.
   'focus:outline-none focus:border-brand-300/60 focus:ring-4 focus:ring-[var(--ring)] focus:bg-[var(--surface-hover)] ' +
   'disabled:opacity-50 aria-[invalid=true]:border-[#ff9fbf]/60';
