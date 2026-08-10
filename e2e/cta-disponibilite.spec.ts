@@ -61,6 +61,13 @@ async function disponibilite(page: Page, chemin: string, libelle: string) {
 
 for (const { chemin, libelle } of CIBLES) {
   test(`${chemin} — le bouton principal est actionnable rapidement`, async ({ page }) => {
+    /*
+     * Une premiere visite tiede la route : en production, la toute premiere
+     * requete paie le demarrage a froid de la fonction serverless — une seconde
+     * entiere qui ne dit rien du code mesure ici.
+     */
+    await page.goto(chemin, { waitUntil: 'networkidle' });
+
     const mesure = await disponibilite(page, chemin, libelle);
 
     console.log(
@@ -70,10 +77,10 @@ for (const { chemin, libelle } of CIBLES) {
     /*
      * Deux bornes complementaires. L'ecart apres `load` mesure ce que le code
      * controle vraiment — le reste depend du reseau et de la machine. La borne
-     * absolue garde l'objectif de l'enonce en vue.
+     * absolue garde l'objectif de l'enonce en vue, sur une route tiede.
      */
-    expect(mesure.tti - mesure.load, 'le bouton doit suivre le chargement de pres').toBeLessThan(600);
-    expect(mesure.tti, 'le bouton doit etre actionnable en moins d\'une seconde').toBeLessThan(3_000);
+    expect(mesure.tti - mesure.load, 'le bouton doit suivre le chargement de pres').toBeLessThan(400);
+    expect(mesure.tti, 'le bouton doit etre actionnable en moins d\'une seconde').toBeLessThan(1_500);
   });
 }
 
