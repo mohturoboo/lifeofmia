@@ -44,6 +44,9 @@ export default function WeightPage() {
   const { run: mutate, fields: erreurs, clearField } = useMutate();
   const { data, loading, refresh } = useResource<WeightData>('/api/weight');
 
+  // Une mesure ne s'enregistre pas pour demain.
+  const aujourdhui = dateKeyIn(Intl.DateTimeFormat().resolvedOptions().timeZone);
+
   const [modalOpen, setModalOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({
@@ -247,13 +250,14 @@ export default function WeightPage() {
       <Modal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
+        onSubmit={save}
         title={t('weight.addEntry')}
         footer={
           <>
             <Button variant="ghost" onClick={() => setModalOpen(false)}>
               {t('common.cancel')}
             </Button>
-            <Button onClick={save} loading={saving} disabled={!form.weightKg}>
+            <Button type="submit" onClick={save} loading={saving} disabled={!form.weightKg}>
               {t('common.save')}
             </Button>
           </>
@@ -262,7 +266,7 @@ export default function WeightPage() {
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <Field label={t('common.date')} htmlFor="weight-date" error={erreurs.date}>
-              <Input id="weight-date" type="date" value={form.date} onChange={(event) => set('date', event.target.value)} />
+              <Input id="weight-date" max={aujourdhui} type="date" value={form.date} onChange={(event) => set('date', event.target.value)} />
             </Field>
             <Field label={`${t('weight.current')} (kg)`} htmlFor="weight-kg" error={erreurs.weightKg} required>
               <Input

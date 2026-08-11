@@ -291,13 +291,14 @@ export default function CalendarPage() {
       <Modal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
+        onSubmit={save}
         title={t('calendar.newEvent')}
         footer={
           <>
             <Button variant="ghost" onClick={() => setModalOpen(false)}>
               {t('common.cancel')}
             </Button>
-            <Button onClick={save} loading={saving} disabled={form.title.trim().length === 0}>
+            <Button type="submit" onClick={save} loading={saving} disabled={form.title.trim().length === 0}>
               {t('common.save')}
             </Button>
           </>

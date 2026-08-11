@@ -59,12 +59,19 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
-  { variant = 'primary', size = 'md', icon, loading, fullWidth, className, children, disabled, ...props },
+  { variant = 'primary', size = 'md', icon, loading, fullWidth, className, children, disabled, type = 'button', ...props },
   ref,
 ) {
   return (
     <button
       ref={ref}
+      /*
+       * `type="button"` par defaut. En HTML, un bouton sans type vaut
+       * `submit` : place dans un formulaire, « Annuler » l'envoyait au lieu de
+       * le fermer. Les boutons qui soumettent le declarent, c'est plus sur que
+       * l'inverse.
+       */
+      type={type}
       disabled={disabled || loading}
       aria-busy={loading || undefined}
       className={cx(

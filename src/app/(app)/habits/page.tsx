@@ -303,13 +303,14 @@ export default function HabitsPage() {
       <Modal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
+        onSubmit={save}
         title={editing ? t('common.edit') : t('habits.new')}
         footer={
           <>
             <Button variant="ghost" onClick={() => setModalOpen(false)}>
               {t('common.cancel')}
             </Button>
-            <Button onClick={save} loading={saving} disabled={form.name.trim().length === 0}>
+            <Button type="submit" onClick={save} loading={saving} disabled={form.name.trim().length === 0}>
               {t('common.save')}
             </Button>
           </>
@@ -319,6 +320,11 @@ export default function HabitsPage() {
           <Field label={t('common.name')} htmlFor="habit-name" error={erreurs.name} hint={`${form.name.length}/80`} required>
             <Input
               id="habit-name"
+              // L'asterisque du libelle annoncait une obligation que le champ
+              // ne portait pas : rien ne l'imposait, ni au clavier ni aux
+              // technologies d'assistance.
+              required
+              aria-required="true"
               invalid={Boolean(erreurs.name)}
               maxLength={80}
               value={form.name}

@@ -265,13 +265,14 @@ export default function FinancePage() {
       <Modal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
+        onSubmit={save}
         title={t('finance.newTransaction')}
         footer={
           <>
             <Button variant="ghost" onClick={() => setModalOpen(false)}>
               {t('common.cancel')}
             </Button>
-            <Button onClick={save} loading={saving} disabled={!form.label || !form.amount}>
+            <Button type="submit" onClick={save} loading={saving} disabled={!form.label || !form.amount}>
               {t('common.save')}
             </Button>
           </>

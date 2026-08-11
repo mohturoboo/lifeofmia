@@ -1,20 +1,17 @@
 import { z } from 'zod';
+import { installerMessagesFrancais } from '@/lib/validation/messages';
 
 /** Briques de validation reutilisees par tous les modules. */
 
 /*
  * Messages d'erreur en francais pour TOUS les schemas.
  *
- * Seuls les champs ecrits a la main portaient un message : partout ailleurs,
- * l'utilisateur recevait le texte par defaut de la bibliotheque — « Invalid
- * input », « Too big: expected string to have <=80 characters ». Un nom
- * d'habitude trop long produisait donc une erreur en anglais, dans une
- * application traduite en huit langues.
- *
- * Ce reglage est global et s'applique des l'import de ce module, que tous les
- * schemas chargent. Les messages explicites restent prioritaires.
+ * La locale fournie par la bibliotheque traduisait mot a mot des messages
+ * ecrits pour des developpeurs — « chaîne attendu », « Option invalide : une
+ * valeur parmi "breakfast"|"lunch"… ». Fautif, et inutilisable par un
+ * utilisateur. La table de `messages.ts` les remplace par des phrases redigees.
  */
-z.config(z.locales.fr());
+installerMessagesFrancais();
 
 export const dateKeySchema = z
   .string()

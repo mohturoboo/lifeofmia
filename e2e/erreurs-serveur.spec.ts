@@ -7,7 +7,7 @@ import { test, expect } from '@playwright/test';
  *
  *   422 { "error": { "code": "VALIDATION",
  *                    "message": "Certains champs sont invalides.",
- *                    "fields": { "name": "80 caracteres maximum." } } }
+ *                    "fields": { "name": "Le nom ne peut pas depasser 80 caracteres." } } }
  *
  * Le client jetait ce detail : les formulaires affichaient « Une erreur est
  * survenue », ou rien du tout. L'utilisateur voyait sa saisie refusee sans
@@ -25,7 +25,7 @@ test('un nom d\'habitude trop long est explique sous le champ', async ({ page })
 
   await page.getByRole('dialog').getByRole('button', { name: 'Enregistrer' }).click();
 
-  await expect(page.locator('#habit-name-error')).toHaveText('80 caracteres maximum.');
+  await expect(page.locator('#habit-name-error')).toHaveText('Le nom ne peut pas depasser 80 caracteres.');
   await expect(champ).toHaveAttribute('aria-invalid', 'true');
   await expect(champ).toHaveAttribute('aria-describedby', 'habit-name-error');
 
@@ -51,7 +51,7 @@ test('une taille hors bornes est expliquee sous le champ', async ({ page }) => {
 
   await page.getByRole('button', { name: 'Enregistrer' }).first().click();
 
-  await expect(page.locator('#height-error')).toHaveText('Taille attendue entre 50 et 250 cm.');
+  await expect(page.locator('#height-error')).toHaveText('La taille doit etre comprise entre 50 et 250 cm.');
   await expect(champ).toHaveAttribute('aria-invalid', 'true');
 });
 
@@ -85,4 +85,61 @@ test('les messages du serveur sont en francais, jamais « Invalid input »', asy
   for (const message of messages) {
     expect(message, `message non traduit : « ${message} »`).not.toMatch(/Invalid input|Too big|Too small|expected/i);
   }
+});
+
+test('« Annuler » ferme la fenetre au lieu de la soumettre', async ({ page }) => {
+  /*
+   * En HTML, un bouton sans `type` vaut `submit`. Place dans un formulaire —
+   * ce que les fenetres sont devenues pour accepter la touche Entree —
+   * « Annuler » aurait enregistre la saisie au lieu de l'abandonner.
+   */
+  await page.goto('/habits');
+  await page.getByRole('button', { name: 'Nouvelle habitude' }).click();
+
+  const fenetre = page.getByRole('dialog');
+  await fenetre.locator('#habit-name').fill('Habitude abandonnee E2E');
+  await fenetre.getByRole('button', { name: 'Annuler' }).click();
+
+  await expect(fenetre).toBeHidden();
+  await expect(page.getByRole('heading', { name: 'Habitude abandonnee E2E' })).toHaveCount(0);
+});
+
+test('la touche Entree valide le formulaire', async ({ page }) => {
+  await page.goto('/habits');
+  await page.getByRole('button', { name: 'Nouvelle habitude' }).click();
+
+  const champ = page.getByRole('dialog').locator('#habit-name');
+  await champ.fill('Habitude au clavier E2E');
+  await champ.press('Enter');
+
+  await expect(page.getByRole('dialog')).toBeHidden();
+  await expect(page.getByRole('heading', { name: 'Habitude au clavier E2E' })).toBeVisible();
+});
+
+test('les champs obligatoires le declarent vraiment', async ({ page }) => {
+  // L'asterisque du libelle annoncait une obligation que le champ ne portait
+  // pas : ni `required`, ni `aria-required`.
+  await page.goto('/habits');
+  await page.getByRole('button', { name: 'Nouvelle habitude' }).click();
+  await expect(page.locator('#habit-name')).toHaveAttribute('aria-required', 'true');
+  await page.getByRole('dialog').getByRole('button', { name: 'Annuler' }).click();
+
+  await page.goto('/goals');
+  await page.getByRole('button', { name: 'Nouvel objectif' }).click();
+  await expect(page.locator('#goal-title')).toHaveAttribute('aria-required', 'true');
+});
+
+test('aucun champ de saisie ne reste anonyme', async ({ page }) => {
+  await page.goto('/goals');
+  await page.getByRole('button', { name: 'Nouvel objectif' }).click();
+
+  // Un champ sans `id` ni `name` n'est associable ni a un libelle, ni a un
+  // message d'erreur, ni au remplissage automatique du navigateur.
+  const anonymes = await page.getByRole('dialog').evaluate((fenetre) =>
+    [...fenetre.querySelectorAll('input, textarea, select')]
+      .filter((champ) => !champ.id && !champ.getAttribute('name'))
+      .map((champ) => champ.outerHTML.slice(0, 80)),
+  );
+
+  expect(anonymes).toEqual([]);
 });

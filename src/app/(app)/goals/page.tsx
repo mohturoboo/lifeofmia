@@ -362,6 +362,7 @@ export default function GoalsPage() {
       <Modal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
+        onSubmit={save}
         title={editing ? t('common.edit') : t('goals.new')}
         size="lg"
         footer={
@@ -369,7 +370,7 @@ export default function GoalsPage() {
             <Button variant="ghost" onClick={() => setModalOpen(false)}>
               {t('common.cancel')}
             </Button>
-            <Button onClick={save} loading={saving} disabled={form.title.trim().length === 0}>
+            <Button type="submit" onClick={save} loading={saving} disabled={form.title.trim().length === 0}>
               {t('common.save')}
             </Button>
           </>
@@ -377,7 +378,16 @@ export default function GoalsPage() {
       >
         <div className="space-y-4">
           <Field label="Titre" htmlFor="goal-title" error={erreurs.title} required>
-            <Input id="goal-title" value={form.title} onChange={(event) => set('title', event.target.value)} autoFocus />
+            <Input
+              id="goal-title"
+              required
+              aria-required="true"
+              maxLength={160}
+              invalid={Boolean(erreurs.title)}
+              value={form.title}
+              onChange={(event) => set('title', event.target.value)}
+              autoFocus
+            />
           </Field>
 
           <Field label={t('common.notes')} htmlFor="goal-description" error={erreurs.description}>
@@ -441,6 +451,8 @@ export default function GoalsPage() {
                 {form.steps.map((step, index) => (
                   <div key={index} className="flex gap-2">
                     <Input
+                      id={`goal-step-${index}`}
+                      name={`goal-step-${index}`}
                       value={step}
                       onChange={(event) => {
                         const steps = [...form.steps];

@@ -59,8 +59,8 @@ export const updateProfileSchema = z.object({
   glassMl: z.number().int().min(50, 'Entre 50 et 1000 ml.').max(1000, 'Entre 50 et 1000 ml.').optional(),
   heightCm: z
     .number()
-    .min(50, 'Taille attendue entre 50 et 250 cm.')
-    .max(250, 'Taille attendue entre 50 et 250 cm.')
+    .min(50, 'La taille doit etre comprise entre 50 et 250 cm.')
+    .max(250, 'La taille doit etre comprise entre 50 et 250 cm.')
     .nullable()
     .optional(),
   mainGoal: z.string().trim().max(200).nullable().optional(),

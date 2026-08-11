@@ -29,7 +29,7 @@ export const HABIT_CATEGORIES = [
 ] as const;
 
 export const habitCreateSchema = z.object({
-  name: z.string().trim().min(1, 'Nom requis.').max(80, '80 caracteres maximum.'),
+  name: z.string().trim().min(1, 'Nom requis.').max(80, 'Le nom ne peut pas depasser 80 caracteres.'),
   description: optionalText(500),
   icon: z.string().trim().max(40).default('check'),
   color: hexColorSchema.default('#e9b8d5'),
@@ -167,7 +167,7 @@ export const waterLogSchema = z
 
 export const weightSchema = z.object({
   date: dateKeySchema,
-  weightKg: z.number().min(20, 'Poids attendu entre 20 et 400 kg.').max(400, 'Poids attendu entre 20 et 400 kg.'),
+  weightKg: z.number().min(20, 'Le poids doit etre compris entre 20 et 400 kg.').max(400, 'Le poids doit etre compris entre 20 et 400 kg.'),
   bodyFat: z.number().min(1).max(70).nullable().optional(),
   muscleKg: z.number().min(1).max(200).nullable().optional(),
   photoUrl: z.string().max(500).nullable().optional(),

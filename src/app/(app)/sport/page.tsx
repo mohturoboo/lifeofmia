@@ -53,6 +53,9 @@ export default function SportPage() {
   const { run: mutate, fields: erreurs, clearField } = useMutate();
   const { data, loading, refresh } = useResource<SportData>('/api/workouts');
 
+  // Une mesure ne s'enregistre pas pour demain.
+  const aujourdhui = dateKeyIn(Intl.DateTimeFormat().resolvedOptions().timeZone);
+
   const [modalOpen, setModalOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({
@@ -253,6 +256,7 @@ export default function SportPage() {
       <Modal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
+        onSubmit={save}
         title={t('sport.newSession')}
         size="lg"
         footer={
@@ -260,7 +264,7 @@ export default function SportPage() {
             <Button variant="ghost" onClick={() => setModalOpen(false)}>
               {t('common.cancel')}
             </Button>
-            <Button onClick={save} loading={saving} disabled={form.name.trim().length === 0}>
+            <Button type="submit" onClick={save} loading={saving} disabled={form.name.trim().length === 0}>
               {t('common.save')}
             </Button>
           </>
@@ -272,7 +276,7 @@ export default function SportPage() {
               <Input id="workout-name" value={form.name} onChange={(event) => set('name', event.target.value)} autoFocus />
             </Field>
             <Field label={t('common.date')} htmlFor="workout-date" error={erreurs.date}>
-              <Input id="workout-date" type="date" value={form.date} onChange={(event) => set('date', event.target.value)} />
+              <Input id="workout-date" max={aujourdhui} type="date" value={form.date} onChange={(event) => set('date', event.target.value)} />
             </Field>
           </div>
 

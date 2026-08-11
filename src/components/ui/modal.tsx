@@ -22,11 +22,19 @@ export interface ModalProps {
   children: ReactNode;
   footer?: ReactNode;
   size?: 'sm' | 'md' | 'lg';
+  /**
+   * Soumission du formulaire contenu dans la fenetre.
+   *
+   * Fournie, elle enveloppe le contenu ET le pied dans un `<form>` : la touche
+   * Entree valide alors la saisie, comme dans n'importe quel formulaire. Sans
+   * elle, il fallait viser le bouton a la souris.
+   */
+  onSubmit?: () => void;
 }
 
 const SIZES = { sm: 'max-w-sm', md: 'max-w-lg', lg: 'max-w-2xl' } as const;
 
-export function Modal({ open, onClose, title, description, children, footer, size = 'md' }: ModalProps) {
+export function Modal({ open, onClose, title, description, children, footer, size = 'md', onSubmit }: ModalProps) {
   const panelRef = useRef<HTMLDivElement>(null);
 
   /*
@@ -184,10 +192,26 @@ export function Modal({ open, onClose, title, description, children, footer, siz
           </button>
         </header>
 
-        <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4">{children}</div>
-
-        {footer && (
-          <footer className="flex justify-end gap-2 border-t border-[var(--border)] px-5 py-3.5">{footer}</footer>
+        {onSubmit ? (
+          <form
+            className="flex min-h-0 flex-1 flex-col"
+            onSubmit={(event) => {
+              event.preventDefault();
+              onSubmit();
+            }}
+          >
+            <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4">{children}</div>
+            {footer && (
+              <footer className="flex justify-end gap-2 border-t border-[var(--border)] px-5 py-3.5">{footer}</footer>
+            )}
+          </form>
+        ) : (
+          <>
+            <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4">{children}</div>
+            {footer && (
+              <footer className="flex justify-end gap-2 border-t border-[var(--border)] px-5 py-3.5">{footer}</footer>
+            )}
+          </>
         )}
       </div>
     </div>,

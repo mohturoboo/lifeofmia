@@ -407,13 +407,14 @@ export default function NutritionPage() {
       <Modal
         open={modalOpen}
         onClose={closeModal}
+        onSubmit={save}
         title={editing ? t('nutrition.editMeal') : t('nutrition.addMeal')}
         footer={
           <>
             <Button variant="ghost" onClick={closeModal}>
               {t('common.cancel')}
             </Button>
-            <Button onClick={save} loading={saving} disabled={form.name.trim().length === 0}>
+            <Button type="submit" onClick={save} loading={saving} disabled={form.name.trim().length === 0}>
               {t('common.save')}
             </Button>
           </>
