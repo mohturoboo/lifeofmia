@@ -6,6 +6,7 @@ import { dateKeyIn, lastNDays } from '@/lib/date';
 import { recomputeDay } from '@/lib/stats';
 import { assertPasDansLeFutur } from '@/lib/api/intervalles';
 import { awardXp, evaluateBadges, refreshStreak } from '@/lib/gamification';
+import { methodeRefusee, optionsPour, type MethodeHttp } from '@/lib/api/methodes';
 
 /** GET /api/workouts — historique et statistiques agregees. */
 export const GET = route(async ({ user, searchParams }) => {
@@ -97,3 +98,15 @@ export const POST = route(
   },
   { schema: workoutCreateSchema },
 );
+
+// --- Methodes non prises en charge
+//
+// Sans handler declare, Next.js repond en HTML sous une URL qui promet du
+// JSON : le client echouait sur « Unexpected token '<' ». Le 405 porte
+// desormais le meme format que toutes les autres erreurs, et l'en-tete
+// `Allow` annonce ce qui est accepte.
+const AUTORISEES: MethodeHttp[] = ['GET', 'POST'];
+export const PUT = methodeRefusee(AUTORISEES);
+export const PATCH = methodeRefusee(AUTORISEES);
+export const DELETE = methodeRefusee(AUTORISEES);
+export const OPTIONS = optionsPour(AUTORISEES);

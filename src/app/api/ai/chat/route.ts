@@ -8,6 +8,7 @@ import { isAiEnabled } from '@/lib/env';
 import { runAgent, AiDisabledError, type AgentMessage } from '@/lib/ai/agent';
 import { stringifyJson } from '@/lib/json';
 import { audit } from '@/lib/audit';
+import { methodeRefusee, optionsPour, type MethodeHttp } from '@/lib/api/methodes';
 
 const chatSchema = z.object({
   message: z.string().trim().min(1, 'Message vide.').max(4000),
@@ -151,3 +152,14 @@ export const DELETE = route(async ({ user, searchParams }) => {
   await prisma.aiConversation.delete({ where: { id: conversation.id } });
   return ok({ deleted: true });
 });
+
+// --- Methodes non prises en charge
+//
+// Sans handler declare, Next.js repond en HTML sous une URL qui promet du
+// JSON : le client echouait sur « Unexpected token '<' ». Le 405 porte
+// desormais le meme format que toutes les autres erreurs, et l'en-tete
+// `Allow` annonce ce qui est accepte.
+const AUTORISEES: MethodeHttp[] = ['GET', 'POST', 'DELETE'];
+export const PUT = methodeRefusee(AUTORISEES);
+export const PATCH = methodeRefusee(AUTORISEES);
+export const OPTIONS = optionsPour(AUTORISEES);

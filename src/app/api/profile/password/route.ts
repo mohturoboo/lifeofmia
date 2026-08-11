@@ -6,6 +6,7 @@ import { changePasswordSchema } from '@/lib/validation/auth';
 import { hashPassword, verifyPassword } from '@/lib/auth/password';
 import { createSession, revokeAllSessions } from '@/lib/auth/session';
 import { audit } from '@/lib/audit';
+import { methodeRefusee, optionsPour, type MethodeHttp } from '@/lib/api/methodes';
 
 /**
  * POST /api/profile/password — changement de mot de passe depuis les reglages.
@@ -37,3 +38,16 @@ export const POST = route(
   },
   { schema: changePasswordSchema },
 );
+
+// --- Methodes non prises en charge
+//
+// Sans handler declare, Next.js repond en HTML sous une URL qui promet du
+// JSON : le client echouait sur « Unexpected token '<' ». Le 405 porte
+// desormais le meme format que toutes les autres erreurs, et l'en-tete
+// `Allow` annonce ce qui est accepte.
+const AUTORISEES: MethodeHttp[] = ['POST'];
+export const GET = methodeRefusee(AUTORISEES);
+export const PUT = methodeRefusee(AUTORISEES);
+export const PATCH = methodeRefusee(AUTORISEES);
+export const DELETE = methodeRefusee(AUTORISEES);
+export const OPTIONS = optionsPour(AUTORISEES);

@@ -8,6 +8,7 @@ import { getPrayerTimes, prayerSettingsFor } from '@/lib/prayer-service';
 import { formatTimeIn } from '@/lib/date';
 import { recomputeDay } from '@/lib/stats';
 import { awardXp, evaluateBadges } from '@/lib/gamification';
+import { methodeRefusee, optionsPour, type MethodeHttp } from '@/lib/api/methodes';
 
 /**
  * GET /api/prayers?date=YYYY-MM-DD
@@ -122,3 +123,14 @@ export const PATCH = route(
   },
   { schema: prayerSettingsSchema },
 );
+
+// --- Methodes non prises en charge
+//
+// Sans handler declare, Next.js repond en HTML sous une URL qui promet du
+// JSON : le client echouait sur « Unexpected token '<' ». Le 405 porte
+// desormais le meme format que toutes les autres erreurs, et l'en-tete
+// `Allow` annonce ce qui est accepte.
+const AUTORISEES: MethodeHttp[] = ['GET', 'POST', 'PATCH'];
+export const PUT = methodeRefusee(AUTORISEES);
+export const DELETE = methodeRefusee(AUTORISEES);
+export const OPTIONS = optionsPour(AUTORISEES);

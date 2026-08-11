@@ -6,6 +6,7 @@ import { requireOwned } from '@/lib/api/ownership';
 import { recomputeDay } from '@/lib/stats';
 import { assertPasDansLeFutur } from '@/lib/api/intervalles';
 import { awardXp } from '@/lib/gamification';
+import { methodeRefusee, optionsPour, type MethodeHttp } from '@/lib/api/methodes';
 
 /**
  * POST /api/focus — enregistre une session de concentration.
@@ -38,3 +39,16 @@ export const POST = route(
   },
   { schema: focusSessionSchema },
 );
+
+// --- Methodes non prises en charge
+//
+// Sans handler declare, Next.js repond en HTML sous une URL qui promet du
+// JSON : le client echouait sur « Unexpected token '<' ». Le 405 porte
+// desormais le meme format que toutes les autres erreurs, et l'en-tete
+// `Allow` annonce ce qui est accepte.
+const AUTORISEES: MethodeHttp[] = ['POST'];
+export const GET = methodeRefusee(AUTORISEES);
+export const PUT = methodeRefusee(AUTORISEES);
+export const PATCH = methodeRefusee(AUTORISEES);
+export const DELETE = methodeRefusee(AUTORISEES);
+export const OPTIONS = optionsPour(AUTORISEES);

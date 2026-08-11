@@ -9,6 +9,7 @@ import { LOGIN_BACKOFF, RATE_LIMITS } from '@/lib/auth/rate-limit';
 import { bucketCompte, bucketIp, consumePartage, reinitialiserPartage } from '@/lib/auth/rate-limit-store';
 import { securityAlertEmail, sendMail } from '@/lib/mailer';
 import { audit } from '@/lib/audit';
+import { methodeRefusee, optionsPour, type MethodeHttp } from '@/lib/api/methodes';
 
 /**
  * Verrouillage progressif du compte apres des echecs repetes.
@@ -199,3 +200,16 @@ function formaterAttente(secondes: number): string {
   const minutes = Math.ceil(secondes / 60);
   return `${minutes} minute${minutes > 1 ? 's' : ''}`;
 }
+
+// --- Methodes non prises en charge
+//
+// Sans handler declare, Next.js repond en HTML sous une URL qui promet du
+// JSON : le client echouait sur « Unexpected token '<' ». Le 405 porte
+// desormais le meme format que toutes les autres erreurs, et l'en-tete
+// `Allow` annonce ce qui est accepte.
+const AUTORISEES: MethodeHttp[] = ['POST'];
+export const GET = methodeRefusee(AUTORISEES);
+export const PUT = methodeRefusee(AUTORISEES);
+export const PATCH = methodeRefusee(AUTORISEES);
+export const DELETE = methodeRefusee(AUTORISEES);
+export const OPTIONS = optionsPour(AUTORISEES);

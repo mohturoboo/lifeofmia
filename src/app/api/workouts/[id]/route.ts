@@ -4,6 +4,7 @@ import { ok, ApiError } from '@/lib/api/response';
 import { workoutUpdateSchema } from '@/lib/validation/modules';
 import { recomputeDay } from '@/lib/stats';
 import { assertPasDansLeFutur } from '@/lib/api/intervalles';
+import { methodeRefusee, optionsPour, type MethodeHttp } from '@/lib/api/methodes';
 
 export const PATCH = route(
   async ({ user, params, body }) => {
@@ -65,3 +66,15 @@ export const DELETE = route(async ({ user, params }) => {
 
   return ok({ deleted: true });
 });
+
+// --- Methodes non prises en charge
+//
+// Sans handler declare, Next.js repond en HTML sous une URL qui promet du
+// JSON : le client echouait sur « Unexpected token '<' ». Le 405 porte
+// desormais le meme format que toutes les autres erreurs, et l'en-tete
+// `Allow` annonce ce qui est accepte.
+const AUTORISEES: MethodeHttp[] = ['PATCH', 'DELETE'];
+export const GET = methodeRefusee(AUTORISEES);
+export const POST = methodeRefusee(AUTORISEES);
+export const PUT = methodeRefusee(AUTORISEES);
+export const OPTIONS = optionsPour(AUTORISEES);

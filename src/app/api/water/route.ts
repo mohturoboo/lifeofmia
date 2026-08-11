@@ -3,6 +3,7 @@ import { route } from '@/lib/api/handler';
 import { ok } from '@/lib/api/response';
 import { waterLogSchema } from '@/lib/validation/modules';
 import { recomputeDay } from '@/lib/stats';
+import { methodeRefusee, optionsPour, type MethodeHttp } from '@/lib/api/methodes';
 
 /**
  * POST /api/water — ajoute (ou retire, avec un montant negatif) de l'hydratation.
@@ -25,3 +26,16 @@ export const POST = route(
   },
   { schema: waterLogSchema },
 );
+
+// --- Methodes non prises en charge
+//
+// Sans handler declare, Next.js repond en HTML sous une URL qui promet du
+// JSON : le client echouait sur « Unexpected token '<' ». Le 405 porte
+// desormais le meme format que toutes les autres erreurs, et l'en-tete
+// `Allow` annonce ce qui est accepte.
+const AUTORISEES: MethodeHttp[] = ['POST'];
+export const GET = methodeRefusee(AUTORISEES);
+export const PUT = methodeRefusee(AUTORISEES);
+export const PATCH = methodeRefusee(AUTORISEES);
+export const DELETE = methodeRefusee(AUTORISEES);
+export const OPTIONS = optionsPour(AUTORISEES);

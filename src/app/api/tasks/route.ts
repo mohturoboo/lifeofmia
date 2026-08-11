@@ -5,6 +5,7 @@ import { taskCreateSchema } from '@/lib/validation/modules';
 import { requireOwned } from '@/lib/api/ownership';
 import { dateKeyIn, fromDateKey } from '@/lib/date';
 import { parseStringArray, stringifyJson } from '@/lib/json';
+import { methodeRefusee, optionsPour, type MethodeHttp } from '@/lib/api/methodes';
 
 /**
  * GET /api/tasks — liste filtrable.
@@ -129,3 +130,15 @@ export const POST = route(
   },
   { schema: taskCreateSchema },
 );
+
+// --- Methodes non prises en charge
+//
+// Sans handler declare, Next.js repond en HTML sous une URL qui promet du
+// JSON : le client echouait sur « Unexpected token '<' ». Le 405 porte
+// desormais le meme format que toutes les autres erreurs, et l'en-tete
+// `Allow` annonce ce qui est accepte.
+const AUTORISEES: MethodeHttp[] = ['GET', 'POST'];
+export const PUT = methodeRefusee(AUTORISEES);
+export const PATCH = methodeRefusee(AUTORISEES);
+export const DELETE = methodeRefusee(AUTORISEES);
+export const OPTIONS = optionsPour(AUTORISEES);

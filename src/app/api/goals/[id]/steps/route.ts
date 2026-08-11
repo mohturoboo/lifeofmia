@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { route } from '@/lib/api/handler';
 import { created, ok, ApiError } from '@/lib/api/response';
 import { syncGoalProgress } from '@/lib/goals';
+import { methodeRefusee, optionsPour, type MethodeHttp } from '@/lib/api/methodes';
 
 const createStepSchema = z.object({ title: z.string().trim().min(1).max(160) });
 
@@ -73,3 +74,15 @@ export const PATCH = route(
   },
   { schema: updateStepSchema },
 );
+
+// --- Methodes non prises en charge
+//
+// Sans handler declare, Next.js repond en HTML sous une URL qui promet du
+// JSON : le client echouait sur « Unexpected token '<' ». Le 405 porte
+// desormais le meme format que toutes les autres erreurs, et l'en-tete
+// `Allow` annonce ce qui est accepte.
+const AUTORISEES: MethodeHttp[] = ['POST', 'PATCH'];
+export const GET = methodeRefusee(AUTORISEES);
+export const PUT = methodeRefusee(AUTORISEES);
+export const DELETE = methodeRefusee(AUTORISEES);
+export const OPTIONS = optionsPour(AUTORISEES);

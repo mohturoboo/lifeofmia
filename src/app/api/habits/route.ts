@@ -1,9 +1,10 @@
 import { prisma } from '@/lib/prisma';
 import { route } from '@/lib/api/handler';
-import { created, ok } from '@/lib/api/response';
+import { created, ok, sansUserId } from '@/lib/api/response';
 import { habitCreateSchema } from '@/lib/validation/modules';
 import { stringifyJson, parseNumberArray } from '@/lib/json';
 import { dateKeyIn, lastNDays } from '@/lib/date';
+import { methodeRefusee, optionsPour, type MethodeHttp } from '@/lib/api/methodes';
 
 /**
  * GET /api/habits — liste des habitudes avec leur historique recent.
@@ -95,7 +96,19 @@ export const POST = route(
       },
     });
 
-    return created({ ...habit, weekDays: parseNumberArray(habit.weekDays) });
+    return created({ ...sansUserId(habit), weekDays: parseNumberArray(habit.weekDays) });
   },
   { schema: habitCreateSchema },
 );
+
+// --- Methodes non prises en charge
+//
+// Sans handler declare, Next.js repond en HTML sous une URL qui promet du
+// JSON : le client echouait sur « Unexpected token '<' ». Le 405 porte
+// desormais le meme format que toutes les autres erreurs, et l'en-tete
+// `Allow` annonce ce qui est accepte.
+const AUTORISEES: MethodeHttp[] = ['GET', 'POST'];
+export const PUT = methodeRefusee(AUTORISEES);
+export const PATCH = methodeRefusee(AUTORISEES);
+export const DELETE = methodeRefusee(AUTORISEES);
+export const OPTIONS = optionsPour(AUTORISEES);

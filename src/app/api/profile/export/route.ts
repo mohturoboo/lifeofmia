@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma';
 import { route } from '@/lib/api/handler';
 import { RATE_LIMITS } from '@/lib/auth/rate-limit';
 import { audit } from '@/lib/audit';
+import { methodeRefusee, optionsPour, type MethodeHttp } from '@/lib/api/methodes';
 
 /**
  * GET /api/profile/export — portabilite des donnees (RGPD, article 20).
@@ -77,3 +78,16 @@ export const GET = route(async ({ user }) => {
     },
   });
 }, { rateLimit: { key: 'export', ...RATE_LIMITS.export } });
+
+// --- Methodes non prises en charge
+//
+// Sans handler declare, Next.js repond en HTML sous une URL qui promet du
+// JSON : le client echouait sur « Unexpected token '<' ». Le 405 porte
+// desormais le meme format que toutes les autres erreurs, et l'en-tete
+// `Allow` annonce ce qui est accepte.
+const AUTORISEES: MethodeHttp[] = ['GET'];
+export const POST = methodeRefusee(AUTORISEES);
+export const PUT = methodeRefusee(AUTORISEES);
+export const PATCH = methodeRefusee(AUTORISEES);
+export const DELETE = methodeRefusee(AUTORISEES);
+export const OPTIONS = optionsPour(AUTORISEES);

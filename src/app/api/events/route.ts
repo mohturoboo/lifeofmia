@@ -3,6 +3,7 @@ import { route } from '@/lib/api/handler';
 import { created, ok } from '@/lib/api/response';
 import { calendarEventSchema } from '@/lib/validation/modules';
 import { assertIntervalle } from '@/lib/api/intervalles';
+import { methodeRefusee, optionsPour, type MethodeHttp } from '@/lib/api/methodes';
 
 /**
  * GET /api/events?from=ISO&to=ISO
@@ -60,3 +61,15 @@ export const POST = route(
   },
   { schema: calendarEventSchema },
 );
+
+// --- Methodes non prises en charge
+//
+// Sans handler declare, Next.js repond en HTML sous une URL qui promet du
+// JSON : le client echouait sur « Unexpected token '<' ». Le 405 porte
+// desormais le meme format que toutes les autres erreurs, et l'en-tete
+// `Allow` annonce ce qui est accepte.
+const AUTORISEES: MethodeHttp[] = ['GET', 'POST'];
+export const PUT = methodeRefusee(AUTORISEES);
+export const PATCH = methodeRefusee(AUTORISEES);
+export const DELETE = methodeRefusee(AUTORISEES);
+export const OPTIONS = optionsPour(AUTORISEES);

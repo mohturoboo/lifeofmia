@@ -4,6 +4,7 @@ import { ok, ApiError } from '@/lib/api/response';
 import { habitLogSchema } from '@/lib/validation/modules';
 import { awardXp, evaluateBadges, refreshStreak } from '@/lib/gamification';
 import { recomputeDay } from '@/lib/stats';
+import { methodeRefusee, optionsPour, type MethodeHttp } from '@/lib/api/methodes';
 
 /**
  * POST /api/habits/[id]/log — valide (ou annule) une habitude pour une date.
@@ -68,3 +69,16 @@ export const POST = route(
   },
   { schema: habitLogSchema },
 );
+
+// --- Methodes non prises en charge
+//
+// Sans handler declare, Next.js repond en HTML sous une URL qui promet du
+// JSON : le client echouait sur « Unexpected token '<' ». Le 405 porte
+// desormais le meme format que toutes les autres erreurs, et l'en-tete
+// `Allow` annonce ce qui est accepte.
+const AUTORISEES: MethodeHttp[] = ['POST'];
+export const GET = methodeRefusee(AUTORISEES);
+export const PUT = methodeRefusee(AUTORISEES);
+export const PATCH = methodeRefusee(AUTORISEES);
+export const DELETE = methodeRefusee(AUTORISEES);
+export const OPTIONS = optionsPour(AUTORISEES);

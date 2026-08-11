@@ -14,6 +14,7 @@ export const ERROR_CODES = {
   VALIDATION: 422,
   CONFLICT: 409,
   RATE_LIMITED: 429,
+  METHOD_NOT_ALLOWED: 405,
   BAD_REQUEST: 400,
   SERVER_ERROR: 500,
   AI_DISABLED: 503,
@@ -60,4 +61,22 @@ export function zodFields(error: ZodError): Record<string, string> {
     if (!fields[path]) fields[path] = issue.message;
   }
   return fields;
+}
+
+/**
+ * Retire `userId` d'une ligne renvoyee au client.
+ *
+ * Renvoyer une ligne Prisma telle quelle expose l'identifiant de son
+ * proprietaire. Le client n'en fait rien : chaque reponse concerne deja, par
+ * construction, l'utilisateur authentifie qui la demande. C'est donc un
+ * identifiant interne diffuse sans usage — et un identifiant diffuse finit par
+ * etre utilise, puis par contraindre le schema.
+ *
+ * La fonction est volontairement typee pour SUPPRIMER la cle du type de
+ * retour : oublier de la desormais appeler devient une erreur de compilation
+ * la ou le champ etait attendu.
+ */
+export function sansUserId<T extends { userId?: unknown }>(ligne: T): Omit<T, 'userId'> {
+  const { userId: _userId, ...reste } = ligne;
+  return reste;
 }
