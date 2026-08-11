@@ -85,7 +85,16 @@ describe('semantique des pictogrammes', () => {
 
 describe('regle CSS des commandes secondaires', () => {
   it('ne les efface que la ou le survol existe reellement', async () => {
-    const css = await readFile(resolve(process.cwd(), 'src/app/globals.css'), 'utf8');
+    /*
+     * Fins de ligne normalisees.
+     *
+     * Git restitue le fichier en CRLF sous Windows : les motifs qui attendent
+     * un saut de ligne simple n'y trouvaient plus rien, et le test passait ou
+     * echouait selon la maniere dont le depot avait ete extrait. Un test dont
+     * le resultat depend de la plateforme ne mesure rien.
+     */
+    const brut = await readFile(resolve(process.cwd(), 'src/app/globals.css'), 'utf8');
+    const css = brut.split('\r\n').join('\n');
 
     const bloc = /@media \(hover: hover\) and \(pointer: fine\) \{([\s\S]*?)\n  \}/.exec(css)?.[1] ?? '';
 
