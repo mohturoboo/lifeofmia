@@ -248,6 +248,8 @@ export const tr: Dictionary = {
   'weight.heightHint': 'VKI hesabi icin boyunuzu Ayarlar bolumunde girin.',
   'weight.empty': 'Kayitli olcum yok.',
   'weight.perWeek': 'haftada',
+  'weight.needSecond': 'Gelisiminizi gormek icin ikinci bir olcum ekleyin.',
+  'weight.sinceStart': 'Baslangictan beri',
 
   'sport.title': 'Spor',
   'sport.subtitle': 'Beden, zihnin karar verdigini izler.',

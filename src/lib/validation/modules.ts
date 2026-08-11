@@ -165,14 +165,35 @@ export const waterLogSchema = z
 
 // --- Poids -------------------------------------------------------------------
 
-export const weightSchema = z.object({
-  date: dateKeySchema,
-  weightKg: z.number().min(20, 'Le poids doit etre compris entre 20 et 400 kg.').max(400, 'Le poids doit etre compris entre 20 et 400 kg.'),
-  bodyFat: z.number().min(1).max(70).nullable().optional(),
-  muscleKg: z.number().min(1).max(200).nullable().optional(),
-  photoUrl: z.string().max(500).nullable().optional(),
-  note: optionalText(300),
-});
+/*
+ * `.strict()` : un champ inconnu fait echouer la requete au lieu d'etre ignore.
+ *
+ * `{"bodyFatPct": 999}` — nom de champ errone — repondait « 201 Created » en
+ * enregistrant `bodyFat: null`. Deux erreurs se couvraient l'une l'autre : le
+ * nom du champ etait faux, et la valeur etait de toute facon hors bornes.
+ * L'appelant ne voyait ni l'une ni l'autre et repartait convaincu d'avoir
+ * enregistre un taux de masse grasse.
+ */
+export const weightSchema = z
+  .object({
+    date: dateKeySchema,
+    weightKg: z.number().min(20, 'Le poids doit etre compris entre 20 et 400 kg.').max(400, 'Le poids doit etre compris entre 20 et 400 kg.'),
+    bodyFat: z
+      .number()
+      .min(0, 'Le taux de masse grasse doit etre compris entre 0 et 100 %.')
+      .max(100, 'Le taux de masse grasse doit etre compris entre 0 et 100 %.')
+      .nullable()
+      .optional(),
+    muscleKg: z
+      .number()
+      .min(1, 'La masse musculaire doit etre comprise entre 1 et 200 kg.')
+      .max(200, 'La masse musculaire doit etre comprise entre 1 et 200 kg.')
+      .nullable()
+      .optional(),
+    photoUrl: z.string().max(500).nullable().optional(),
+    note: optionalText(300),
+  })
+  .strict();
 
 // --- Sport -------------------------------------------------------------------
 

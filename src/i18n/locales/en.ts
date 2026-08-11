@@ -248,6 +248,8 @@ export const en: Dictionary = {
   'weight.heightHint': 'Enter your height in Settings to compute your BMI.',
   'weight.empty': 'No measurement recorded.',
   'weight.perWeek': 'per week',
+  'weight.needSecond': 'Add a second measurement to see your trend.',
+  'weight.sinceStart': 'Since the start',
 
   'sport.title': 'Training',
   'sport.subtitle': 'The body follows what the mind decides.',

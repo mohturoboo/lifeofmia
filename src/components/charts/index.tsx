@@ -17,6 +17,17 @@ import { cx } from '@/components/ui/primitives';
 export interface Point {
   label: string;
   value: number;
+  /**
+   * Position sur l'axe horizontal, quand elle n'est pas simplement le rang.
+   *
+   * Une serie de mesures n'est pas forcement reguliere : trois pesees les 8, 10
+   * et 31 decembre etaient dessinees a intervalles egaux, ce qui donnait a
+   * trois semaines d'ecart la meme largeur qu'a deux jours. La pente affichee
+   * ne correspondait a aucune realite. Renseignee sur TOUS les points d'une
+   * serie, cette valeur — un horodatage, par exemple — espace le trace
+   * proportionnellement au temps ecoule.
+   */
+  at?: number;
 }
 
 const PALETTE = ['#e9b8d5', '#fbc7da', '#f6d9e4', '#ff9fbf', '#d9c7f0', '#e6e6e6', '#efc4e2', '#dcc7ea'];
@@ -118,13 +129,51 @@ export function LineChart({
 
   const innerWidth = width - padding.left - padding.right;
   const innerHeight = height - padding.top - padding.bottom;
-  const stepX = series.length > 1 ? innerWidth / (series.length - 1) : innerWidth;
   const scaleY = (value: number) =>
     padding.top + innerHeight - ((value - min) / Math.max(0.0001, max - min)) * innerHeight;
 
-  const toXY = (point: Point, index: number) => ({ x: padding.left + index * stepX, y: scaleY(point.value) });
-  const mainPoints = data.map(toXY);
-  const forecastPoints = forecast.map((point, index) => toXY(point, data.length + index));
+  /*
+   * Abscisses : proportionnelles au temps si la serie le permet, au rang sinon.
+   *
+   * Le trace etait categoriel — un pas constant par point, quel que soit
+   * l'intervalle reel entre deux mesures. Sur une serie de pesees espacees de
+   * deux jours puis de trois semaines, la courbe montrait deux segments de
+   * meme largeur : la vitesse de variation etait purement inventee par le
+   * graphique. Des que chaque point porte un `at`, l'echelle horizontale
+   * devient celle du temps.
+   */
+  const horodatages = series.map((point) => point.at);
+  const proportionnel =
+    series.length > 1 &&
+    horodatages.every((value): value is number => typeof value === 'number' && Number.isFinite(value)) &&
+    Math.max(...(horodatages as number[])) > Math.min(...(horodatages as number[]));
+
+  const ratioAt = (index: number): number => {
+    if (proportionnel) {
+      const valeurs = horodatages as number[];
+      const lo = Math.min(...valeurs);
+      const hi = Math.max(...valeurs);
+      return (valeurs[index] - lo) / (hi - lo);
+    }
+    return series.length > 1 ? index / (series.length - 1) : 0;
+  };
+
+  const xs = series.map((_, index) => padding.left + ratioAt(index) * innerWidth);
+  const scaleX = (index: number) => xs[index] ?? padding.left;
+
+  const mainPoints = data.map((point, index) => ({ x: scaleX(index), y: scaleY(point.value) }));
+  const forecastPoints = forecast.map((point, index) => ({
+    x: scaleX(data.length + index),
+    y: scaleY(point.value),
+  }));
+
+  /** Bornes de la zone sensible d'un point : a mi-chemin de ses voisins. */
+  const zoneAutour = (index: number) => {
+    const gauche = index === 0 ? padding.left : (xs[index - 1] + xs[index]) / 2;
+    const droite =
+      index === series.length - 1 ? width - padding.right : (xs[index] + xs[index + 1]) / 2;
+    return { x: gauche, width: Math.max(1, droite - gauche) };
+  };
 
   const gridLines = [0, 0.25, 0.5, 0.75, 1];
   const labelEvery = Math.max(1, Math.ceil(data.length / 7));
@@ -194,9 +243,9 @@ export function LineChart({
             )}
             {/* Zone de survol large : le pointage reste facile sur mobile. */}
             <rect
-              x={point.x - stepX / 2}
+              x={zoneAutour(index).x}
               y={padding.top}
-              width={stepX}
+              width={zoneAutour(index).width}
               height={innerHeight}
               fill="transparent"
               onMouseEnter={() => setHover(index)}
@@ -209,7 +258,7 @@ export function LineChart({
           index % labelEvery === 0 || index === data.length - 1 ? (
             <text
               key={point.label + index}
-              x={padding.left + index * stepX}
+              x={scaleX(index)}
               y={height - 7}
               textAnchor="middle"
               fontSize="10"
@@ -225,7 +274,7 @@ export function LineChart({
         <div
           className="pointer-events-none absolute -translate-x-1/2 -translate-y-full rounded-lg border border-[var(--border)] bg-[var(--surface)] px-2.5 py-1.5 text-xs shadow-lg"
           style={{
-            left: `${((padding.left + hover * stepX) / width) * 100}%`,
+            left: `${(scaleX(hover) / width) * 100}%`,
             top: `${(scaleY(data[hover].value) / height) * 100}%`,
           }}
         >

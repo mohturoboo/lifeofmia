@@ -260,6 +260,8 @@ export const fr = {
   'weight.heightHint': 'Renseignez votre taille dans les reglages pour calculer l\'IMC.',
   'weight.empty': 'Aucune mesure enregistree.',
   'weight.perWeek': 'par semaine',
+  'weight.needSecond': 'Ajoutez une deuxieme mesure pour voir votre evolution.',
+  'weight.sinceStart': 'Depuis le debut',
 
   // --- Sport ---
   'sport.title': 'Sport',

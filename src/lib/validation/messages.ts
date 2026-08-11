@@ -75,8 +75,19 @@ export function messageDeValidation(issue: z.core.$ZodRawIssue): string | undefi
       return 'Format invalide.';
     }
 
-    case 'unrecognized_keys':
-      return 'Ce formulaire contient un champ inattendu.';
+    /*
+     * Le champ inconnu est NOMME.
+     *
+     * Un envoi de `bodyFatPct` la ou le serveur attend `bodyFat` repondait
+     * « 201 Created » en ignorant silencieusement la valeur : l'appelant
+     * croyait avoir enregistre un taux de masse grasse, la base gardait
+     * `null`. Le refus ne sert a rien s'il ne dit pas quel nom est fautif.
+     */
+    case 'unrecognized_keys': {
+      const keys = (issue as { keys?: string[] }).keys ?? [];
+      if (keys.length === 0) return 'Ce formulaire contient un champ inattendu.';
+      return `Champ inconnu : ${keys.join(', ')}.`;
+    }
 
     case 'not_multiple_of':
       return `La valeur doit etre un multiple de ${issue.divisor}.`;

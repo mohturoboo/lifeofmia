@@ -61,6 +61,51 @@ describe('LineChart — domaine impose', () => {
   });
 });
 
+describe('LineChart — axe temporel', () => {
+  /** Abscisses des points traces, dans l'ordre de la serie. */
+  function abscisses(container: HTMLElement): number[] {
+    return Array.from(container.querySelectorAll('circle'))
+      .map((node) => Number(node.getAttribute('cx')))
+      .filter((value) => Number.isFinite(value));
+  }
+
+  it('espace les points proportionnellement au temps quand `at` est fourni', () => {
+    // Trois pesees : 8 dec., 10 dec., puis 31 dec. Deux jours, puis trois semaines.
+    const jour = (iso: string) => new Date(`${iso}T12:00:00Z`).getTime();
+    const { container } = render(
+      <LineChart
+        data={[
+          { label: '8 dec.', value: 75, at: jour('2026-12-08') },
+          { label: '10 dec.', value: 74.5, at: jour('2026-12-10') },
+          { label: '31 dec.', value: 74, at: jour('2026-12-31') },
+        ]}
+        unit=" kg"
+      />,
+    );
+
+    const [a, b, c] = abscisses(container);
+    const premierEcart = b - a;
+    const secondEcart = c - b;
+
+    /*
+     * Le trace etait categoriel : les deux segments avaient exactement la meme
+     * largeur, ce qui donnait a deux jours l'apparence de trois semaines. Le
+     * second intervalle doit desormais etre nettement plus large.
+     */
+    expect(secondEcart).toBeGreaterThan(premierEcart * 5);
+  });
+
+  it('retombe sur un espacement regulier quand aucune date n est fournie', () => {
+    const { container } = render(
+      <LineChart data={SEMAINE.map((label, index) => ({ label, value: [1, 2, 3, 4, 5, 6, 7][index] }))} />,
+    );
+
+    const xs = abscisses(container);
+    const ecarts = xs.slice(1).map((valeur, index) => valeur - xs[index]);
+    for (const ecart of ecarts) expect(ecart).toBeCloseTo(ecarts[0], 6);
+  });
+});
+
 describe('BarChart — lisibilite', () => {
   it('etire les colonnes sur toute la hauteur du graphique', () => {
     const { container } = render(

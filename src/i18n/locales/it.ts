@@ -248,6 +248,8 @@ export const it: Dictionary = {
   'weight.heightHint': 'Inserisci la tua altezza nelle impostazioni per calcolare l\'IMC.',
   'weight.empty': 'Nessuna misurazione registrata.',
   'weight.perWeek': 'a settimana',
+  'weight.needSecond': 'Aggiungi una seconda misurazione per vedere la tua evoluzione.',
+  'weight.sinceStart': 'Dall inizio',
 
   'sport.title': 'Sport',
   'sport.subtitle': 'Il corpo segue cio che la mente decide.',

@@ -249,6 +249,8 @@ export const ar: Dictionary = {
   'weight.heightHint': 'أدخل طولك في الإعدادات لحساب مؤشر كتلة الجسم.',
   'weight.empty': 'لا توجد قياسات مسجلة.',
   'weight.perWeek': 'في الأسبوع',
+  'weight.needSecond': 'أضف قياسًا ثانيًا لعرض تطورك.',
+  'weight.sinceStart': 'منذ البداية',
 
   'sport.title': 'الرياضة',
   'sport.subtitle': 'الجسد يتبع ما يقرره العقل.',

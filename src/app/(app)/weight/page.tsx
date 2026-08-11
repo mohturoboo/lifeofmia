@@ -10,7 +10,8 @@ import { LineChart } from '@/components/charts';
 import { useToast } from '@/components/ui/toast';
 import { PageHeader } from '@/components/page-header';
 import { useI18n } from '@/i18n/provider';
-import { dateKeyIn } from '@/lib/date';
+import { addDaysToKey, dateKeyIn } from '@/lib/date';
+import { formatWeight, formatWeightDelta } from '@/lib/weight';
 
 interface WeightEntry {
   id: string;
@@ -22,6 +23,8 @@ interface WeightEntry {
 }
 
 interface WeightData {
+  /** Aujourd'hui dans le fuseau du PROFIL, pas dans celui du navigateur. */
+  today: string;
   entries: WeightEntry[];
   latest: WeightEntry | null;
   heightCm: number | null;
@@ -43,9 +46,6 @@ export default function WeightPage() {
   const toast = useToast();
   const { run: mutate, fields: erreurs, clearField } = useMutate();
   const { data, loading, refresh } = useResource<WeightData>('/api/weight');
-
-  // Une mesure ne s'enregistre pas pour demain.
-  const aujourdhui = dateKeyIn(Intl.DateTimeFormat().resolvedOptions().timeZone);
 
   const [modalOpen, setModalOpen] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -108,14 +108,42 @@ export default function WeightPage() {
     obese: t('weight.bmiObese'),
   };
 
-  // La projection est affichee en pointilles a la suite de la courbe reelle.
+  // Une mesure ne s'enregistre pas pour demain. La borne vient du serveur :
+  // le fuseau du navigateur peut avancer d'un jour sur celui du profil.
+  const aujourdhui = data.today;
+  const anneeCourante = new Date(`${aujourdhui}T12:00:00Z`).getUTCFullYear();
+  const horodatage = (cle: string) => new Date(`${cle}T12:00:00Z`).getTime();
+
+  /**
+   * Date d'historique : l'annee apparait des qu'elle n'est pas l'annee en cours.
+   *
+   * « 31 dec. » au-dessus de « 10 aout » se lisait comme une date passee alors
+   * qu'il s'agissait d'une mesure de 2027. Une annee omise n'est pas une
+   * economie de place : c'est une information supprimee.
+   */
+  const formatDateEntree = (cle: string) => {
+    const date = new Date(`${cle}T12:00:00Z`);
+    return date.toLocaleDateString(locale, {
+      day: '2-digit',
+      month: 'short',
+      ...(date.getUTCFullYear() === anneeCourante ? {} : { year: 'numeric' }),
+    });
+  };
+
+  /*
+   * La projection est affichee en pointilles a la suite de la courbe reelle.
+   * `at` donne au graphique l'echelle du TEMPS : sans lui, trois pesees
+   * espacees de deux jours puis de trois semaines etaient dessinees a
+   * intervalles egaux, et la pente affichee ne voulait plus rien dire.
+   */
   const chartData = data.entries.map((entry) => ({
-    label: new Date(`${entry.date}T12:00:00Z`).toLocaleDateString(locale, { day: 'numeric', month: 'short' }),
+    label: formatDateEntree(entry.date),
     value: entry.weightKg,
+    at: horodatage(entry.date),
   }));
 
   const forecastData = data.forecast
-    ? [{ label: '+30 j', value: data.forecast.predicted }]
+    ? [{ label: '+30 j', value: data.forecast.predicted, at: horodatage(addDaysToKey(aujourdhui, 30)) }]
     : [];
 
   const first = data.entries[0];
@@ -129,7 +157,14 @@ export default function WeightPage() {
         icon="scale"
         color="#f6d9e4"
         actions={
-          <Button icon="plus" onClick={() => setModalOpen(true)}>
+          <Button
+            icon="plus"
+            onClick={() => {
+              // La date proposee est celle du profil, pas celle de l'appareil.
+              setForm((current) => ({ ...current, date: aujourdhui }));
+              setModalOpen(true);
+            }}
+          >
             {t('weight.addEntry')}
           </Button>
         }
@@ -138,14 +173,17 @@ export default function WeightPage() {
       <div className="mb-4 grid grid-cols-2 gap-3 lg:grid-cols-4">
         <Card>
           <p className="text-[11px] text-[var(--text-faint)]">{t('weight.current')}</p>
+          {/*
+            `formatWeight` partout : les cartes collaient l'unite au chiffre par
+            une marge CSS (« 75kg ») quand l'historique l'ecrivait dans le texte
+            (« 75 kg »). Deux chemins de rendu, deux resultats, sur la meme page.
+          */}
           <p className="mt-1 text-2xl font-semibold text-[var(--text)]">
-            {data.latest ? `${data.latest.weightKg}` : '—'}
-            {data.latest && <span className="ms-1 text-sm font-normal text-[var(--text-faint)]">kg</span>}
+            {data.latest ? formatWeight(data.latest.weightKg, locale) : '—'}
           </p>
           {totalDelta !== null && (
             <p className={`mt-0.5 text-[11px] ${totalDelta < 0 ? 'text-[#f6d9e4]' : 'text-[#ff9fbf]'}`}>
-              {totalDelta > 0 ? '+' : ''}
-              {totalDelta} kg depuis le debut
+              {formatWeightDelta(totalDelta, locale)} {t('weight.sinceStart').toLowerCase()}
             </p>
           )}
         </Card>
@@ -166,12 +204,11 @@ export default function WeightPage() {
         <Card>
           <p className="text-[11px] text-[var(--text-faint)]">{t('weight.target')}</p>
           <p className="mt-1 text-2xl font-semibold text-[var(--text)]">
-            {data.targetWeight ?? '—'}
-            {data.targetWeight && <span className="ms-1 text-sm font-normal text-[var(--text-faint)]">kg</span>}
+            {data.targetWeight !== null ? formatWeight(data.targetWeight, locale) : '—'}
           </p>
-          {data.targetWeight && data.latest && (
+          {data.targetWeight !== null && data.latest && (
             <p className="mt-0.5 text-[11px] text-[var(--text-faint)]">
-              {Math.abs(Math.round((data.latest.weightKg - data.targetWeight) * 10) / 10)} kg restants
+              {formatWeight(Math.abs(data.latest.weightKg - data.targetWeight), locale)} restants
             </p>
           )}
         </Card>
@@ -179,13 +216,11 @@ export default function WeightPage() {
         <Card>
           <p className="text-[11px] text-[var(--text-faint)]">{t('weight.forecast')}</p>
           <p className="mt-1 text-2xl font-semibold text-[var(--text)]">
-            {data.forecast ? `${data.forecast.predicted}` : '—'}
-            {data.forecast && <span className="ms-1 text-sm font-normal text-[var(--text-faint)]">kg</span>}
+            {data.forecast ? formatWeight(data.forecast.predicted, locale) : '—'}
           </p>
           {data.forecast && (
             <p className="mt-0.5 text-[11px] text-[var(--text-faint)]">
-              {data.forecast.slopePerWeek > 0 ? '+' : ''}
-              {data.forecast.slopePerWeek} kg {t('weight.perWeek')}
+              {formatWeightDelta(data.forecast.slopePerWeek, locale)} {t('weight.perWeek')}
             </p>
           )}
         </Card>
@@ -198,8 +233,17 @@ export default function WeightPage() {
           icon="trending"
           accent="#f6d9e4"
         />
-        {data.entries.length < 2 ? (
+        {/*
+          Deux etats vides distincts, parce que ce sont deux situations
+          differentes. Le graphique exige deux points ; avec une seule mesure
+          il affichait « Aucune mesure enregistree. Commencez par ajouter votre
+          premier element. » — juste au-dessus de l'historique qui listait cette
+          mesure. La page se contredisait a un centimetre d'intervalle.
+        */}
+        {data.entries.length === 0 ? (
           <EmptyState icon="scale" title={t('weight.empty')} hint={t('common.emptyHint')} />
+        ) : data.entries.length < 2 ? (
+          <EmptyState icon="trending" title={t('weight.needSecond')} />
         ) : (
           <LineChart data={chartData} forecast={forecastData} color="#f6d9e4" unit=" kg" height={230} />
         )}
@@ -218,14 +262,16 @@ export default function WeightPage() {
               return (
                 <li key={entry.id} className="group flex items-center gap-3 py-2.5">
                   <span className="w-24 shrink-0 text-xs text-[var(--text-faint)]">
-                    {new Date(`${entry.date}T12:00:00Z`).toLocaleDateString(locale, { day: '2-digit', month: 'short' })}
+                    {formatDateEntree(entry.date)}
                   </span>
-                  <span className="text-sm font-medium text-[var(--text)]">{entry.weightKg} kg</span>
+                  <span className="text-sm font-medium text-[var(--text)]">
+                    {formatWeight(entry.weightKg, locale)}
+                  </span>
 
                   {delta !== null && delta !== 0 && (
                     <span className={`flex items-center gap-0.5 text-[11px] ${delta < 0 ? 'text-[#f6d9e4]' : 'text-[#ff9fbf]'}`}>
                       <Icon name={delta < 0 ? 'arrowDown' : 'arrowUp'} size={11} />
-                      {Math.abs(delta)}
+                      {formatWeight(Math.abs(delta), locale)}
                     </span>
                   )}
 
@@ -284,10 +330,27 @@ export default function WeightPage() {
 
           <div className="grid grid-cols-2 gap-3">
             <Field label={`${t('weight.bodyFat')} (%)`} htmlFor="weight-fat" error={erreurs.bodyFat} hint={t('common.optional')}>
-              <Input id="weight-fat" type="number" step="0.1" value={form.bodyFat} onChange={(event) => set('bodyFat', event.target.value)} />
+              {/* Les bornes du serveur sont rappelees sur le champ : 0 a 100 %. */}
+              <Input
+                id="weight-fat"
+                type="number"
+                step="0.1"
+                min={0}
+                max={100}
+                value={form.bodyFat}
+                onChange={(event) => set('bodyFat', event.target.value)}
+              />
             </Field>
             <Field label={`${t('weight.muscle')} (kg)`} htmlFor="weight-muscle" error={erreurs.muscleKg} hint={t('common.optional')}>
-              <Input id="weight-muscle" type="number" step="0.1" value={form.muscleKg} onChange={(event) => set('muscleKg', event.target.value)} />
+              <Input
+                id="weight-muscle"
+                type="number"
+                step="0.1"
+                min={1}
+                max={200}
+                value={form.muscleKg}
+                onChange={(event) => set('muscleKg', event.target.value)}
+              />
             </Field>
           </div>
 

@@ -1,10 +1,11 @@
 import { prisma } from '@/lib/prisma';
 import { route } from '@/lib/api/handler';
-import { created, ok } from '@/lib/api/response';
+import { ApiError, created, ok } from '@/lib/api/response';
 import { weightSchema } from '@/lib/validation/modules';
 import { bmi, bmiCategory, projectWeight } from '@/lib/stats';
 import { recomputeDay } from '@/lib/stats';
 import { awardXp, evaluateBadges } from '@/lib/gamification';
+import { dateKeyIn } from '@/lib/date';
 
 /**
  * GET /api/weight
@@ -13,8 +14,19 @@ import { awardXp, evaluateBadges } from '@/lib/gamification';
  * obtenue par regression lineaire sur les mesures existantes.
  */
 export const GET = route(async ({ user }) => {
+  const today = dateKeyIn(user.timezone);
+
+  /*
+   * L'historique s'arrete a aujourd'hui.
+   *
+   * Le serveur refuse desormais les dates futures, mais une pesee datee de
+   * 2027 avait pu etre enregistree avant ce garde-fou. Elle devenait la
+   * derniere mesure — donc le « poids actuel » — et faussait la regression de
+   * la projection. Le filtre ecarte ces lignes de toutes les lectures sans
+   * detruire la donnee : l'utilisateur reste maitre de la supprimer.
+   */
   const entries = await prisma.weightEntry.findMany({
-    where: { userId: user.id },
+    where: { userId: user.id, date: { lte: today } },
     orderBy: { date: 'asc' },
   });
 
@@ -27,6 +39,7 @@ export const GET = route(async ({ user }) => {
   const currentBmi = latest && user.heightCm ? bmi(latest.weightKg, user.heightCm) : null;
 
   return ok({
+    today,
     entries,
     latest,
     heightCm: user.heightCm,
@@ -46,6 +59,26 @@ export const GET = route(async ({ user }) => {
  */
 export const POST = route(
   async ({ user, body }) => {
+    /*
+     * Une pesee ne se date pas dans le futur.
+     *
+     * Le formulaire posait deja `max` sur son champ date, mais cet attribut
+     * n'est qu'une commodite de saisie : il ne protege rien. Un appel direct
+     * datant une mesure de 2027 etait accepte, cette mesure devenait la plus
+     * recente — donc le « poids actuel » affiche — et la regression lineaire
+     * de la projection s'appuyait sur un point situe des annees plus loin que
+     * tous les autres.
+     *
+     * La borne est calculee dans le fuseau du PROFIL : celui du navigateur
+     * peut avancer d'un jour sur celui de l'utilisateur.
+     */
+    const today = dateKeyIn(user.timezone);
+    if (body.date > today) {
+      throw new ApiError('VALIDATION', 'Une pesee ne peut pas etre datee dans le futur.', {
+        date: `La date ne peut pas depasser le ${today}.`,
+      });
+    }
+
     const entry = await prisma.weightEntry.upsert({
       where: { userId_date: { userId: user.id, date: body.date } },
       create: {

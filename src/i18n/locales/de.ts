@@ -248,6 +248,8 @@ export const de: Dictionary = {
   'weight.heightHint': 'Trage deine Grosse in den Einstellungen ein, um den BMI zu berechnen.',
   'weight.empty': 'Keine Messung erfasst.',
   'weight.perWeek': 'pro Woche',
+  'weight.needSecond': 'Fugen Sie eine zweite Messung hinzu, um Ihren Verlauf zu sehen.',
+  'weight.sinceStart': 'Seit dem Start',
 
   'sport.title': 'Sport',
   'sport.subtitle': 'Der Korper folgt dem, was der Geist entscheidet.',
