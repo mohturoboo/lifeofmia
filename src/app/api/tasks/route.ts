@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import { route } from '@/lib/api/handler';
-import { created, ok } from '@/lib/api/response';
+import { created, ok, ApiError } from '@/lib/api/response';
 import { taskCreateSchema } from '@/lib/validation/modules';
 import { requireOwned } from '@/lib/api/ownership';
 import { dateKeyIn, fromDateKey } from '@/lib/date';
@@ -8,11 +8,29 @@ import { parseStringArray, stringifyJson } from '@/lib/json';
 
 /**
  * GET /api/tasks — liste filtrable.
- *   ?scope=today|week|month|overdue|all   ?status=todo|doing|done|cancelled
+ *   ?scope=today|week|month|overdue|undated|all   ?status=todo|doing|done|cancelled
  *   ?goalId=...   ?projectId=...
  */
+const SCOPES = ['today', 'week', 'month', 'overdue', 'undated', 'all'] as const;
+type Scope = (typeof SCOPES)[number];
+
 export const GET = route(async ({ user, searchParams }) => {
-  const scope = searchParams.get('scope') ?? 'all';
+  const demande = searchParams.get('scope') ?? 'all';
+
+  /*
+   * Un filtre inconnu est REFUSE, jamais ignore.
+   *
+   * `?scope=done` — un filtre qui n'existe pas — retombait sur « aucune borne
+   * de date » et renvoyait donc TOUTES les taches. Une faute de frappe dans un
+   * filtre produisait silencieusement le resultat le plus large possible, ce
+   * qui est exactement l'inverse de ce qu'on attend d'un filtre.
+   */
+  if (!SCOPES.includes(demande as Scope)) {
+    throw new ApiError('VALIDATION', `Filtre inconnu : « ${demande} ».`, {
+      scope: `Valeurs acceptees : ${SCOPES.join(', ')}.`,
+    });
+  }
+  const scope = demande as Scope;
   const status = searchParams.get('status');
   const goalId = searchParams.get('goalId');
   const projectId = searchParams.get('projectId');
@@ -32,6 +50,7 @@ export const GET = route(async ({ user, searchParams }) => {
     week: { gte: startOfToday, lte: new Date(startOfToday.getTime() + 7 * 86_400_000) },
     month: { gte: startOfToday, lte: new Date(startOfToday.getTime() + 30 * 86_400_000) },
     overdue: { lte: startOfToday },
+    undated: undefined,
     all: undefined,
   };
 
@@ -39,26 +58,26 @@ export const GET = route(async ({ user, searchParams }) => {
     where: {
       userId: user.id,
       parentId: null, // les sous-taches sont renvoyees imbriquees
-      ...(status ? { status } : {}),
+      /*
+       * « Terminees » exige une date d'achevement : une tache marquee `done`
+       * sans `completedAt` serait une incoherence, et l'inclure fausserait tout
+       * decompte de productivite.
+       */
+      ...(status ? { status, ...(status === 'done' ? { completedAt: { not: null } } : {}) } : {}),
       ...(goalId ? { goalId } : {}),
       ...(projectId ? { projectId } : {}),
       /*
-       * Une tache SANS echeance reste visible dans « aujourd'hui », « semaine »
-       * et « mois ».
+       * Les taches SANS echeance ont leur propre filtre.
        *
-       * Le filtre portait uniquement sur `dueDate`, et la date est facultative
-       * dans le formulaire : une tache creee sans echeance n'apparaissait donc
-       * dans aucun onglet sauf « Tout ». Elle etait bien enregistree, mais la
-       * liste restait vide juste apres l'avoir ajoutee — le bouton
-       * « Enregistrer » semblait ne rien faire.
-       *
-       * « En retard » garde l'exclusion : sans echeance, on ne peut pas l'etre.
+       * Elles apparaissaient auparavant dans « aujourd'hui », « semaine » ET
+       * « mois » a la fois — un correctif trop large, pose pour qu'une tache
+       * creee sans date ne disparaisse pas de l'ecran. Le resultat etait
+       * trompeur : trois filtres censes decouper le temps renvoyaient tous la
+       * meme chose. Elles sont desormais regroupees sous « sans echeance »,
+       * que l'interface affiche a part pour qu'aucune ne soit perdue.
        */
-      ...(ranges[scope]
-        ? scope === 'overdue'
-          ? { dueDate: ranges[scope] }
-          : { OR: [{ dueDate: ranges[scope] }, { dueDate: null }] }
-        : {}),
+      ...(scope === 'undated' ? { dueDate: null } : {}),
+      ...(ranges[scope] ? { dueDate: ranges[scope] } : {}),
       ...(scope === 'overdue' ? { status: { in: ['todo', 'doing'] } } : {}),
     },
     orderBy: [{ status: 'asc' }, { dueDate: 'asc' }, { position: 'asc' }],

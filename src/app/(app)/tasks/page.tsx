@@ -32,7 +32,7 @@ const PRIORITY_COLORS: Record<string, string> = {
   urgent: '#ff9fbf',
 };
 
-const SCOPES = ['today', 'week', 'month', 'overdue', 'all'] as const;
+const SCOPES = ['today', 'week', 'month', 'overdue', 'undated', 'all'] as const;
 
 const EMPTY_FORM = {
   title: '',
@@ -53,6 +53,19 @@ export default function TasksPage() {
   const [showDone, setShowDone] = useState(false);
   const { data, loading, refresh } = useResource<Task[]>(`/api/tasks?scope=${scope}`, [scope]);
 
+  /*
+   * Les taches sans echeance, affichees a part sous les vues datees.
+   *
+   * Elles ne se melent plus aux trois filtres de periode — c'etait trompeur —
+   * mais elles ne doivent pas pour autant disparaitre : une tache creee sans
+   * date resterait invisible tant qu'on ne pense pas a changer d'onglet.
+   */
+  const vueDatee = scope === 'today' || scope === 'week' || scope === 'month';
+  const { data: sansEcheance, refresh: refreshSansEcheance } = useResource<Task[]>(
+    vueDatee ? '/api/tasks?scope=undated' : null,
+    [vueDatee],
+  );
+
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<Task | null>(null);
   const [parentId, setParentId] = useState<string | null>(null);
@@ -72,6 +85,7 @@ export default function TasksPage() {
     week: t('tasks.thisWeek'),
     month: t('tasks.thisMonth'),
     overdue: t('tasks.overdue'),
+    undated: t('tasks.noDate'),
     all: t('common.all'),
   };
 
@@ -117,6 +131,7 @@ export default function TasksPage() {
     if (!saved) return;
     setModalOpen(false);
     void refresh();
+    void refreshSansEcheance();
   }
 
   async function toggle(task: Task) {
@@ -125,12 +140,14 @@ export default function TasksPage() {
       { notifySuccess: false },
     );
     void refresh();
+    void refreshSansEcheance();
   }
 
   async function remove(task: Task) {
     if (!window.confirm(t('common.deleteConfirm'))) return;
     await api.delete(`/api/tasks/${task.id}`).catch(() => toast.error(t('common.error')));
     void refresh();
+    void refreshSansEcheance();
   }
 
   const renderTask = (task: Task, depth = 0) => {
@@ -240,14 +257,28 @@ export default function TasksPage() {
         }
       />
 
-      <div className="mb-4 flex flex-wrap items-center gap-2">
-        <div className="flex flex-wrap gap-1 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-1">
+      {/*
+        Vraie barre d'onglets : `role="tablist"` et `aria-selected` disent
+        « une seule vue a la fois », la ou `aria-pressed` decrivait six
+        interrupteurs independants. `aria-controls` relie chaque onglet a la
+        liste qu'il gouverne.
+
+        « Terminees » reste a part DANS le meme cadre : ce n'est pas une
+        septieme vue mais un axe different — montrer ou non les taches finies,
+        quelle que soit la periode. Un interrupteur, donc `aria-pressed`.
+      */}
+      <div className="mb-4 flex flex-wrap items-center gap-1 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-1">
+        <div role="tablist" aria-label={t('tasks.title')} className="flex flex-wrap gap-1">
           {SCOPES.map((value) => (
             <button
               key={value}
               type="button"
+              role="tab"
+              id={`onglet-${value}`}
+              aria-selected={scope === value}
+              aria-controls="liste-taches"
+              tabIndex={scope === value ? 0 : -1}
               onClick={() => setScope(value)}
-              aria-pressed={scope === value}
               className={cx(
                 'rounded-lg px-3 py-1.5 text-[13px] transition-colors',
                 scope === value
@@ -260,9 +291,21 @@ export default function TasksPage() {
           ))}
         </div>
 
-        <Button variant="ghost" size="sm" onClick={() => setShowDone((value) => !value)}>
-          {showDone ? t('common.all') : t('tasks.completed')}
-        </Button>
+        <span aria-hidden="true" className="mx-1 h-5 w-px bg-[var(--border)]" />
+
+        <button
+          type="button"
+          aria-pressed={showDone}
+          onClick={() => setShowDone((value) => !value)}
+          className={cx(
+            'rounded-lg px-3 py-1.5 text-[13px] transition-colors',
+            showDone
+              ? 'bg-[var(--surface-2)] font-medium text-[var(--text)]'
+              : 'text-[var(--text-muted)] hover:text-[var(--text)]',
+          )}
+        >
+          {t('tasks.completed')}
+        </button>
       </div>
 
       {loading ? (
@@ -284,9 +327,20 @@ export default function TasksPage() {
           />
         </Card>
       ) : (
-        <ul className="space-y-2">
+        <ul id="liste-taches" role="tabpanel" aria-labelledby={`onglet-${scope}`} className="space-y-2">
           <AnimatePresence initial={false}>{visible.map((task) => renderTask(task))}</AnimatePresence>
         </ul>
+      )}
+
+      {vueDatee && (sansEcheance ?? []).filter((task) => showDone || task.status !== 'done').length > 0 && (
+        <section className="mt-6">
+          <h2 className="lm-eyebrow mb-2 px-1">{t('tasks.noDate')}</h2>
+          <ul className="space-y-2">
+            {(sansEcheance ?? [])
+              .filter((task) => showDone || task.status !== 'done')
+              .map((task) => renderTask(task))}
+          </ul>
+        </section>
       )}
 
       <Modal
