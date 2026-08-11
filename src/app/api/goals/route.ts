@@ -3,6 +3,7 @@ import { route } from '@/lib/api/handler';
 import { created, ok } from '@/lib/api/response';
 import { goalCreateSchema } from '@/lib/validation/modules';
 import { requireOwned } from '@/lib/api/ownership';
+import { assertPasDansLePasse } from '@/lib/api/intervalles';
 
 /** GET /api/goals — objectifs racines avec leurs etapes, sous-objectifs et taches. */
 export const GET = route(async ({ user, searchParams }) => {
@@ -34,6 +35,21 @@ export const GET = route(async ({ user, searchParams }) => {
  */
 export const POST = route(
   async ({ user, body }) => {
+    /*
+     * Une echeance deja passee sur un objectif qu'on ouvre est une faute de
+     * frappe, pas une intention : l'objectif nait « en retard » et pollue
+     * immediatement les listes triees par echeance.
+     *
+     * Le refus se limite volontairement a la CREATION d'un objectif encore a
+     * atteindre. Enregistrer apres coup un objectif deja termine ou abandonne
+     * avec sa vraie date reste legitime, et modifier un objectif dont
+     * l'echeance est depassee ne doit jamais etre bloque — sans quoi il
+     * deviendrait impossible de le corriger.
+     */
+    if (body.deadline && (body.status === 'active' || body.status === 'paused')) {
+      assertPasDansLePasse(body.deadline, user.timezone);
+    }
+
     // Un sous-objectif ne peut se rattacher qu'a un objectif de l'utilisateur.
     const parentId = await requireOwned('goal', body.parentId, user.id);
 

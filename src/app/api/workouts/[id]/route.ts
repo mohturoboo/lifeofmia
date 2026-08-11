@@ -3,6 +3,7 @@ import { route } from '@/lib/api/handler';
 import { ok, ApiError } from '@/lib/api/response';
 import { workoutUpdateSchema } from '@/lib/validation/modules';
 import { recomputeDay } from '@/lib/stats';
+import { assertPasDansLeFutur } from '@/lib/api/intervalles';
 
 export const PATCH = route(
   async ({ user, params, body }) => {
@@ -11,6 +12,10 @@ export const PATCH = route(
       select: { id: true, date: true },
     });
     if (!existing) throw new ApiError('NOT_FOUND', 'Seance introuvable.');
+
+    // Meme regle qu'a la creation : deplacer une seance ne doit pas permettre
+    // de contourner la borne.
+    if (body.date) assertPasDansLeFutur(body.date, user.timezone, 'date', 'Une seance');
 
     const { exercises, ...fields } = body;
 

@@ -4,6 +4,7 @@ import { created, ok } from '@/lib/api/response';
 import { workoutCreateSchema } from '@/lib/validation/modules';
 import { dateKeyIn, lastNDays } from '@/lib/date';
 import { recomputeDay } from '@/lib/stats';
+import { assertPasDansLeFutur } from '@/lib/api/intervalles';
 import { awardXp, evaluateBadges, refreshStreak } from '@/lib/gamification';
 
 /** GET /api/workouts — historique et statistiques agregees. */
@@ -55,6 +56,9 @@ export const GET = route(async ({ user, searchParams }) => {
 /** POST /api/workouts — seance + exercices en une seule ecriture. */
 export const POST = route(
   async ({ user, body }) => {
+    // Une seance decrit ce qui a ete fait : elle ne se date pas dans le futur.
+    assertPasDansLeFutur(body.date, user.timezone, 'date', 'Une seance');
+
     const workout = await prisma.workout.create({
       data: {
         userId: user.id,

@@ -9,6 +9,7 @@ import { Modal } from '@/components/ui/modal';
 import { useToast } from '@/components/ui/toast';
 import { PageHeader } from '@/components/page-header';
 import { useI18n } from '@/i18n/provider';
+import { FIN_AVANT_DEBUT } from '@/lib/validation/common';
 
 interface CalendarEvent {
   id: string;
@@ -31,7 +32,7 @@ const COLORS = ['#e9b8d5', '#fbc7da', '#f6d9e4', '#ff9fbf', '#d9c7f0', '#e6e6e6'
 export default function CalendarPage() {
   const { t, locale } = useI18n();
   const toast = useToast();
-  const { run: mutate, fields: erreurs, clearField } = useMutate();
+  const { run: mutate, fields: erreurs, clearField, setField: setErreur } = useMutate();
 
   const [cursor, setCursor] = useState(() => new Date());
   const [selected, setSelected] = useState<string | null>(null);
@@ -109,8 +110,22 @@ export default function CalendarPage() {
     return map;
   }, [data]);
 
+  /*
+   * Meme regle que le serveur, verifiee avant l'envoi.
+   *
+   * Le `min` pose sur le champ de fin guide la saisie, mais un attribut HTML
+   * n'empeche rien : le navigateur laisse valider une heure anterieure des
+   * lors que le formulaire est soumis au clavier. Ce controle evite l'aller-
+   * retour reseau ; c'est le serveur qui reste l'autorite.
+   */
+  const finAvantDebut = form.endTime <= form.startTime;
+
   async function save() {
     if (form.title.trim().length === 0) return;
+    if (finAvantDebut) {
+      setErreur('endAt', FIN_AVANT_DEBUT);
+      return;
+    }
     setSaving(true);
     // Le detail par champ renvoye par le serveur s'affiche sous le champ
     // fautif ; la saisie reste en place pour etre corrigee.
@@ -316,8 +331,24 @@ export default function CalendarPage() {
             <Field label="Debut" htmlFor="event-start" error={erreurs.startAt}>
               <Input id="event-start" type="time" value={form.startTime} onChange={(event) => set('startTime', event.target.value)} />
             </Field>
-            <Field label="Fin" htmlFor="event-end" error={erreurs.endAt}>
-              <Input id="event-end" type="time" value={form.endTime} onChange={(event) => set('endTime', event.target.value)} />
+            <Field
+              label="Fin"
+              htmlFor="event-end"
+              error={erreurs.endAt || (finAvantDebut ? FIN_AVANT_DEBUT : undefined)}
+            >
+              {/*
+                `min` suit l'heure de debut : le selecteur natif refuse de
+                proposer une fin anterieure, et l'incoherence se voit avant
+                meme la soumission.
+              */}
+              <Input
+                id="event-end"
+                type="time"
+                min={form.startTime}
+                aria-invalid={finAvantDebut || Boolean(erreurs.endAt)}
+                value={form.endTime}
+                onChange={(event) => set('endTime', event.target.value)}
+              />
             </Field>
           </div>
 

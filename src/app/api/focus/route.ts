@@ -4,6 +4,7 @@ import { created } from '@/lib/api/response';
 import { focusSessionSchema } from '@/lib/validation/modules';
 import { requireOwned } from '@/lib/api/ownership';
 import { recomputeDay } from '@/lib/stats';
+import { assertPasDansLeFutur } from '@/lib/api/intervalles';
 import { awardXp } from '@/lib/gamification';
 
 /**
@@ -13,6 +14,11 @@ import { awardXp } from '@/lib/gamification';
  */
 export const POST = route(
   async ({ user, body }) => {
+    // Une session de concentration se constate, elle ne se planifie pas :
+    // datee de la semaine prochaine, elle offrait de l'XP pour un temps que
+    // personne n'avait passe.
+    assertPasDansLeFutur(body.date, user.timezone, 'date', 'Une session');
+
     const taskId = await requireOwned('task', body.taskId, user.id);
 
     const session = await prisma.focusSession.create({

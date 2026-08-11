@@ -2,6 +2,7 @@ import { prisma } from '@/lib/prisma';
 import { stringifyJson } from '@/lib/json';
 import { dateKeyIn } from '@/lib/date';
 import { recomputeDay } from '@/lib/stats';
+import { assertPasDansLeFutur, assertPasDansLePasse } from '@/lib/api/intervalles';
 import type { SessionUser } from '@/lib/auth/session';
 import {
   habitCreateSchema,
@@ -350,6 +351,13 @@ const EXECUTORS: Record<string, Executor> = {
       steps,
     });
 
+    /*
+     * L'agent passe par les memes regles que l'interface. Il ecrit avec les
+     * memes schemas mais sans traverser les routes : sans ce rappel, une porte
+     * restait ouverte la ou l'autre venait d'etre fermee.
+     */
+    if (parsed.deadline) assertPasDansLePasse(parsed.deadline, user.timezone);
+
     const goal = await prisma.goal.create({
       data: {
         userId: user.id,
@@ -455,6 +463,8 @@ const EXECUTORS: Record<string, Executor> = {
       notes: input.notes ?? null,
       exercises,
     });
+
+    assertPasDansLeFutur(parsed.date, user.timezone, 'date', 'Une seance');
 
     const workout = await prisma.workout.create({
       data: {

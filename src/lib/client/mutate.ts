@@ -64,5 +64,17 @@ export function useMutate() {
     setFields((current) => (current[name] ? { ...current, [name]: '' } : current));
   }, []);
 
-  return { run, fields, clearField };
+  /**
+   * Pose une erreur sans passer par le serveur.
+   *
+   * Certaines regles se verifient avant l'envoi — « la fin doit suivre le
+   * debut » n'a pas besoin d'un aller-retour reseau pour etre constatee. Le
+   * message emprunte le meme canal que ceux du serveur : meme emplacement,
+   * meme apparence, meme effacement des que l'utilisateur reprend le champ.
+   */
+  const setField = useCallback((name: string, message: string) => {
+    setFields((current) => ({ ...current, [name]: message }));
+  }, []);
+
+  return { run, fields, clearField, setField };
 }

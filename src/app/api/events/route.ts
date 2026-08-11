@@ -2,6 +2,7 @@ import { prisma } from '@/lib/prisma';
 import { route } from '@/lib/api/handler';
 import { created, ok } from '@/lib/api/response';
 import { calendarEventSchema } from '@/lib/validation/modules';
+import { assertIntervalle } from '@/lib/api/intervalles';
 
 /**
  * GET /api/events?from=ISO&to=ISO
@@ -32,17 +33,23 @@ export const GET = route(async ({ user, searchParams }) => {
 
 export const POST = route(
   async ({ user, body }) => {
-    const startAt = new Date(body.startAt);
-    const endAt = new Date(body.endAt);
+    /*
+     * Le schema a deja refuse un intervalle invalide ; cet appel est la
+     * seconde barriere et la source unique des objets `Date`.
+     *
+     * La route « corrigeait » auparavant une fin anterieure au debut en
+     * imposant une duree d'une heure, puis repondait 201 : l'appelant croyait
+     * son evenement enregistre tel quel, la base en contenait un autre.
+     */
+    const { debut: startAt, fin: endAt } = assertIntervalle(body.startAt, body.endAt);
 
     const event = await prisma.calendarEvent.create({
       data: {
         userId: user.id,
         title: body.title,
         description: body.description,
-        // Un evenement dont la fin precede le debut est corrige a une heure.
         startAt,
-        endAt: endAt > startAt ? endAt : new Date(startAt.getTime() + 3_600_000),
+        endAt,
         allDay: body.allDay,
         location: body.location,
         color: body.color,

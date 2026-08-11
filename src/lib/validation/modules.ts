@@ -1,7 +1,9 @@
 import { z } from 'zod';
 import {
   dateKeySchema,
+  FIN_AVANT_DEBUT,
   hexColorSchema,
+  instantSchema,
   optionalDate,
   optionalText,
   tagsSchema,
@@ -315,17 +317,42 @@ export const noteSchema = z.object({
 
 export const noteUpdateSchema = updatableFrom(noteSchema);
 
-export const calendarEventSchema = z.object({
+/*
+ * Le corps de l'evenement est garde a part de sa regle de coherence.
+ *
+ * `.partial()` refuse de s'appliquer a un objet portant un raffinement : la
+ * regle « la fin suit le debut » n'a de sens que sur une creation, ou les deux
+ * bornes sont forcement presentes. Sur une modification partielle, elle est
+ * verifiee cote route, apres fusion avec les valeurs deja enregistrees — sans
+ * quoi deplacer la seule heure de fin echapperait a tout controle.
+ */
+const calendarEventFields = z.object({
   title: z.string().trim().min(1, 'Titre requis.').max(160),
   description: optionalText(2000),
-  startAt: z.string().min(1),
-  endAt: z.string().min(1),
+  startAt: instantSchema,
+  endAt: instantSchema,
   allDay: z.boolean().default(false),
   location: optionalText(200),
   color: hexColorSchema.default('#e9b8d5'),
 });
 
-export const calendarEventUpdateSchema = updatableFrom(calendarEventSchema);
+export const calendarEventSchema = calendarEventFields.superRefine((valeur, ctx) => {
+  const debut = new Date(valeur.startAt);
+  const fin = new Date(valeur.endAt);
+  if (Number.isNaN(debut.getTime()) || Number.isNaN(fin.getTime())) return;
+
+  /*
+   * Un evenement de duree nulle ou negative etait accepte, puis « corrige »
+   * par la route a une heure : 201 Created, et une donnee que l'appelant
+   * n'avait jamais demandee. L'erreur se signale, elle ne se repare pas dans
+   * le dos de l'utilisateur.
+   */
+  if (fin.getTime() <= debut.getTime()) {
+    ctx.addIssue({ code: 'custom', path: ['endAt'], message: FIN_AVANT_DEBUT });
+  }
+});
+
+export const calendarEventUpdateSchema = updatableFrom(calendarEventFields);
 
 export type HabitCreateInput = z.infer<typeof habitCreateSchema>;
 export type TaskCreateInput = z.infer<typeof taskCreateSchema>;

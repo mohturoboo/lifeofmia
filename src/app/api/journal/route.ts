@@ -5,6 +5,7 @@ import { journalSchema } from '@/lib/validation/modules';
 import { parseJson, parseStringArray, stringifyJson } from '@/lib/json';
 import { dateKeyIn, isDateKey } from '@/lib/date';
 import { recomputeDay } from '@/lib/stats';
+import { assertPasDansLeFutur } from '@/lib/api/intervalles';
 import { awardXp, evaluateBadges } from '@/lib/gamification';
 
 interface Media {
@@ -55,6 +56,9 @@ export const GET = route(async ({ user, searchParams }) => {
  */
 export const PUT = route(
   async ({ user, body }) => {
+    // On ecrit son journal apres coup, jamais pour un jour a venir.
+    assertPasDansLeFutur(body.date, user.timezone, 'date', 'Une entree de journal');
+
     const payload = {
       mood: body.mood,
       energy: body.energy,

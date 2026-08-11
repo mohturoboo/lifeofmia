@@ -28,6 +28,28 @@ export const timeSchema = z
 export const cuidSchema = z.string().min(1, 'Identifiant requis');
 
 /**
+ * Messages de coherence temporelle, partages par les schemas et les routes.
+ *
+ * Ils vivent ici plutot que dans la couche API : les schemas ne doivent pas
+ * dependre de `next/server`, qui n'a rien a faire dans un bundle client.
+ */
+export const FIN_AVANT_DEBUT = 'La fin doit etre posterieure au debut.';
+export const DATE_INVALIDE = 'Date invalide.';
+
+/**
+ * Instant ISO reellement analysable.
+ *
+ * `z.string().min(1)` laissait passer n'importe quel texte : « demain » devenait
+ * `Invalid Date`, que Prisma refusait en fin de course avec une erreur 500 sans
+ * rapport avec la saisie. La date est verifiee ici, ou l'on peut encore
+ * l'expliquer a l'utilisateur.
+ */
+export const instantSchema = z
+  .string()
+  .min(1, 'Date requise.')
+  .refine((valeur) => !Number.isNaN(new Date(valeur).getTime()), DATE_INVALIDE);
+
+/**
  * Email normalise avant validation.
  *
  * L'ordre est important : `z.email().trim().toLowerCase()` validerait la chaine
