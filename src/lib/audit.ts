@@ -16,6 +16,10 @@ export type AuditAction =
   | 'REGISTER'
   | 'LOGIN'
   | 'LOGIN_FAILED'
+  /** Tentative refusee par la limitation de debit, avant meme la verification. */
+  | 'LOGIN_THROTTLED'
+  /** Compte verrouille apres des echecs repetes ; le titulaire est prevenu. */
+  | 'ACCOUNT_LOCKED'
   | 'LOGOUT'
   | 'PASSWORD_RESET_REQUEST'
   | 'PASSWORD_RESET'

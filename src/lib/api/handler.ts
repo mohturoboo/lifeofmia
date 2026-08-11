@@ -73,12 +73,22 @@ function isSameOrigin(request: NextRequest): boolean {
   return originHost === forwardedHost || originHost === host;
 }
 
-function clientKey(request: NextRequest, suffix: string): string {
-  const ip =
+/**
+ * Adresse de l'appelant, telle que vue derriere le proxy de l'hebergeur.
+ *
+ * Exportee parce que les routes d'authentification en ont besoin pour leurs
+ * propres compteurs, plus stricts que celui de l'enveloppe.
+ */
+export function clientIp(request: NextRequest): string {
+  return (
     request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ??
     request.headers.get('x-real-ip') ??
-    'local';
-  return `${suffix}:${ip}`;
+    'local'
+  );
+}
+
+function clientKey(request: NextRequest, suffix: string): string {
+  return `${suffix}:${clientIp(request)}`;
 }
 
 async function readBody<TBody>(

@@ -1,10 +1,11 @@
 import { headers } from 'next/headers';
 import { prisma } from '@/lib/prisma';
-import { publicRoute } from '@/lib/api/handler';
-import { ok } from '@/lib/api/response';
+import { clientIp, publicRoute } from '@/lib/api/handler';
+import { fail, ok } from '@/lib/api/response';
 import { forgotPasswordSchema } from '@/lib/validation/auth';
 import { issueToken, TOKEN_TYPES } from '@/lib/auth/tokens';
-import { RATE_LIMITS } from '@/lib/auth/rate-limit';
+import { LOGIN_BACKOFF, RATE_LIMITS } from '@/lib/auth/rate-limit';
+import { bucketCompte, bucketIp, consumePartage } from '@/lib/auth/rate-limit-store';
 import { passwordResetEmail, sendMail } from '@/lib/mailer';
 import { audit } from '@/lib/audit';
 
@@ -15,7 +16,29 @@ import { audit } from '@/lib/audit';
  * pas s'en servir pour dresser la liste des comptes enregistres.
  */
 export const POST = publicRoute(
-  async ({ body }) => {
+  async ({ request, body }) => {
+    /*
+     * Deux compteurs partages : par adresse IP, contre l'arrosage general, et
+     * par adresse email, contre le harcelement d'une boite precise.
+     *
+     * Le second compte les tentatives meme quand l'adresse est inconnue —
+     * sinon seules les adresses reelles seraient ralenties, et le silence
+     * soigneusement construit plus bas se lirait dans le temps de reponse.
+     */
+    const debits = await Promise.all([
+      consumePartage(bucketIp('forgot', clientIp(request)), { ...RATE_LIMITS.passwordResetIp, ...LOGIN_BACKOFF }),
+      consumePartage(bucketCompte('forgot', body.email), { ...RATE_LIMITS.passwordReset, ...LOGIN_BACKOFF }),
+    ]);
+    const bloque = debits.find((debit) => !debit.allowed);
+    if (bloque) {
+      return fail(
+        'RATE_LIMITED',
+        `Trop de demandes. Reessayez dans ${Math.ceil(bloque.retryAfterSeconds / 60)} minute(s).`,
+        undefined,
+        { 'Retry-After': String(bloque.retryAfterSeconds) },
+      );
+    }
+
     const user = await prisma.user.findFirst({
       where: { email: body.email, deletedAt: null },
       select: { id: true, email: true, firstName: true },

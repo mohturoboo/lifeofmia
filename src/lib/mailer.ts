@@ -92,3 +92,39 @@ export function passwordResetEmail(to: string, firstName: string, token: string)
     text: `Bonjour ${firstName},\n\nReinitialisez votre mot de passe : ${url}\n\nCe lien expire dans 1 heure.`,
   };
 }
+
+/**
+ * Alerte de securite envoyee au titulaire du compte apres un verrouillage.
+ *
+ * Le seul destinataire est le proprietaire de l'adresse. Elle ne revele rien a
+ * l'attaquant, et donne a la victime la seule information qu'elle ne peut pas
+ * obtenir autrement : quelqu'un s'acharne sur son compte en ce moment.
+ *
+ * Elle ne contient volontairement aucun lien d'action. Un email de securite
+ * poussant a cliquer dans l'urgence est exactement la forme que prend un
+ * hameconnage : on invite a se rendre sur le site par ses propres moyens.
+ */
+export function securityAlertEmail(
+  to: string,
+  firstName: string,
+  tentatives: number,
+  minutes: number,
+): MailMessage {
+  const corps =
+    `Nous avons bloque l'acces a votre compte apres ${tentatives} tentatives de connexion infructueuses. ` +
+    `Il le restera pendant ${minutes} minutes.<br><br>` +
+    "Si ces tentatives viennent de vous, il n'y a rien a faire : attendez la fin du delai. " +
+    'Dans le cas contraire, changez votre mot de passe des que possible, depuis le site, ' +
+    'en vous y rendant vous-meme.';
+
+  return {
+    to,
+    subject: 'Tentatives de connexion sur votre compte — LifeofM',
+    html: layout(`Bonjour ${firstName}`, corps),
+    text:
+      `Bonjour ${firstName},\n\n` +
+      `${tentatives} tentatives de connexion infructueuses ont ete detectees sur votre compte. ` +
+      `L'acces est bloque pendant ${minutes} minutes.\n\n` +
+      "Si ce n'est pas vous, changez votre mot de passe en vous rendant vous-meme sur le site.",
+  };
+}

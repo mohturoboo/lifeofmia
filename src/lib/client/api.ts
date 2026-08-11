@@ -16,10 +16,33 @@ export class ApiClientError extends Error {
     message: string,
     public readonly fields?: Record<string, string>,
     public readonly status?: number,
+    /**
+     * Secondes a attendre avant de reessayer, lues dans l'en-tete
+     * `Retry-After`.
+     *
+     * Le serveur repondait deja 429 avec cet en-tete, mais le client le
+     * jetait : l'interface affichait « Trop de tentatives » sans jamais dire
+     * combien de temps, ce qui pousse a reessayer en boucle — exactement le
+     * comportement que la limitation cherche a decourager.
+     */
+    public readonly retryAfterSeconds?: number,
   ) {
     super(message);
     this.name = 'ApiClientError';
   }
+}
+
+/** `Retry-After` en secondes, quel que soit son format. */
+function lireRetryAfter(response: Response): number | undefined {
+  const brut = response.headers.get('Retry-After');
+  if (!brut) return undefined;
+
+  const secondes = Number(brut);
+  if (Number.isFinite(secondes)) return Math.max(0, Math.round(secondes));
+
+  // La norme autorise aussi une date HTTP.
+  const date = Date.parse(brut);
+  return Number.isNaN(date) ? undefined : Math.max(0, Math.round((date - Date.now()) / 1000));
 }
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
@@ -45,6 +68,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
       error?.message ?? 'Une erreur est survenue.',
       error?.fields,
       response.status,
+      lireRetryAfter(response),
     );
   }
 

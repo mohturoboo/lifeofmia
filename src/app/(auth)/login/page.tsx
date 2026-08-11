@@ -2,11 +2,19 @@
 
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Suspense, useState, type FormEvent } from 'react';
+import { Suspense, useEffect, useState, type FormEvent } from 'react';
 import { api, ApiClientError } from '@/lib/client/api';
 import { Button, Field, Input } from '@/components/ui/primitives';
 import { Icon } from '@/components/ui/icons';
 import { useT } from '@/i18n/provider';
+
+/** « 45 s », « 2 min 05 s » : une attente doit se lire d'un coup d'oeil. */
+function formaterAttente(secondes: number): string {
+  if (secondes < 60) return `${secondes} s`;
+  const minutes = Math.floor(secondes / 60);
+  const reste = secondes % 60;
+  return `${minutes} min ${String(reste).padStart(2, '0')} s`;
+}
 
 function LoginForm() {
   const t = useT();
@@ -19,9 +27,26 @@ function LoginForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [fields, setFields] = useState<Record<string, string>>({});
+  /*
+   * Secondes restantes avant de pouvoir reessayer.
+   *
+   * Le serveur repondait 429 avec un en-tete `Retry-After` que personne ne
+   * lisait : le formulaire affichait « Trop de tentatives » et laissait le
+   * bouton actif, ce qui invite a marteler — le contraire de ce que la
+   * limitation cherche a obtenir. Le decompte rend l'attente lisible et le
+   * bouton inutilisable tant qu'elle dure.
+   */
+  const [attente, setAttente] = useState(0);
+
+  useEffect(() => {
+    if (attente <= 0) return;
+    const minuteur = setInterval(() => setAttente((reste) => Math.max(0, reste - 1)), 1000);
+    return () => clearInterval(minuteur);
+  }, [attente]);
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
+    if (attente > 0) return;
     setLoading(true);
     setError(null);
     setFields({});
@@ -36,6 +61,7 @@ function LoginForm() {
       if (caught instanceof ApiClientError) {
         setError(caught.message);
         setFields(caught.fields ?? {});
+        if (caught.status === 429) setAttente(caught.retryAfterSeconds ?? 60);
       } else {
         setError(t('common.error'));
       }
@@ -52,6 +78,11 @@ function LoginForm() {
         {error && (
           <div role="alert" className="rounded-xl border border-red-500/25 bg-red-500/10 px-4 py-3 text-sm text-red-500">
             {error}
+            {attente > 0 && (
+              <span className="mt-1 block text-[13px] opacity-80">
+                Nouvelle tentative possible dans {formaterAttente(attente)}.
+              </span>
+            )}
           </div>
         )}
 
@@ -100,8 +131,8 @@ function LoginForm() {
           </Link>
         </div>
 
-        <Button type="submit" loading={loading} fullWidth size="lg">
-          {t('auth.login')}
+        <Button type="submit" loading={loading} disabled={attente > 0} fullWidth size="lg">
+          {attente > 0 ? `${t('auth.login')} — ${formaterAttente(attente)}` : t('auth.login')}
         </Button>
       </form>
 

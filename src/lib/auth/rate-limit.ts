@@ -57,12 +57,42 @@ export function reset(key: string): void {
 
 /** Presets utilises par les routes sensibles. */
 export const RATE_LIMITS = {
-  login: { limit: 8, windowMs: 15 * 60_000 },
-  register: { limit: 5, windowMs: 60 * 60_000 },
+  /*
+   * Cinq tentatives par quart d'heure.
+   *
+   * La valeur precedente — huit — laissait passer huit essais consecutifs
+   * avant le moindre ralentissement : de quoi parcourir une petite liste de
+   * mots de passe courants sans jamais croiser un 429. Sur une application qui
+   * conserve des donnees de sante, de finances, de pratique religieuse et un
+   * journal intime, la marge n'avait pas lieu d'etre aussi large.
+   */
+  login: { limit: 5, windowMs: 15 * 60_000 },
+  /*
+   * La borne par adresse IP est volontairement PLUS LARGE que celle par compte.
+   *
+   * Une adresse IP n'identifie pas une personne : derriere une seule se
+   * tiennent un bureau, un campus, un reseau mobile entier. La serrer au meme
+   * niveau que le compte reviendrait a exclure tout un immeuble parce que l'un
+   * de ses occupants s'est trompe de mot de passe. Le compteur par compte est
+   * l'instrument precis ; celui-ci ne sert qu'a arreter le balayage massif
+   * d'un grand nombre d'adresses depuis une meme origine.
+   */
+  loginIp: { limit: 20, windowMs: 15 * 60_000 },
+  register: { limit: 10, windowMs: 60 * 60_000 },
   passwordReset: { limit: 4, windowMs: 60 * 60_000 },
+  passwordResetIp: { limit: 15, windowMs: 60 * 60_000 },
   ai: { limit: 40, windowMs: 60 * 60_000 },
   write: { limit: 300, windowMs: 60_000 },
   /** Lectures couteuses : export RGPD (vingt tables), statistiques annuelles. */
   export: { limit: 5, windowMs: 60 * 60_000 },
   analytics: { limit: 120, windowMs: 60_000 },
 } as const;
+
+/**
+ * Recul exponentiel des routes d'authentification.
+ *
+ * Trente secondes au premier refus, puis le double a chaque nouvelle
+ * tentative refusee : 30 s, 1 min, 2 min, 4 min... Le plafond d'une heure
+ * evite qu'un incident ne bloque un compte pour la journee.
+ */
+export const LOGIN_BACKOFF = { baseDelaySeconds: 30, maxDelaySeconds: 60 * 60 } as const;
