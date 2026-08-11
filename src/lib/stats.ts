@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import { disciplineScore } from '@/lib/levels';
-import { lastNDays, weekDayOf, type DateKey } from '@/lib/date';
+import { dateKeyIn, lastNDays, weekDayOf, type DateKey } from '@/lib/date';
 import { parseNumberArray } from '@/lib/json';
 
 /**
@@ -32,12 +32,45 @@ export interface DayStats {
   completionRate: number;
 }
 
-/** Une habitude est-elle attendue ce jour-la ? */
-function isHabitScheduled(weekDaysJson: string, frequency: string, date: DateKey): boolean {
+/** Une habitude est-elle attendue ce jour-la, d'apres sa frequence ? */
+export function isHabitScheduled(weekDaysJson: string, frequency: string, date: DateKey): boolean {
   if (frequency === 'weekly') return true;
   const days = parseNumberArray(weekDaysJson);
   if (days.length === 0) return true;
   return days.includes(weekDayOf(date));
+}
+
+export interface HabitWindow {
+  createdAt: Date;
+  archivedAt: Date | null;
+  weekDays: string;
+  frequency: string;
+}
+
+/**
+ * Une habitude compte-t-elle dans le denominateur de cette journee ?
+ *
+ * La frequence ne suffit pas : il faut aussi que l'habitude ait EXISTE ce
+ * jour-la. Sans cette condition, le denominateur d'une journee etait toujours
+ * calcule avec la liste d'habitudes du moment, et une action presente
+ * reecrivait le passe. Enregistrer un repas d'avant-hier suffisait a
+ * declencher le recalcul de cette journee-la : une habitude creee depuis
+ * s'ajoutait a son total attendu, jamais validee puisqu'elle n'existait pas,
+ * et le score d'avant-hier baissait tout seul. Le meme mecanisme jouait a
+ * l'envers a l'archivage — l'habitude disparaissait de toutes les journees
+ * passees, dont celles ou elle avait ete validee.
+ *
+ * La fenetre d'existence va de la creation (incluse) au jour precedant
+ * l'archivage. Le jour de l'archivage lui-meme est exclu, pour rester aligne
+ * sur la liste d'habitudes que le tableau de bord affiche le jour meme : deux
+ * denominateurs differents pour la meme journee sont precisement le genre
+ * d'incoherence que cette fonction existe pour supprimer. Les journees
+ * ANTERIEURES, elles, ne bougent pas — c'est tout l'objet du bornage.
+ */
+export function habitCountsOn(habit: HabitWindow, date: DateKey, timezone: string): boolean {
+  if (dateKeyIn(timezone, habit.createdAt) > date) return false;
+  if (habit.archivedAt && dateKeyIn(timezone, habit.archivedAt) <= date) return false;
+  return isHabitScheduled(habit.weekDays, habit.frequency, date);
 }
 
 /**
@@ -48,11 +81,26 @@ export async function recomputeDay(userId: string, date: DateKey): Promise<DaySt
   const dayStart = new Date(`${date}T00:00:00.000Z`);
   const dayEnd = new Date(`${date}T23:59:59.999Z`);
 
-  const [habits, habitLogs, tasks, prayerLogs, meals, water, weight, workouts, focus, journal, xpEvents] =
+  const [owner, habits, habitLogs, tasks, prayerLogs, meals, water, weight, workouts, focus, journal, xpEvents] =
     await Promise.all([
+      prisma.user.findUnique({ where: { id: userId }, select: { timezone: true } }),
+      /*
+       * Les habitudes archivees sont chargees elles aussi : c'est
+       * `habitCountsOn` qui decide, journee par journee, si l'habitude existait
+       * alors. Les filtrer ici revenait a effacer d'un coup leur presence dans
+       * tout l'historique.
+       */
       prisma.habit.findMany({
-        where: { userId, archivedAt: null },
-        select: { id: true, weekDays: true, frequency: true, targetPerDay: true, isNegative: true },
+        where: { userId },
+        select: {
+          id: true,
+          weekDays: true,
+          frequency: true,
+          targetPerDay: true,
+          isNegative: true,
+          createdAt: true,
+          archivedAt: true,
+        },
       }),
       prisma.habitLog.findMany({ where: { userId, date }, select: { habitId: true, status: true, count: true } }),
       prisma.task.findMany({
@@ -78,7 +126,8 @@ export async function recomputeDay(userId: string, date: DateKey): Promise<DaySt
       }),
     ]);
 
-  const scheduled = habits.filter((habit) => isHabitScheduled(habit.weekDays, habit.frequency, date));
+  const timezone = owner?.timezone ?? 'UTC';
+  const scheduled = habits.filter((habit) => habitCountsOn(habit, date, timezone));
   const logsByHabit = new Map(habitLogs.map((log) => [log.habitId, log]));
 
   const habitsDone = scheduled.filter((habit) => {

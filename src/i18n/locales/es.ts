@@ -371,6 +371,8 @@ export const es: Dictionary = {
   'compare.since1y': 'Ultimo ano',
   'compare.sinceStart': 'Desde el principio',
   'compare.metric': 'Indicador',
+  'compare.noReference': 'Aun no hay suficiente historial: la cuenta necesita dos periodos completos para que la comparacion tenga sentido.',
+  'compare.accountCreated': 'Cuenta creada el',
 
   'ai.title': 'Life AI',
   'ai.subtitle': 'Tu coach personal. Solo conoce tus datos.',

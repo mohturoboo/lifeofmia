@@ -372,6 +372,8 @@ export const ar: Dictionary = {
   'compare.since1y': 'آخر سنة',
   'compare.sinceStart': 'منذ البداية',
   'compare.metric': 'المؤشر',
+  'compare.noReference': 'لا يوجد سجل كافٍ بعد: يحتاج حسابك إلى فترتين كاملتين حتى تصبح المقارنة ذات معنى.',
+  'compare.accountCreated': 'تم إنشاء الحساب في',
 
   'ai.title': 'Life AI',
   'ai.subtitle': 'مدربك الشخصي. لا يعرف سوى بياناتك.',

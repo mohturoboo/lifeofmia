@@ -35,6 +35,9 @@ export type SessionUser = Pick<
   | 'heightCm'
   | 'birthDate'
   | 'gender'
+  // Date de creation du compte : les vues analytiques s'en servent pour ne
+  // jamais presenter de periode anterieure a l'existence du compte.
+  | 'createdAt'
 >;
 
 const SESSION_USER_SELECT = {
@@ -62,6 +65,7 @@ const SESSION_USER_SELECT = {
   heightCm: true,
   birthDate: true,
   gender: true,
+  createdAt: true,
 } as const;
 
 function cookieOptions(maxAgeSeconds: number) {

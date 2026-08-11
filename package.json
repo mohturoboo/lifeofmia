@@ -26,6 +26,7 @@
     "db:reset-account": "tsx scripts/reset-account.ts",
     "db:use": "node scripts/use-db.mjs",
     "db:fix-timezones": "tsx scripts/fix-timezones.ts",
+    "db:recompute-stats": "tsx scripts/recompute-stats.ts",
     "setup": "npm install && npm run db:use sqlite && npm run db:push && npm run db:seed"
   },
   "prisma": {

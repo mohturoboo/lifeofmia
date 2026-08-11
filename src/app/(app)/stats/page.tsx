@@ -18,7 +18,16 @@ interface StatsData {
   totals: Aggregate;
   heatmap: Array<{ date: string; value: number }>;
   byCategory: Record<string, number>;
-  perHabit: Array<{ id: string; name: string; color: string; done: number; missed: number; rate: number }>;
+  perHabit: Array<{
+    id: string;
+    name: string;
+    color: string;
+    done: number;
+    missed: number;
+    /** Jours ou l'habitude etait attendue dans la periode, depuis sa creation. */
+    expected: number;
+    rate: number;
+  }>;
   radar: RadarAxis[];
   progress: LevelProgress;
   streak: { current: number; longest: number };
@@ -129,6 +138,9 @@ export default function StatsPage() {
             color="#fbc7da"
             unit="%"
             height={220}
+            // Un score est un pourcentage : son axe va de 0 a 100, pas de
+            // -4,1 a 31,1 comme le produisait l'echelle automatique.
+            domain={[0, 100]}
           />
         </Card>
 
@@ -174,7 +186,17 @@ export default function StatsPage() {
                 <li key={habit.id}>
                   <div className="mb-1 flex items-center justify-between text-[13px]">
                     <span className="truncate text-[var(--text-muted)]">{habit.name}</span>
-                    <span className="ms-2 shrink-0 font-medium text-[var(--text)]">{habit.rate}%</span>
+                    {/*
+                      Le rapport brut accompagne le pourcentage : « 100 % (1/1) »
+                      et « 100 % (28/28) » ne disent pas la meme chose, et seul
+                      le second temoigne d'une regularite installee.
+                    */}
+                    <span className="ms-2 shrink-0 font-medium text-[var(--text)]">
+                      {habit.rate}%
+                      <span className="ms-1.5 font-normal tabular-nums text-[var(--text-faint)]">
+                        ({habit.done}/{habit.expected})
+                      </span>
+                    </span>
                   </div>
                   <Progress value={habit.rate} color={habit.color} height={6} label={habit.name} />
                 </li>

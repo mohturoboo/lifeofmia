@@ -58,6 +58,17 @@ export interface LineChartProps {
   /** Serie secondaire en pointilles, ex. la projection de poids. */
   forecast?: Point[];
   ariaLabel?: string;
+  /**
+   * Bornes imposees de l'axe vertical, ex. `[0, 100]` pour un pourcentage.
+   *
+   * Sans elles, l'echelle est deduite des valeurs avec une marge de 15 %, ce
+   * qui a du sens pour un poids mais produit des graduations absurdes sur une
+   * grandeur bornee : un score de discipline entre 0 et 27 % affichait un axe
+   * allant de -4,1 a 31,1. Un score negatif n'existe pas, et l'amplitude
+   * artificiellement etiree faisait passer une variation minime pour une
+   * montagne.
+   */
+  domain?: [number, number];
 }
 
 export function LineChart({
@@ -68,6 +79,7 @@ export function LineChart({
   showArea = true,
   forecast = [],
   ariaLabel,
+  domain,
 }: LineChartProps) {
   const gradientId = useId();
   const [hover, setHover] = useState<number | null>(null);
@@ -81,13 +93,20 @@ export function LineChart({
   const series = useMemo(() => [...data, ...forecast], [data, forecast]);
 
   const { min, max } = useMemo(() => {
+    if (domain) return { min: domain[0], max: domain[1] };
+
     const values = series.map((point) => point.value).filter(Number.isFinite);
     if (values.length === 0) return { min: 0, max: 1 };
     const lo = Math.min(...values);
     const hi = Math.max(...values);
     const margin = (hi - lo) * 0.15 || Math.max(1, hi * 0.1);
-    return { min: lo - margin, max: hi + margin };
-  }, [series]);
+    /*
+     * La marge basse ne franchit pas zero quand la serie est entierement
+     * positive : elle inventait sinon des graduations negatives sous une
+     * courbe qui ne descend jamais en dessous de zero.
+     */
+    return { min: lo >= 0 ? Math.max(0, lo - margin) : lo - margin, max: hi + margin };
+  }, [series, domain]);
 
   if (data.length === 0) {
     return (
@@ -229,12 +248,15 @@ export function BarChart({
   height = 180,
   unit = '',
   maxValue,
+  emptyLabel = 'Aucune donnee sur cette periode',
 }: {
   data: Point[];
   color?: string;
   height?: number;
   unit?: string;
   maxValue?: number;
+  /** Texte affiche quand toutes les valeurs de la serie sont nulles. */
+  emptyLabel?: string;
 }) {
   const max = maxValue ?? Math.max(1, ...data.map((point) => point.value));
 
@@ -243,13 +265,39 @@ export function BarChart({
   }
 
   /*
+   * Serie entierement nulle : etat vide explicite.
+   *
+   * Un histogramme de barres au minimum syndical se lit comme un graphique en
+   * panne, pas comme « rien a montrer ». La phrase leve l'ambiguite.
+   */
+  if (data.every((point) => point.value <= 0)) {
+    return (
+      <div
+        className="grid place-items-center px-4 text-center text-xs text-[var(--text-faint)]"
+        style={{ height }}
+      >
+        {emptyLabel}
+      </div>
+    );
+  }
+
+  /*
    * La marge laterale reserve la place des infobulles. Elles sont larges — 3 px sur trente jours affiches en
    * 320 px — et debordent donc sur les cotes. Sans cette reserve, celle de la
    * derniere barre poussait la PAGE entiere : defilement horizontal.
+   *
+   * `items-stretch` (par defaut) et non `items-end` : avec `items-end`, les
+   * colonnes n'etaient PAS etirees a la hauteur du graphique — elles prenaient
+   * la hauteur de leur contenu, soit celle du seul libelle. La zone de barre,
+   * en `flex-1` sur une base nulle, mesurait alors 0 px, et la hauteur des
+   * barres, exprimee en POURCENTAGE de cette zone, valait 0 px elle aussi.
+   * Le graphique restait vide quelles que soient les valeurs. L'alignement en
+   * bas des barres est assure a l'interieur de chaque colonne, par le
+   * `items-end` de la zone de barre.
    */
   return (
     <div
-      className="flex w-full items-end gap-1.5 px-4"
+      className="flex w-full gap-1.5 px-4"
       style={{ height }}
       role="img"
       aria-label={`Histogramme de ${data.length} valeurs`}
@@ -258,11 +306,16 @@ export function BarChart({
         const ratio = Math.max(0, Math.min(1, point.value / max));
         return (
           <div key={point.label + index} className="group flex min-w-0 flex-1 flex-col items-center gap-1.5">
-            <div className="relative flex w-full flex-1 items-end">
+            <div className="relative flex w-full min-h-0 flex-1 items-end">
+              {/*
+                Plancher de 3 % : une journee a zero garde un socle visible.
+                Sans lui, la colonne disparaissait completement et ne se
+                distinguait plus d'un jour absent de la serie.
+              */}
               <div
                 className="w-full rounded-t-md transition-all duration-500 ease-out group-hover:brightness-125"
                 style={{
-                  height: `${Math.max(2, ratio * 100)}%`,
+                  height: `${Math.max(3, ratio * 100)}%`,
                   background: `linear-gradient(180deg, ${color}, ${color}66)`,
                 }}
               />

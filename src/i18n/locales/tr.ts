@@ -371,6 +371,8 @@ export const tr: Dictionary = {
   'compare.since1y': 'Son bir yil',
   'compare.sinceStart': 'Baslangictan beri',
   'compare.metric': 'Gosterge',
+  'compare.noReference': 'Henuz yeterli gecmis yok: karsilastirmanin anlamli olmasi icin hesabin iki tam donem yasamis olmasi gerekir.',
+  'compare.accountCreated': 'Hesap olusturuldu',
 
   'ai.title': 'Life AI',
   'ai.subtitle': 'Kisisel kocunuz. Yalnizca sizin verilerinizi bilir.',

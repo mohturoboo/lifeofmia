@@ -388,6 +388,8 @@ export const fr = {
   'compare.since1y': 'Derniere annee',
   'compare.sinceStart': 'Depuis le debut',
   'compare.metric': 'Indicateur',
+  'compare.noReference': 'Pas encore assez de recul : votre compte doit avoir vecu deux periodes completes avant que la comparaison ait un sens.',
+  'compare.accountCreated': 'Compte cree le',
 
   // --- IA ---
   'ai.title': 'Life AI',

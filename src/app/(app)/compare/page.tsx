@@ -13,10 +13,14 @@ import type { MetricDelta, RadarAxis } from '@/lib/analytics';
 interface CompareData {
   period: string;
   days: number;
+  /** Premier jour d'existence du compte, dans le fuseau de l'utilisateur. */
+  accountStart: string;
+  /** `false` tant que la periode de reference n'est pas entierement vecue. */
+  hasPrevious: boolean;
   current: { from: string; to: string; totals: Aggregate; series: DayStats[] };
-  previous: { from: string; to: string; totals: Aggregate; series: DayStats[] };
+  previous: { from: string; to: string; totals: Aggregate; series: DayStats[] } | null;
   metrics: MetricDelta[];
-  radar: { current: RadarAxis[]; previous: RadarAxis[] };
+  radar: { current: RadarAxis[]; previous: RadarAxis[] | null };
 }
 
 const PERIODS = ['7d', '30d', '3m', '6m', '1y', 'all'] as const;
@@ -44,8 +48,13 @@ export default function ComparePage() {
     );
   }
 
+  /*
+   * Annee sur quatre chiffres : « 12 juin 26 » se lit comme un jour de juin
+   * 26, pas comme l'annee 2026. L'ambiguite est gratuite sur une page dont
+   * tout le propos est de situer deux periodes l'une par rapport a l'autre.
+   */
   const formatDate = (key: string) =>
-    new Date(`${key}T12:00:00Z`).toLocaleDateString(locale, { day: 'numeric', month: 'short', year: '2-digit' });
+    new Date(`${key}T12:00:00Z`).toLocaleDateString(locale, { day: 'numeric', month: 'short', year: 'numeric' });
 
   return (
     <div className="mx-auto max-w-6xl">
@@ -79,11 +88,27 @@ export default function ComparePage() {
       <div className="mb-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
         <Card className="border-[var(--border)]">
           <p className="text-[11px] uppercase tracking-wide text-[var(--text-faint)]">{t('compare.periodA')}</p>
-          <p className="mt-1 text-sm font-medium text-[var(--text-muted)]">
-            {formatDate(data.previous.from)} → {formatDate(data.previous.to)}
-          </p>
-          <p className="mt-3 text-3xl font-semibold text-[var(--text-muted)]">{data.previous.totals.avgDiscipline}%</p>
-          <p className="text-[11px] text-[var(--text-faint)]">{t('dash.disciplineScore')}</p>
+          {data.previous ? (
+            <>
+              <p className="mt-1 text-sm font-medium text-[var(--text-muted)]">
+                {formatDate(data.previous.from)} → {formatDate(data.previous.to)}
+              </p>
+              <p className="mt-3 text-3xl font-semibold text-[var(--text-muted)]">
+                {data.previous.totals.avgDiscipline}%
+              </p>
+              <p className="text-[11px] text-[var(--text-faint)]">{t('dash.disciplineScore')}</p>
+            </>
+          ) : (
+            <>
+              <p className="mt-1 text-sm font-medium text-[var(--text-muted)]">—</p>
+              <p className="mt-3 text-[13px] leading-relaxed text-[var(--text-faint)]">
+                {t('compare.noReference')}
+              </p>
+              <p className="mt-1.5 text-[11px] text-[var(--text-faint)]">
+                {t('compare.accountCreated')} {formatDate(data.accountStart)}
+              </p>
+            </>
+          )}
         </Card>
 
         <Card className="border-brand-500/30 bg-brand-500/[0.04]">
@@ -99,6 +124,16 @@ export default function ComparePage() {
       <Card className="mb-4">
         <CardHeader title={t('compare.metric')} subtitle="Periode courante face a la precedente" icon="chart" accent="#d9c7f0" />
 
+        {/*
+          Sans periode de reference, le tableau ne peut afficher que des ecarts
+          calcules contre des zeros — c'est-a-dire des ecarts faux. On explique
+          l'attente plutot que de remplir la colonne Δ.
+        */}
+        {!data.previous ? (
+          <p className="py-10 text-center text-[13px] leading-relaxed text-[var(--text-faint)]">
+            {t('compare.noReference')}
+          </p>
+        ) : (
         <div className="overflow-x-auto">
           <table className="w-full min-w-[520px] text-sm">
             <caption className="lm-sr-only">
@@ -146,6 +181,7 @@ export default function ComparePage() {
             </tbody>
           </table>
         </div>
+        )}
       </Card>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
@@ -159,14 +195,20 @@ export default function ComparePage() {
             color="#fbc7da"
             unit="%"
             height={230}
+            domain={[0, 100]}
           />
         </Card>
 
         <Card>
-          <CardHeader title={t('stats.radar')} subtitle="Plein : aujourd'hui · pointilles : avant" icon="compare" accent="#d9c7f0" />
+          <CardHeader
+            title={t('stats.radar')}
+            subtitle={data.radar.previous ? "Plein : aujourd'hui · pointilles : avant" : "Periode courante"}
+            icon="compare"
+            accent="#d9c7f0"
+          />
           <RadarChart
             data={data.radar.current.map((axis) => ({ label: t(axis.labelKey), value: axis.value }))}
-            compareData={data.radar.previous.map((axis) => ({ label: t(axis.labelKey), value: axis.value }))}
+            compareData={data.radar.previous?.map((axis) => ({ label: t(axis.labelKey), value: axis.value }))}
             size={240}
             color="#d9c7f0"
             compareColor="#b4b4b4"

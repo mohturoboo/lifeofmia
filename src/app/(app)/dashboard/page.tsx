@@ -201,7 +201,31 @@ export default function DashboardPage() {
       <section
         className="relative flex flex-col items-center px-4 pb-2 pt-6 text-center sm:pt-10"
       >
-        <RingProgress value={stats.completionRate} size={104} thickness={5} color="#fbc7da" />
+        {/*
+          --- L'anneau porte desormais son nom ---
+          Trois pourcentages differents cohabitent sur cette page : l'anneau
+          (habitudes ET taches du jour), le score de discipline (moyenne
+          ponderee qui compte aussi prieres, sport et concentration) et le
+          compteur d'habitudes. Ils mesurent trois choses distinctes, mais
+          l'anneau n'annoncait pas laquelle : trois nombres proches et
+          contradictoires, sans moyen de les reconcilier. Le libelle et le
+          rapport brut affiches sous l'anneau rendent son calcul verifiable.
+        */}
+        <RingProgress
+          value={stats.completionRate}
+          size={104}
+          thickness={5}
+          color="#fbc7da"
+          label={t('dash.dailyProgress')}
+        />
+        <p className="mt-2.5 text-center text-[11px] leading-tight text-[var(--text-faint)]">
+          <span className="font-medium text-[var(--text-muted)]">{t('dash.dailyProgress')}</span>
+          <span className="mx-1.5 text-brand-300/50">·</span>
+          <span className="tabular-nums">
+            {stats.habitsDone + stats.tasksDone}/{stats.habitsTotal + stats.tasksTotal}
+          </span>{' '}
+          {t('habits.title').toLowerCase()} + {t('tasks.title').toLowerCase()}
+        </p>
 
         <h1 className="mt-6 text-4xl font-medium tracking-tight text-[var(--text)] sm:text-5xl">
           {t(greetingKey)} <span className="lm-gradient-text">{data.user.firstName}</span>
@@ -418,6 +442,7 @@ export default function DashboardPage() {
             unit="%"
             maxValue={100}
             height={160}
+            emptyLabel={t('common.empty')}
           />
         </Card>
 
