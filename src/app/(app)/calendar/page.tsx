@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react';
 import { api, useResource } from '@/lib/client/api';
 import { useMutate } from '@/lib/client/mutate';
-import { Button, Card, Field, Input, Skeleton, Textarea, cx } from '@/components/ui/primitives';
+import { Button, Card, cx, Field, IconButton, Input, Skeleton, Textarea } from '@/components/ui/primitives';
 import { Icon } from '@/components/ui/icons';
 import { Modal } from '@/components/ui/modal';
 import { useToast } from '@/components/ui/toast';
@@ -170,7 +170,7 @@ export default function CalendarPage() {
                 type="button"
                 onClick={() => setCursor(new Date(cursor.getFullYear(), cursor.getMonth() - 1, 1))}
                 aria-label="Mois precedent"
-                className="grid size-8 place-items-center rounded-lg text-[var(--text-muted)] transition-colors hover:bg-[var(--surface-2)]"
+                className="grid size-11 place-items-center rounded-lg text-[var(--text-muted)] lm-transition-ui hover:bg-[var(--surface-2)]"
               >
                 <Icon name="chevronLeft" size={16} className="rtl:rotate-180" />
               </button>
@@ -181,7 +181,7 @@ export default function CalendarPage() {
                 type="button"
                 onClick={() => setCursor(new Date(cursor.getFullYear(), cursor.getMonth() + 1, 1))}
                 aria-label="Mois suivant"
-                className="grid size-8 place-items-center rounded-lg text-[var(--text-muted)] transition-colors hover:bg-[var(--surface-2)]"
+                className="grid size-11 place-items-center rounded-lg text-[var(--text-muted)] lm-transition-ui hover:bg-[var(--surface-2)]"
               >
                 <Icon name="chevronRight" size={16} className="rtl:rotate-180" />
               </button>
@@ -275,14 +275,7 @@ export default function CalendarPage() {
                     {item.type === 'task' ? t('nav.tasks') : t('calendar.title')}
                   </span>
                   {item.type === 'event' && (
-                    <button
-                      type="button"
-                      onClick={() => remove(item.id)}
-                      aria-label={t('common.delete')}
-                      className="grid size-7 shrink-0 place-items-center rounded-lg text-[var(--text-faint)] transition-opacity sm:opacity-0 hover:text-red-500 sm:group-hover:opacity-100"
-                    >
-                      <Icon name="trash" size={13} />
-                    </button>
+                    <IconButton icon="trash" label={t('common.delete')} size={13} tone="danger" onClick={() => remove(item.id)} discret />
                   )}
                 </li>
               ))}

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { api, useResource } from '@/lib/client/api';
 import { useMutate } from '@/lib/client/mutate';
-import { Badge, Button, Card, CardHeader, EmptyState, Field, Input, Select, Skeleton, Textarea } from '@/components/ui/primitives';
+import { Badge, Button, Card, CardHeader, EmptyState, Field, IconButton, Input, Select, Skeleton, Textarea } from '@/components/ui/primitives';
 import { Icon } from '@/components/ui/icons';
 import { Modal } from '@/components/ui/modal';
 import { BarChart, DonutChart } from '@/components/charts';
@@ -224,14 +224,7 @@ export default function SportPage() {
                     </div>
                   </div>
 
-                  <button
-                    type="button"
-                    onClick={() => remove(workout)}
-                    aria-label={t('common.delete')}
-                    className="grid size-7 shrink-0 place-items-center rounded-lg text-[var(--text-faint)] transition-opacity sm:opacity-0 hover:text-red-500 sm:group-hover:opacity-100"
-                  >
-                    <Icon name="trash" size={13} />
-                  </button>
+                  <IconButton icon="trash" label={t('common.delete')} size={13} tone="danger" onClick={() => remove(workout)} discret />
                 </div>
 
                 {workout.exercises.length > 0 && (

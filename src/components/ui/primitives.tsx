@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  Children,
   forwardRef,
   type ButtonHTMLAttributes,
   type InputHTMLAttributes,
@@ -50,6 +51,18 @@ const BUTTON_SIZES: Record<ButtonSize, string> = {
   lg: 'h-13 px-8 text-[14.5px] tracking-[0.04em] gap-2.5 rounded-full',
 };
 
+/*
+ * Un bouton REDUIT A SON PICTOGRAMME n'offre aucune autre prise que sa
+ * surface : il lui faut 44 px sur les deux axes, quelle que soit sa taille
+ * declaree. Un `Button size="sm" icon="plus"` sans libelle mesurait 47 x 36 —
+ * assez large, trop bas, et impossible a viser proprement au pouce.
+ *
+ * Le bouton porteur d'un libelle, lui, garde sa hauteur : sa largeur fournit
+ * deja une cible confortable, et l'imposer a 44 px reviendrait a redessiner
+ * toute l'application.
+ */
+const BUTTON_ICONE_SEULE = 'size-11 rounded-full';
+
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
   size?: ButtonSize;
@@ -62,6 +75,16 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
   { variant = 'primary', size = 'md', icon, loading, fullWidth, className, children, disabled, type = 'button', ...props },
   ref,
 ) {
+  /*
+   * « Reduit a son pictogramme » se mesure a l'absence de TEXTE, pas a
+   * l'absence d'enfants : `<Button><Icon /></Button>` n'affiche pas plus de
+   * libelle que `<Button icon="plus" />`, et sa cible etait pourtant laissee
+   * a 36 px.
+   */
+  const iconeSeule = !Children.toArray(children).some(
+    (enfant) => typeof enfant === 'string' || typeof enfant === 'number',
+  );
+
   return (
     <button
       ref={ref}
@@ -92,7 +115,13 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
         'lm-transition-ui duration-150',
         'disabled:opacity-50 disabled:pointer-events-none',
         BUTTON_VARIANTS[variant],
-        BUTTON_SIZES[size],
+        /*
+         * La taille du pictogramme seul REMPLACE celle du gabarit, elle ne s'y
+         * ajoute pas : deux utilitaires de hauteur concurrents (`h-9` et
+         * `h-11`) sont departages par l'ordre de la feuille de style, pas par
+         * l'ordre d'ecriture — la cible restait a 36 px de haut.
+         */
+        iconeSeule ? BUTTON_ICONE_SEULE : BUTTON_SIZES[size],
         fullWidth && 'w-full',
         className,
       )}
@@ -390,4 +419,78 @@ export function EmptyState({
 
 export function Skeleton({ className }: { className?: string }) {
   return <div className={cx('lm-skeleton', className)} aria-hidden="true" />;
+}
+
+// --- Bouton icone -------------------------------------------------------------
+
+export interface IconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  icon: IconName;
+  /** Nom accessible. Obligatoire : un bouton sans texte n'en a aucun autre. */
+  label: string;
+  /** Taille du pictogramme. La cible tactile, elle, ne bouge pas. */
+  size?: number;
+  tone?: 'neutral' | 'danger';
+  /**
+   * Commande secondaire d'une carte ou d'une ligne de liste.
+   *
+   * Ces commandes n'apparaissaient qu'au survol du pointeur. Sur un ecran
+   * tactile, ou le survol n'existe pas, elles etaient donc INATTEIGNABLES ;
+   * au clavier, elles restaient invisibles jusqu'au focus. Avec cette option,
+   * elles s'effacent au repos uniquement sur les appareils capables de
+   * survoler, et reviennent des que le pointeur ou le focus les touche.
+   */
+  discret?: boolean;
+}
+
+/**
+ * Bouton reduit a un pictogramme.
+ *
+ * La CIBLE fait 44 x 44 px — le minimum recommande pour un doigt — tandis que
+ * le disque visible en reste a 28 px. Les deux tailles sont dissociees a
+ * dessein : agrandir le visuel aurait alourdi des cartes deja denses, et les
+ * boutons de 28 px etaient impossibles a viser proprement.
+ *
+ * La cible est le bouton lui-meme, pas un pseudo-element : trois commandes
+ * voisines espacees de 2 px auraient vu leurs zones de 44 px se chevaucher, et
+ * la derniere dessinee aurait vole les clics des precedentes — « modifier »
+ * devenant « supprimer » selon l'endroit exact du clic.
+ */
+export function IconButton({
+  icon,
+  label,
+  size = 14,
+  tone = 'neutral',
+  discret = false,
+  className,
+  ...props
+}: IconButtonProps) {
+  return (
+    <button
+      type="button"
+      aria-label={label}
+      title={label}
+      className={cx(
+        'group/icone grid size-11 shrink-0 place-items-center rounded-full',
+        'lm-transition-ui focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--brand-text)]',
+        discret && 'lm-commande-discrete',
+        className,
+      )}
+      {...props}
+    >
+      {/*
+        Le disque visible garde ses 28 px : c'est lui qui porte la couleur et
+        le fond au survol. Le bouton qui l'entoure reste transparent.
+      */}
+      <span
+        className={cx(
+          'grid size-7 place-items-center rounded-lg lm-transition-ui',
+          tone === 'danger'
+            ? 'text-[var(--text-faint)] group-hover/icone:bg-red-500/10 group-hover/icone:text-red-500'
+            : 'text-[var(--text-faint)] group-hover/icone:bg-[var(--surface-2)] group-hover/icone:text-[var(--text)]',
+        )}
+      >
+        <Icon name={icon} size={size} />
+      </span>
+    </button>
+  );
 }

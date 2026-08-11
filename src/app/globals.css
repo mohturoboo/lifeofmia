@@ -337,6 +337,32 @@
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   }
 
+  /*
+   * Commande secondaire d'une carte ou d'une ligne : modifier, archiver,
+   * supprimer.
+   *
+   * Elles ne s'affichaient qu'au survol du pointeur. Sur un ecran tactile, le
+   * survol N'EXISTE PAS : la commande n'apparaissait jamais, donc la seule
+   * facon de modifier ou supprimer une carte depuis un telephone etait
+   * d'ignorer qu'elle existait. Au clavier, elle restait invisible jusqu'a ce
+   * que le focus l'atteigne — c'est-a-dire qu'il fallait tabuler a l'aveugle.
+   *
+   * La regle est donc inversee : visible par defaut, effacee au repos
+   * UNIQUEMENT la ou le survol est reellement disponible, et ramenee des que
+   * le pointeur entre dans la carte ou que le focus se pose dessus.
+   */
+  @media (hover: hover) and (pointer: fine) {
+    .lm-commande-discrete {
+      opacity: 0;
+    }
+
+    .group:hover .lm-commande-discrete,
+    .group:focus-within .lm-commande-discrete,
+    .lm-commande-discrete:focus-visible {
+      opacity: 1;
+    }
+  }
+
   .lm-modal-overlay {
     animation: lm-overlay-in 0.18s ease-out;
   }

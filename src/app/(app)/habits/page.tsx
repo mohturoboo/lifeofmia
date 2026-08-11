@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { api, useResource } from '@/lib/client/api';
 import { useHydrated } from '@/lib/client/hydrated';
 import { useMutate } from '@/lib/client/mutate';
-import { Badge, Button, Card, EmptyState, Field, Input, Select, Skeleton, Textarea, Toggle, cx } from '@/components/ui/primitives';
+import { Badge, Button, Card, cx, EmptyState, Field, IconButton, Input, Select, Skeleton, Textarea, Toggle } from '@/components/ui/primitives';
 import { HABIT_ICONS, Icon, type IconName } from '@/components/ui/icons';
 import { Modal } from '@/components/ui/modal';
 import { PageHeader } from '@/components/page-header';
@@ -37,7 +37,7 @@ const COLORS = ['#e9b8d5', '#fbc7da', '#f6d9e4', '#ff9fbf', '#d9c7f0', '#e6e6e6'
 const EMPTY_FORM = {
   name: '',
   description: '',
-  icon: 'check',
+  icon: 'target',
   color: '#e9b8d5',
   category: 'other',
   targetPerDay: 1,
@@ -227,30 +227,9 @@ export default function HabitsPage() {
                           {habit.name}
                         </h2>
                         <div className="flex shrink-0 gap-0.5">
-                          <button
-                            type="button"
-                            onClick={() => openEdit(habit)}
-                            aria-label={t('common.edit')}
-                            className="grid size-7 place-items-center rounded-lg text-[var(--text-faint)] transition-colors hover:bg-[var(--surface-2)] hover:text-[var(--text)]"
-                          >
-                            <Icon name="edit" size={14} />
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => archive(habit)}
-                            aria-label={t('habits.archive')}
-                            className="grid size-7 place-items-center rounded-lg text-[var(--text-faint)] transition-colors hover:bg-[var(--surface-2)] hover:text-[var(--text)]"
-                          >
-                            <Icon name="download" size={14} />
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => remove(habit)}
-                            aria-label={t('common.delete')}
-                            className="grid size-7 place-items-center rounded-lg text-[var(--text-faint)] transition-colors hover:bg-red-500/10 hover:text-red-500"
-                          >
-                            <Icon name="trash" size={14} />
-                          </button>
+                          <IconButton icon="edit" label={t('common.edit')} onClick={() => openEdit(habit)} />
+                          <IconButton icon="archive" label={t('habits.archive')} onClick={() => archive(habit)} />
+                          <IconButton icon="trash" label={t('common.delete')} tone="danger" onClick={() => remove(habit)} />
                         </div>
                       </div>
 

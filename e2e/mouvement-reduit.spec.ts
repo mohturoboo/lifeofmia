@@ -46,12 +46,16 @@ async function elementsInvisibles(page: Page) {
       const estInteractif = element.matches('a, button, input, select, textarea, [role="button"]');
       if (!porteDuContenu && !estInteractif) continue;
       /*
-       * Les actions de ligne se revelent au survol sur grand ecran : elles
-       * declarent explicitement `group-hover:opacity-100`. C'est un choix
-       * d'interface, pas une animation bloquee. Leur atteignabilite au doigt
-       * est traitee ailleurs — elles restent visibles sous `sm`.
+       * Les actions de ligne se revelent au survol sur grand ecran. C'est un
+       * choix d'interface, pas une animation bloquee : elles le declarent
+       * desormais par la classe `lm-commande-discrete`, dont la regle CSS est
+       * enfermee dans `(hover: hover) and (pointer: fine)`. Sur un ecran
+       * tactile elles sont donc toujours opaques — c'est precisement le defaut
+       * corrige, et il est verifie dans `accessibilite.spec.ts`.
        */
-      if (/group-hover:opacity-100|hover:opacity-100/.test((element.className || '').toString())) continue;
+      const classes = (element.className || '').toString();
+      if (/group-hover:opacity-100|hover:opacity-100/.test(classes)) continue;
+      if (classes.includes('lm-commande-discrete') || element.closest('.lm-commande-discrete')) continue;
       fautifs.push({
         balise: element.tagName,
         classe: (element.className || '').toString().slice(0, 60),

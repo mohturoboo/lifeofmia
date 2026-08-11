@@ -21,6 +21,7 @@ export const ar: Dictionary = {
   'common.month': 'شهر',
   'common.year': 'سنة',
   'common.all': 'الكل',
+  'common.seeAll': 'عرض الكل',
   'common.none': 'لا شيء',
   'common.confirm': 'تأكيد',
   'common.close': 'إغلاق',

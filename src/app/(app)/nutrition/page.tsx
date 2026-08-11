@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { api, useResource } from '@/lib/client/api';
 import { useMutate } from '@/lib/client/mutate';
 import { useHydrated } from '@/lib/client/hydrated';
-import { Button, Card, CardHeader, Field, Input, Select, Skeleton, Textarea, cx } from '@/components/ui/primitives';
+import { Button, Card, CardHeader, cx, Field, IconButton, Input, Select, Skeleton, Textarea } from '@/components/ui/primitives';
 import { Icon } from '@/components/ui/icons';
 import { Modal } from '@/components/ui/modal';
 import { DonutChart } from '@/components/charts';
@@ -339,23 +339,9 @@ export default function NutritionPage() {
                         n'apparaissaient qu'au survol, un geste qui n'existe pas
                         sur mobile — le bouton etait donc inatteignable au doigt.
                       */}
-                      <div className="flex shrink-0 items-center gap-0.5 transition-opacity sm:opacity-0 sm:group-hover:opacity-100 sm:group-focus-within:opacity-100">
-                        <button
-                          type="button"
-                          onClick={() => openEdit(meal)}
-                          aria-label={`${t('common.edit')} — ${meal.name}`}
-                          className="grid size-7 place-items-center rounded-lg text-[var(--text-faint)] transition-colors hover:text-[var(--text)]"
-                        >
-                          <Icon name="edit" size={13} />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => remove(meal)}
-                          aria-label={`${t('common.delete')} — ${meal.name}`}
-                          className="grid size-7 place-items-center rounded-lg text-[var(--text-faint)] transition-colors hover:text-red-500"
-                        >
-                          <Icon name="trash" size={13} />
-                        </button>
+                      <div className="lm-commande-discrete flex shrink-0 items-center gap-0.5 lm-transition-ui">
+                        <IconButton icon="edit" label={`${t('common.edit')} — ${meal.name}`} size={13} onClick={() => openEdit(meal)} />
+                        <IconButton icon="trash" label={`${t('common.delete')} — ${meal.name}`} size={13} tone="danger" onClick={() => remove(meal)} />
                       </div>
                     </li>
                   ))}
@@ -390,14 +376,7 @@ export default function NutritionPage() {
                   <span className="block text-[13px] text-[var(--text)]">{template.name}</span>
                   <span className="block text-[11px] text-[var(--text-faint)]">{Math.round(template.calories)} kcal</span>
                 </button>
-                <button
-                  type="button"
-                  onClick={() => openEdit(template)}
-                  aria-label={`${t('common.edit')} — ${template.name}`}
-                  className="grid size-7 place-items-center rounded-lg me-1.5 text-[var(--text-faint)] transition-colors hover:text-[var(--text)]"
-                >
-                  <Icon name="edit" size={13} />
-                </button>
+                <IconButton icon="edit" label={`${t('common.edit')} — ${template.name}`} size={13} onClick={() => openEdit(template)} />
               </div>
             ))}
           </div>

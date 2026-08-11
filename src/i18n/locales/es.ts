@@ -20,6 +20,7 @@ export const es: Dictionary = {
   'common.month': 'Mes',
   'common.year': 'Ano',
   'common.all': 'Todo',
+  'common.seeAll': 'Ver todo',
   'common.none': 'Ninguno',
   'common.confirm': 'Confirmar',
   'common.close': 'Cerrar',

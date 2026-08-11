@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { api, useResource } from '@/lib/client/api';
 import { useHydrated } from '@/lib/client/hydrated';
 import { useMutate } from '@/lib/client/mutate';
-import { Badge, Button, Card, EmptyState, Field, Input, Select, Skeleton, Textarea, cx } from '@/components/ui/primitives';
+import { Badge, Button, Card, cx, EmptyState, Field, IconButton, Input, Select, Skeleton, Textarea } from '@/components/ui/primitives';
 import { Icon } from '@/components/ui/icons';
 import { Modal } from '@/components/ui/modal';
 import { useToast } from '@/components/ui/toast';
@@ -206,33 +206,12 @@ export default function TasksPage() {
             </div>
           </div>
 
-          <div className="flex shrink-0 gap-0.5 transition-opacity sm:opacity-0 sm:group-hover:opacity-100 sm:focus-within:opacity-100">
+          <div className="lm-commande-discrete flex shrink-0 gap-0.5 lm-transition-ui">
             {depth === 0 && (
-              <button
-                type="button"
-                onClick={() => openCreate(task.id)}
-                aria-label={t('tasks.subtasks')}
-                className="grid size-7 place-items-center rounded-lg text-[var(--text-faint)] transition-colors hover:bg-[var(--surface-2)] hover:text-[var(--text)]"
-              >
-                <Icon name="plus" size={14} />
-              </button>
+              <IconButton icon="plus" label={t('tasks.subtasks')} onClick={() => openCreate(task.id)} />
             )}
-            <button
-              type="button"
-              onClick={() => openEdit(task)}
-              aria-label={t('common.edit')}
-              className="grid size-7 place-items-center rounded-lg text-[var(--text-faint)] transition-colors hover:bg-[var(--surface-2)] hover:text-[var(--text)]"
-            >
-              <Icon name="edit" size={14} />
-            </button>
-            <button
-              type="button"
-              onClick={() => remove(task)}
-              aria-label={t('common.delete')}
-              className="grid size-7 place-items-center rounded-lg text-[var(--text-faint)] transition-colors hover:bg-red-500/10 hover:text-red-500"
-            >
-              <Icon name="trash" size={14} />
-            </button>
+            <IconButton icon="edit" label={t('common.edit')} onClick={() => openEdit(task)} />
+            <IconButton icon="trash" label={t('common.delete')} tone="danger" onClick={() => remove(task)} />
           </div>
         </div>
 

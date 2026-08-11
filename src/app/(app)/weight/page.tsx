@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { api, useResource } from '@/lib/client/api';
 import { useMutate } from '@/lib/client/mutate';
-import { Badge, Button, Card, CardHeader, EmptyState, Field, Input, Skeleton, Textarea } from '@/components/ui/primitives';
+import { Badge, Button, Card, CardHeader, EmptyState, Field, IconButton, Input, Skeleton, Textarea } from '@/components/ui/primitives';
 import { Icon } from '@/components/ui/icons';
 import { Modal } from '@/components/ui/modal';
 import { LineChart } from '@/components/charts';
@@ -278,14 +278,7 @@ export default function WeightPage() {
                   {entry.bodyFat && <span className="text-[11px] text-[var(--text-faint)]">{entry.bodyFat}% MG</span>}
                   <span className="min-w-0 flex-1 truncate text-[11px] text-[var(--text-faint)]">{entry.note}</span>
 
-                  <button
-                    type="button"
-                    onClick={() => remove(entry)}
-                    aria-label={t('common.delete')}
-                    className="grid size-7 shrink-0 place-items-center rounded-lg text-[var(--text-faint)] transition-opacity sm:opacity-0 hover:text-red-500 sm:group-hover:opacity-100"
-                  >
-                    <Icon name="trash" size={13} />
-                  </button>
+                  <IconButton icon="trash" label={t('common.delete')} size={13} tone="danger" onClick={() => remove(entry)} discret />
                 </li>
               );
             })}

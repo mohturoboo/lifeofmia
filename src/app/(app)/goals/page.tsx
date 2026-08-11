@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { api, useResource } from '@/lib/client/api';
 import { useHydrated } from '@/lib/client/hydrated';
 import { useMutate } from '@/lib/client/mutate';
-import { Badge, Button, Card, EmptyState, Field, Input, Progress, Select, Skeleton, Textarea, cx } from '@/components/ui/primitives';
+import { Badge, Button, Card, cx, EmptyState, Field, IconButton, Input, Progress, Select, Skeleton, Textarea } from '@/components/ui/primitives';
 import { Icon } from '@/components/ui/icons';
 import { Modal } from '@/components/ui/modal';
 import { useToast } from '@/components/ui/toast';
@@ -268,30 +268,9 @@ export default function GoalsPage() {
                                 {goal.progress}%
                               </span>
                               <div className="flex gap-0.5">
-                                <button
-                                  type="button"
-                                  onClick={() => complete(goal)}
-                                  aria-label={t('goals.statusDone')}
-                                  className="grid size-7 place-items-center rounded-lg text-[var(--text-faint)] transition-colors hover:bg-[#f6d9e4]/10 hover:text-[#f6d9e4]"
-                                >
-                                  <Icon name="checkCircle" size={14} />
-                                </button>
-                                <button
-                                  type="button"
-                                  onClick={() => openEdit(goal)}
-                                  aria-label={t('common.edit')}
-                                  className="grid size-7 place-items-center rounded-lg text-[var(--text-faint)] transition-colors hover:bg-[var(--surface-2)] hover:text-[var(--text)]"
-                                >
-                                  <Icon name="edit" size={14} />
-                                </button>
-                                <button
-                                  type="button"
-                                  onClick={() => remove(goal)}
-                                  aria-label={t('common.delete')}
-                                  className="grid size-7 place-items-center rounded-lg text-[var(--text-faint)] transition-colors hover:bg-red-500/10 hover:text-red-500"
-                                >
-                                  <Icon name="trash" size={14} />
-                                </button>
+                                <IconButton icon="checkCircle" label={t('goals.statusDone')} onClick={() => complete(goal)} />
+                                <IconButton icon="edit" label={t('common.edit')} onClick={() => openEdit(goal)} />
+                                <IconButton icon="trash" label={t('common.delete')} tone="danger" onClick={() => remove(goal)} />
                               </div>
                             </div>
                           </div>
@@ -328,7 +307,7 @@ export default function GoalsPage() {
                                   type="button"
                                   onClick={() => removeStep(goal.id, step.id)}
                                   aria-label={t('common.delete')}
-                                  className="grid size-6 shrink-0 place-items-center rounded text-[var(--text-faint)] transition-opacity sm:opacity-0 hover:text-red-500 sm:group-hover:opacity-100"
+                                  className="lm-commande-discrete grid size-11 shrink-0 place-items-center rounded text-[var(--text-faint)] lm-transition-ui hover:text-red-500"
                                 >
                                   <Icon name="close" size={12} />
                                 </button>

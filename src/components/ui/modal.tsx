@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useRef, type ReactNode } from 'react';
+import { useRef, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
-import { Icon } from '@/components/ui/icons';
-import { cx } from '@/components/ui/primitives';
+import { usePiegeFocus } from '@/lib/client/piege-focus';
+import { cx, IconButton } from '@/components/ui/primitives';
 
 /**
  * Fenetre modale accessible.
@@ -38,93 +38,15 @@ export function Modal({ open, onClose, title, description, children, footer, siz
   const panelRef = useRef<HTMLDivElement>(null);
 
   /*
-   * `onClose` est conserve dans une ref plutot que lu directement dans l'effet.
+   * Echap, piege a focus, restitution du focus au declencheur et blocage du
+   * defilement sont mutualises avec le tiroir de navigation.
    *
-   * Les appelants passent naturellement une fonction en ligne
-   * (`onClose={() => setOpen(false)}`) : son identite change a CHAQUE rendu.
-   * Si l'effet ci-dessous en dependait, la moindre frappe au clavier
-   * declencherait son nettoyage puis sa reexecution — donc un `focus()` force
-   * sur le premier champ du formulaire. L'utilisateur perdait le curseur apres
-   * chaque caractere des qu'il ecrivait ailleurs que dans le premier champ.
-   *
-   * La ref donne au gestionnaire clavier un acces toujours a jour a `onClose`
-   * sans lier le cycle de vie de l'effet a son identite.
+   * Ces regles etaient ecrites ici, et nulle part ailleurs : le tiroir mobile
+   * s'ouvrait donc par-dessus la page sans rien confiner. Une regle ecrite
+   * deux fois finit toujours par ne valoir qu'a un seul endroit ; celle-ci
+   * n'existait qu'a moitie.
    */
-  const onCloseRef = useRef(onClose);
-  useEffect(() => {
-    onCloseRef.current = onClose;
-  }, [onClose]);
-
-  // Effet de montage : ne depend QUE de `open`, jamais d'une prop instable.
-  useEffect(() => {
-    if (!open) return;
-
-    const previouslyFocused = document.activeElement as HTMLElement | null;
-    const { overflow } = document.body.style;
-    document.body.style.overflow = 'hidden';
-    // Seconde ligne de defense, independante de l'empilement : voir la regle
-    // `body[data-dialog-open]` dans globals.css.
-    document.body.dataset.dialogOpen = 'true';
-
-    const focusable = () =>
-      Array.from(
-        panelRef.current?.querySelectorAll<HTMLElement>(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-        ) ?? [],
-      ).filter((element) => !element.hasAttribute('disabled'));
-
-    /*
-     * A l'ouverture, le focus va au premier CHAMP de saisie, pas au premier
-     * element focusable — qui est le bouton de fermeture, place avant le
-     * contenu dans le DOM. Sans cette distinction, le `autoFocus` pose par les
-     * formulaires sur leur premier champ etait systematiquement ecrase, et
-     * l'utilisateur devait cliquer avant de pouvoir ecrire.
-     *
-     * Le placement est SYNCHRONE. Il attendait une image d'animation, qui
-     * arrive au mieux 16 ms plus tard et bien plus tard si la boucle est
-     * ralentie : tout ce que l'utilisateur tapait dans cet intervalle partait
-     * vers l'element focalise auparavant — le bouton qui venait d'ouvrir la
-     * fenetre — et etait perdu sans le moindre signe.
-     *
-     * Le panneau et son contenu sont deja montes quand cet effet s'execute :
-     * rien ne justifie d'attendre.
-     */
-    const elements = focusable();
-    const firstField = elements.find((element) =>
-      ['INPUT', 'TEXTAREA', 'SELECT'].includes(element.tagName),
-    );
-    (firstField ?? elements[0] ?? panelRef.current)?.focus();
-
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        event.preventDefault();
-        onCloseRef.current();
-        return;
-      }
-      if (event.key !== 'Tab') return;
-
-      const elements = focusable();
-      if (elements.length === 0) return;
-      const first = elements[0];
-      const last = elements[elements.length - 1];
-
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first.focus();
-      }
-    };
-
-    document.addEventListener('keydown', onKeyDown);
-    return () => {
-      document.removeEventListener('keydown', onKeyDown);
-      document.body.style.overflow = overflow;
-      delete document.body.dataset.dialogOpen;
-      previouslyFocused?.focus?.();
-    };
-  }, [open]);
+  usePiegeFocus(open, panelRef, onClose, { prioriteAuxChamps: true });
 
   if (!open || typeof document === 'undefined') return null;
 
@@ -182,14 +104,7 @@ export function Modal({ open, onClose, title, description, children, footer, siz
               </p>
             )}
           </div>
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Fermer"
-            className="grid size-8 shrink-0 place-items-center rounded-lg text-[var(--text-faint)] transition-colors hover:bg-[var(--surface-2)] hover:text-[var(--text)]"
-          >
-            <Icon name="close" size={17} />
-          </button>
+          <IconButton icon="close" label="Fermer" size={17} onClick={onClose} />
         </header>
 
         {onSubmit ? (

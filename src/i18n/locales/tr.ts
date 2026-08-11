@@ -20,6 +20,7 @@ export const tr: Dictionary = {
   'common.month': 'Ay',
   'common.year': 'Yil',
   'common.all': 'Tumu',
+  'common.seeAll': 'Tumunu gor',
   'common.none': 'Hicbiri',
   'common.confirm': 'Onayla',
   'common.close': 'Kapat',

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { api, useResource } from '@/lib/client/api';
 import { useMutate } from '@/lib/client/mutate';
-import { Badge, Card, CardHeader, Progress, Select, Skeleton, cx } from '@/components/ui/primitives';
+import { Badge, Card, CardHeader, cx, Progress, Select, Skeleton } from '@/components/ui/primitives';
 import { Icon } from '@/components/ui/icons';
 import { PageHeader, DateNav } from '@/components/page-header';
 import { useI18n } from '@/i18n/provider';
@@ -152,19 +152,29 @@ export default function PrayersPage() {
                           ['missed', 'close', '#ff9fbf', t('prayers.markMissed')],
                         ] as const
                       ).map(([value, icon, color, label]) => (
+                        /*
+                          Groupe de bascules, pas un simple bouton-icone : chaque
+                          etat porte sa couleur et son `aria-pressed`. Seule la
+                          CIBLE passe a 44 px, la pastille coloree gardant ses
+                          28 px pour ne pas alourdir la ligne.
+                        */
                         <button
                           key={value}
                           type="button"
                           onClick={() => mark(name, value)}
                           aria-label={`${label} — ${name}`}
                           aria-pressed={status === value}
-                          className="grid size-7 place-items-center rounded-lg transition-colors"
-                          style={{
-                            background: status === value ? `${color}22` : 'transparent',
-                            color: status === value ? color : 'var(--text-faint)',
-                          }}
+                          className="grid size-11 shrink-0 place-items-center rounded-full"
                         >
-                          <Icon name={icon} size={13} />
+                          <span
+                            className="grid size-7 place-items-center rounded-lg lm-transition-ui"
+                            style={{
+                              background: status === value ? `${color}22` : 'transparent',
+                              color: status === value ? color : 'var(--text-faint)',
+                            }}
+                          >
+                            <Icon name={icon} size={13} />
+                          </span>
                         </button>
                       ))}
                     </div>

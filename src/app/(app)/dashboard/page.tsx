@@ -256,7 +256,7 @@ export default function DashboardPage() {
         ) : (
           <Link
             href="/settings"
-            className="mt-5 inline-block text-sm text-[var(--brand-text)] transition-opacity hover:opacity-80"
+            className="mt-4 inline-flex min-h-11 items-center px-1 text-sm text-[var(--brand-text)] lm-transition-ui hover:opacity-80"
           >
             {t('dash.setMainGoal')}
           </Link>
@@ -313,8 +313,19 @@ export default function DashboardPage() {
             icon="flame"
             accent="#e9b8d5"
             action={
-              <Link href="/habits">
-                <Button variant="ghost" size="sm" icon="chevronRight" />
+              /*
+                Le lien EST la cible, et non un bouton place a l'interieur.
+                Un `<Button>` sans texte dans un `<Link>` cumulait trois
+                defauts : deux elements interactifs imbriques (HTML invalide),
+                aucun nom accessible — un lecteur d'ecran annoncait « bouton »
+                sans plus — et une hauteur de 36 px.
+              */
+              <Link
+                href="/habits"
+                aria-label={`${t('common.seeAll')} — ${t('habits.title')}`}
+                className="grid size-11 place-items-center rounded-full text-[var(--text-faint)] lm-transition-ui hover:bg-[var(--surface-2)] hover:text-[var(--text)]"
+              >
+                <Icon name="chevronRight" size={16} />
               </Link>
             }
           />
@@ -393,8 +404,12 @@ export default function DashboardPage() {
             icon="moon"
             accent="#dcc7ea"
             action={
-              <Link href="/prayers">
-                <Button variant="ghost" size="sm" icon="chevronRight" />
+              <Link
+                href="/prayers"
+                aria-label={`${t('common.seeAll')} — ${t('prayers.title')}`}
+                className="grid size-11 place-items-center rounded-full text-[var(--text-faint)] lm-transition-ui hover:bg-[var(--surface-2)] hover:text-[var(--text)]"
+              >
+                <Icon name="chevronRight" size={16} />
               </Link>
             }
           />
@@ -473,8 +488,12 @@ export default function DashboardPage() {
               icon="checkCircle"
               accent="#e6e6e6"
               action={
-                <Link href="/tasks">
-                  <Button variant="ghost" size="sm" icon="chevronRight" />
+                <Link
+                  href="/tasks"
+                  aria-label={`${t('common.seeAll')} — ${t('tasks.title')}`}
+                  className="grid size-11 place-items-center rounded-full text-[var(--text-faint)] lm-transition-ui hover:bg-[var(--surface-2)] hover:text-[var(--text)]"
+                >
+                  <Icon name="chevronRight" size={16} />
                 </Link>
               }
             />

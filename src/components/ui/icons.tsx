@@ -51,6 +51,7 @@ export type IconName =
   | 'send'
   | 'shield'
   | 'download'
+  | 'archive'
   | 'eye'
   | 'eyeOff'
   | 'arrowUp'
@@ -103,6 +104,15 @@ const PATHS: Record<IconName, string> = {
   send: 'M22 2 11 13M22 2l-7 20-4-9-9-4z',
   shield: 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z',
   download: 'M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3',
+  /*
+   * Archive : un couvercle pose sur une boite, avec sa poignee.
+   *
+   * « Archiver » empruntait jusqu'ici le pictogramme de TELECHARGEMENT — une
+   * fleche vers le bas sortant d'un plateau. Le sens annonce etait donc
+   * l'inverse de l'action : l'utilisateur croyait exporter son habitude alors
+   * qu'il la retirait de sa liste.
+   */
+  archive: 'M3 8h18M3 8a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h18a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1M4 8v11a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V8M10 12h4',
   eye: 'M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7ZM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z',
   eyeOff: 'M9.9 4.2A10 10 0 0 1 12 4c6.4 0 10 8 10 8a18 18 0 0 1-2.8 4M6.6 6.6A18 18 0 0 0 2 12s3.6 8 10 8a10 10 0 0 0 4.5-1M2 2l20 20M9.9 9.9a3 3 0 0 0 4.2 4.2',
   arrowUp: 'M12 19V5M5 12l7-7 7 7',
@@ -140,14 +150,20 @@ export function Icon({ name, size = 20, ...props }: IconProps) {
 
 /** Liste des icones proposees lors de la creation d'une habitude. */
 export const HABIT_ICONS: IconName[] = [
-  'check',
+  /*
+   * `target` ouvre la liste, et non `check`.
+   *
+   * La coche est deja le signe de l'etat « accompli » : une habitude qui la
+   * portait comme icone paraissait validee en permanence, y compris quand
+   * elle ne l'etait pas. Elle reste proposee — mais plus par defaut.
+   */
+  'target',
   'flame',
   'book',
   'dumbbell',
   'moon',
   'droplet',
   'apple',
-  'target',
   'clock',
   'zap',
   'sparkles',
@@ -155,4 +171,5 @@ export const HABIT_ICONS: IconName[] = [
   'shield',
   'user',
   'chart',
+  'check',
 ];

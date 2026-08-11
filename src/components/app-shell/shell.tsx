@@ -3,11 +3,12 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useEffect, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import { Icon } from '@/components/ui/icons';
 import { cx } from '@/components/ui/primitives';
 import { ALL_NAV_ITEMS, MOBILE_NAV, NAV_SECTIONS } from '@/components/app-shell/navigation';
 import { useI18n } from '@/i18n/provider';
+import { usePiegeFocus } from '@/lib/client/piege-focus';
 import { useTheme } from '@/components/theme-provider';
 import { LOCALES, LOCALE_META, type Locale } from '@/i18n/config';
 import { levelProgress } from '@/lib/levels';
@@ -38,6 +39,9 @@ export function AppShell({ user, children }: { user: ShellUser; children: ReactN
   const { resolved, setTheme } = useTheme();
 
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const tiroirRef = useRef<HTMLElement>(null);
+  const fermerTiroir = useCallback(() => setDrawerOpen(false), []);
+  usePiegeFocus(drawerOpen, tiroirRef, fermerTiroir);
   const [menuOpen, setMenuOpen] = useState(false);
 
   // Toute navigation referme les surcouches ouvertes.
@@ -70,7 +74,9 @@ export function AppShell({ user, children }: { user: ShellUser; children: ReactN
 
   const sidebar = (
     <div className="flex h-full flex-col">
-      <Link href="/dashboard" className="flex items-center gap-2.5 px-4 py-5">
+      {/* `aria-label` : le nom accessible du lien etait vide pour un lecteur
+          d'ecran, l'icone n'ayant pas d'alternative textuelle. */}
+      <Link href="/dashboard" aria-label={t('nav.dashboard')} className="flex items-center gap-2.5 px-4 py-5">
         <span className="grid size-9 place-items-center rounded-2xl lm-gradient-bg lm-glow text-[var(--on-pink)]">
           <Icon name="zap" size={19} />
         </span>
@@ -123,7 +129,11 @@ export function AppShell({ user, children }: { user: ShellUser; children: ReactN
 
       {/* Progression de niveau, toujours visible en bas de la barre. */}
       <div className="border-t border-[var(--border)] p-3">
-        <Link href="/settings" className="block rounded-2xl p-3 transition-colors hover:bg-[var(--surface-2)]">
+        <Link
+          href="/settings"
+          aria-label={`${t('nav.settings')} — ${t('dash.level')} ${progress.level}`}
+          className="block rounded-2xl p-3 transition-colors hover:bg-[var(--surface-2)]"
+        >
           <div className="flex items-center justify-between text-xs">
             <span className="font-medium text-[var(--text)]">
               {t('dash.level')} {progress.level}
@@ -167,7 +177,20 @@ export function AppShell({ user, children }: { user: ShellUser; children: ReactN
               onClick={() => setDrawerOpen(false)}
               className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             />
+            {/*
+              Le tiroir est une surface MODALE : il recouvre la page, la rend
+              inutilisable derriere son voile, et doit donc se comporter comme
+              telle. Il ne le faisait pas — Echap ne le fermait pas, Tab
+              continuait de parcourir le contenu masque, et le focus restait sur
+              le bouton d'ouverture. `usePiegeFocus` lui applique exactement les
+              memes regles qu'aux fenetres modales.
+            */}
             <motion.aside
+              ref={tiroirRef}
+              tabIndex={-1}
+              role="dialog"
+              aria-modal="true"
+              aria-label={t('nav.dashboard')}
               initial={{ x: '-100%' }}
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
@@ -192,7 +215,7 @@ export function AppShell({ user, children }: { user: ShellUser; children: ReactN
               type="button"
               onClick={() => setDrawerOpen(true)}
               aria-label="Ouvrir le menu"
-              className="grid size-9 place-items-center rounded-full text-[var(--text-muted)] transition-colors hover:bg-[var(--surface-2)] hover:text-[var(--text)] lg:hidden"
+              className="grid size-11 place-items-center rounded-full text-[var(--text-muted)] transition-colors hover:bg-[var(--surface-2)] hover:text-[var(--text)] lg:hidden"
             >
               <Icon name="menu" size={19} />
             </button>
@@ -229,21 +252,29 @@ export function AppShell({ user, children }: { user: ShellUser; children: ReactN
               type="button"
               onClick={() => setTheme(resolved === 'dark' ? 'light' : 'dark')}
               aria-label={t('settings.theme')}
-              className="grid size-9 place-items-center rounded-full text-[var(--text-muted)] transition-colors hover:bg-[var(--surface-2)] hover:text-[var(--text)]"
+              className="grid size-11 place-items-center rounded-full text-[var(--text-muted)] transition-colors hover:bg-[var(--surface-2)] hover:text-[var(--text)]"
             >
               <Icon name={resolved === 'dark' ? 'sun' : 'moon'} size={18} />
             </button>
 
             {/* Menu utilisateur */}
             <div className="relative">
+              {/*
+                La CIBLE fait 44 px, la pastille reste a 36 px : agrandir le
+                disque rose aurait alourdi l'en-tete, alors que seul le point
+                de contact posait probleme.
+              */}
               <button
                 type="button"
                 onClick={() => setMenuOpen((value) => !value)}
                 aria-expanded={menuOpen}
                 aria-haspopup="menu"
-                className="grid size-9 place-items-center rounded-full lm-gradient-bg lm-glow text-[13px] font-semibold transition-transform hover:scale-105"
+                aria-label={t('nav.settings')}
+                className="grid size-11 place-items-center rounded-full lm-transition-ui"
               >
-                {initials || <Icon name="user" size={17} />}
+                <span className="grid size-9 place-items-center rounded-full lm-gradient-bg lm-glow text-[13px] font-semibold transition-transform hover:scale-105">
+                  {initials || <Icon name="user" size={17} />}
+                </span>
               </button>
 
               <AnimatePresence>

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { api, useResource } from '@/lib/client/api';
 import { useMutate } from '@/lib/client/mutate';
-import { Button, Card, EmptyState, Field, Input, Skeleton, Textarea, cx } from '@/components/ui/primitives';
+import { Button, Card, cx, EmptyState, Field, IconButton, Input, Skeleton, Textarea } from '@/components/ui/primitives';
 import { Icon } from '@/components/ui/icons';
 import { Modal } from '@/components/ui/modal';
 import { useToast } from '@/components/ui/toast';
@@ -148,28 +148,8 @@ export default function NotesPage() {
               <div className="flex items-start justify-between gap-2">
                 <h2 className="min-w-0 flex-1 truncate text-sm font-medium text-[var(--text)]">{note.title}</h2>
                 <div className="flex shrink-0 gap-0.5">
-                  <button
-                    type="button"
-                    onClick={() => togglePin(note)}
-                    aria-label={t('notes.pin')}
-                    aria-pressed={note.pinned}
-                    className={cx(
-                      'grid size-7 place-items-center rounded-lg transition-colors',
-                      note.pinned
-                        ? 'text-[#ff9fbf]'
-                        : 'text-[var(--text-faint)] sm:opacity-0 sm:group-hover:opacity-100 hover:text-[var(--text)]',
-                    )}
-                  >
-                    <Icon name="award" size={13} />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => remove(note)}
-                    aria-label={t('common.delete')}
-                    className="grid size-7 place-items-center rounded-lg text-[var(--text-faint)] transition-opacity sm:opacity-0 hover:text-red-500 sm:group-hover:opacity-100"
-                  >
-                    <Icon name="trash" size={13} />
-                  </button>
+                  <IconButton icon="award" label={t('notes.pin')} size={13} onClick={() => togglePin(note)} />
+                  <IconButton icon="trash" label={t('common.delete')} size={13} tone="danger" onClick={() => remove(note)} discret />
                 </div>
               </div>
 

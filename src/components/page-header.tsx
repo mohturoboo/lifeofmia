@@ -68,7 +68,7 @@ export function DateNav({
         type="button"
         onClick={() => shift(-1)}
         aria-label="Jour precedent"
-        className="grid size-8 place-items-center rounded-lg text-[var(--text-muted)] transition-colors hover:bg-[var(--surface-2)]"
+        className="grid size-11 place-items-center rounded-lg text-[var(--text-muted)] lm-transition-ui hover:bg-[var(--surface-2)]"
       >
         <Icon name="chevronLeft" size={16} className="rtl:rotate-180" />
       </button>
@@ -79,7 +79,7 @@ export function DateNav({
         type="button"
         onClick={() => shift(1)}
         aria-label="Jour suivant"
-        className="grid size-8 place-items-center rounded-lg text-[var(--text-muted)] transition-colors hover:bg-[var(--surface-2)]"
+        className="grid size-11 place-items-center rounded-lg text-[var(--text-muted)] lm-transition-ui hover:bg-[var(--surface-2)]"
       >
         <Icon name="chevronRight" size={16} className="rtl:rotate-180" />
       </button>

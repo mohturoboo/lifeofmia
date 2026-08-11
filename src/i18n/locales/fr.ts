@@ -24,6 +24,7 @@ export const fr = {
   'common.month': 'Mois',
   'common.year': 'Annee',
   'common.all': 'Tout',
+  'common.seeAll': 'Voir tout',
   'common.none': 'Aucun',
   'common.confirm': 'Confirmer',
   'common.close': 'Fermer',
