@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { motif } from './texte';
 
 /**
  * Coherence des chiffres affiches.
@@ -57,7 +58,7 @@ test('une semaine sans aucune donnee affiche un etat vide, pas un graphique muet
     await page.goto('/dashboard');
     // Un histogramme de barres invisibles se lit comme une panne. La phrase
     // dit que la semaine est vide.
-    await expect(page.getByText(/rien a afficher/i).first()).toBeVisible();
+    await expect(page.getByText(motif('rien a afficher')).first()).toBeVisible();
   }
 });
 
@@ -148,7 +149,7 @@ test('la page Comparaison explique l\'absence de reference au lieu d\'afficher u
   const { data } = (await reponse.json()) as { data?: { hasPrevious?: boolean } };
 
   if (data?.hasPrevious === false) {
-    await expect(page.getByText(/deux periodes completes/i).first()).toBeVisible();
+    await expect(page.getByText(motif('deux periodes completes')).first()).toBeVisible();
   }
 
   // Les dates affichees portent une annee sur quatre chiffres : « 12 juin 26 »

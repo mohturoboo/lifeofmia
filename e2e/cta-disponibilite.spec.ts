@@ -19,7 +19,7 @@ import { test, expect, type Page } from '@playwright/test';
 const CIBLES = [
   { chemin: '/habits', libelle: 'Nouvelle habitude' },
   { chemin: '/goals', libelle: 'Nouvel objectif' },
-  { chemin: '/tasks', libelle: 'Nouvelle tache' },
+  { chemin: '/tasks', libelle: 'Nouvelle tâche' },
 ];
 
 /** Instant ou le bouton devient actionnable, et etat de l'attente affichee. */

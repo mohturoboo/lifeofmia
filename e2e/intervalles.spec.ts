@@ -149,7 +149,7 @@ test('une entree de journal ne se date pas dans le futur', async ({ page }) => {
 test('le formulaire d\'evenement borne l\'heure de fin sur l\'heure de debut', async ({ page }) => {
   await page.goto('/calendar');
 
-  await page.getByRole('button', { name: /nouvel evenement|new event/i }).click();
+  await page.getByRole('button', { name: /nouvel événement|new event/i }).click();
   const debut = page.locator('#event-start');
   const fin = page.locator('#event-end');
   await expect(fin).toBeVisible();

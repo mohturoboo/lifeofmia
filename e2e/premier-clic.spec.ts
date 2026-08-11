@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { motifExact } from './texte';
 
 /**
  * Le premier clic doit agir.
@@ -26,8 +27,8 @@ import { test, expect } from '@playwright/test';
 const PARCOURS = [
   { chemin: '/habits', bouton: 'Nouvelle habitude', titre: 'Nouvelle habitude' },
   { chemin: '/goals', bouton: 'Nouvel objectif', titre: 'Nouvel objectif' },
-  { chemin: '/tasks', bouton: 'Nouvelle tache', titre: 'Nouvelle tache' },
-  { chemin: '/finance', bouton: 'Nouvelle operation', titre: 'Nouvelle operation' },
+  { chemin: '/tasks', bouton: 'Nouvelle tâche', titre: 'Nouvelle tâche' },
+  { chemin: '/finance', bouton: 'Nouvelle opération', titre: 'Nouvelle opération' },
   { chemin: '/nutrition', bouton: 'Ajouter un repas', titre: 'Ajouter un repas' },
 ];
 
@@ -54,10 +55,10 @@ for (const { chemin, bouton, titre } of PARCOURS) {
 test('les onglets des reglages agissent des le premier clic', async ({ page }) => {
   await page.goto('/settings', { waitUntil: 'commit' });
 
-  await page.getByRole('button', { name: 'Securite' }).click();
+  await page.getByRole('button', { name: motifExact('Securite') }).click();
 
   // Le panneau a bien change : c'est la preuve que le clic a ete pris en compte.
-  await expect(page.getByRole('button', { name: 'Securite' })).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.getByRole('button', { name: motifExact('Securite') })).toHaveAttribute('aria-pressed', 'true');
   await expect(page.getByLabel(/Mot de passe actuel/)).toBeVisible();
 });
 

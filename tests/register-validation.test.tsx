@@ -59,12 +59,12 @@ describe('Inscription — etape 1', () => {
 
     expect(screen.getAllByText('Ce champ est obligatoire.').length).toBe(4);
     // La page ne progresse pas tant que l'etape 1 n'est pas valide.
-    expect(screen.getByText(/Etape 1\/2/)).toBeTruthy();
+    expect(screen.getByText(/Étape 1\/2/)).toBeTruthy();
   });
 
   it('signale une adresse email mal formee', async () => {
     afficher();
-    saisir(/Prenom/i, 'Moha');
+    saisir(/Prénom/i, 'Moha');
     saisir(/^Nom/i, 'Test');
     saisir(/Adresse email/i, 'pas-un-email');
     saisir(/Mot de passe/i, 'MotDePasse1');
@@ -75,13 +75,13 @@ describe('Inscription — etape 1', () => {
 
   it('distingue un mot de passe trop court d\'un mot de passe trop simple', async () => {
     afficher();
-    saisir(/Prenom/i, 'Moha');
+    saisir(/Prénom/i, 'Moha');
     saisir(/^Nom/i, 'Test');
     saisir(/Adresse email/i, 'moha@exemple.fr');
 
     saisir(/Mot de passe/i, 'abc');
     await act(async () => { fireEvent.click(suivant()); });
-    expect(screen.getByText('8 caracteres minimum.')).toBeTruthy();
+    expect(screen.getByText('8 caractères minimum.')).toBeTruthy();
 
     saisir(/Mot de passe/i, 'motdepasse');
     await act(async () => { fireEvent.click(suivant()); });
@@ -93,18 +93,18 @@ describe('Inscription — etape 1', () => {
     await act(async () => { fireEvent.click(suivant()); });
     expect(screen.getAllByText('Ce champ est obligatoire.').length).toBe(4);
 
-    saisir(/Prenom/i, 'M');
+    saisir(/Prénom/i, 'M');
     expect(screen.getAllByText('Ce champ est obligatoire.').length).toBe(3);
   });
 
   it('passe a l\'etape 2 quand tout est valide', async () => {
     afficher();
-    saisir(/Prenom/i, 'Moha');
+    saisir(/Prénom/i, 'Moha');
     saisir(/^Nom/i, 'Test');
     saisir(/Adresse email/i, 'moha@exemple.fr');
     saisir(/Mot de passe/i, 'MotDePasse1');
     await act(async () => { fireEvent.click(suivant()); });
 
-    expect(screen.getByText(/Etape 2\/2/)).toBeTruthy();
+    expect(screen.getByText(/Étape 2\/2/)).toBeTruthy();
   });
 });

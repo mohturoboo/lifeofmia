@@ -1,4 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
+import { motif } from './texte';
 
 /**
  * Regles de saisie d'une pesee.
@@ -92,8 +93,16 @@ test('une seule mesure invite a en ajouter une seconde au lieu de nier son exist
      * historique qui listait justement cette mesure. La page se contredisait
      * a un centimetre d'intervalle.
      */
-    await expect(page.getByText(/deuxieme mesure/i).first()).toBeVisible();
-    await expect(page.getByText(/aucune mesure enregistree/i)).toHaveCount(0);
+    await expect(page.getByText(motif('deuxieme mesure')).first()).toBeVisible();
+    /*
+         * Motif tolerant aux accents ici AUSSI, et pas seulement par confort :
+         * l'assertion porte sur une ABSENCE. Ecrite sans accents, elle ne
+         * trouvait plus rien apres la reaccentuation et passait donc pour une
+         * bonne raison apparente — alors que la phrase interdite pouvait tres
+         * bien s'afficher. Une assertion qui ne peut plus echouer ne mesure
+         * plus rien.
+         */
+        await expect(page.getByText(motif('aucune mesure enregistree'))).toHaveCount(0);
   }
 });
 

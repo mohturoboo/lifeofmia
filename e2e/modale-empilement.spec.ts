@@ -22,12 +22,12 @@ const VIEWPORT = { width: 390, height: 800 };
 const FENETRES = [
   { chemin: '/habits', ouvrir: 'Nouvelle habitude' },
   { chemin: '/goals', ouvrir: 'Nouvel objectif' },
-  { chemin: '/tasks', ouvrir: 'Nouvelle tache' },
-  { chemin: '/finance', ouvrir: 'Nouvelle operation' },
+  { chemin: '/tasks', ouvrir: 'Nouvelle tâche' },
+  { chemin: '/finance', ouvrir: 'Nouvelle opération' },
   { chemin: '/weight', ouvrir: 'Enregistrer mon poids' },
-  { chemin: '/sport', ouvrir: 'Nouvelle seance' },
+  { chemin: '/sport', ouvrir: 'Nouvelle séance' },
   { chemin: '/notes', ouvrir: 'Nouvelle note' },
-  { chemin: '/calendar', ouvrir: 'Nouvel evenement' },
+  { chemin: '/calendar', ouvrir: 'Nouvel événement' },
   { chemin: '/nutrition', ouvrir: 'Ajouter un repas' },
 ];
 

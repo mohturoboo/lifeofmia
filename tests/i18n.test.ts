@@ -30,8 +30,27 @@ describe('internationalisation', () => {
   });
 
   it('n\'introduit aucune cle superflue', () => {
+    /*
+     * Une langue peut porter des formes plurielles que le francais ignore :
+     * l'arabe en distingue six la ou le francais n'en a que deux. Ce ne sont
+     * pas des cles superflues mais les memes cles declinees — a condition que
+     * leur racine existe dans le dictionnaire de reference et que le suffixe
+     * soit une categorie du CLDR. Tout le reste reste une faute.
+     */
+    const CATEGORIES = ['zero', 'one', 'two', 'few', 'many', 'other'];
+    const racines = new Set(
+      keys.filter((key) => key.endsWith('_one')).map((key) => key.slice(0, -'_one'.length)),
+    );
+    const formePlurielleValide = (key: string) => {
+      const separateur = key.lastIndexOf('_');
+      if (separateur === -1) return false;
+      return racines.has(key.slice(0, separateur)) && CATEGORIES.includes(key.slice(separateur + 1));
+    };
+
     for (const locale of LOCALES) {
-      const extra = Object.keys(DICTIONARIES[locale]).filter((key) => !keys.includes(key));
+      const extra = Object.keys(DICTIONARIES[locale]).filter(
+        (key) => !keys.includes(key) && !formePlurielleValide(key),
+      );
       expect(extra, `cles en trop en ${locale}`).toEqual([]);
     }
   });

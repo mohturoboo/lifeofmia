@@ -1,4 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
+import { motifExact } from './texte';
 
 /**
  * Les filtres de la liste de taches.
@@ -131,6 +132,6 @@ test('les onglets forment un vrai groupe accessible', async ({ page }) => {
 
   // « Terminees » est un interrupteur, pas une septieme vue : il reste hors du
   // groupe d'onglets tout en partageant son cadre.
-  const terminees = page.getByRole('button', { name: 'Terminees' });
+  const terminees = page.getByRole('button', { name: motifExact('Terminees') });
   await expect(terminees).toHaveAttribute('aria-pressed', 'false');
 });

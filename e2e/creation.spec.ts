@@ -1,4 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
+import { motif } from './texte';
 
 /**
  * Les cinq flux de creation signales comme « non persistants ».
@@ -28,7 +29,7 @@ test.beforeEach(async ({ page }) => {
 test('une tache creee survit au rechargement', async ({ page }) => {
   await page.goto('/tasks');
 
-  await page.getByRole('button', { name: 'Nouvelle tache' }).click();
+  await page.getByRole('button', { name: 'Nouvelle tâche' }).click();
   const fenetre = page.getByRole('dialog');
   await expect(fenetre).toBeVisible();
 
@@ -50,7 +51,7 @@ test('une operation financiere creee survit au rechargement', async ({ page }) =
   const fenetre = page.getByRole('dialog');
   await expect(fenetre).toBeVisible();
 
-  await fenetre.getByLabel('Libelle').fill('Courses E2E');
+  await fenetre.getByLabel(motif('Libelle')).fill('Courses E2E');
   await fenetre.getByLabel('Montant').fill('42');
   await fenetre.getByRole('button', { name: 'Enregistrer' }).click();
 

@@ -28,11 +28,52 @@ export function createTranslator(locale: Locale): Translator {
   const dictionary = DICTIONARIES[locale] ?? DICTIONARIES[DEFAULT_LOCALE];
   const fallback = DICTIONARIES[DEFAULT_LOCALE];
 
+  /*
+   * Les regles de pluriel de la langue, pas celles du francais.
+   *
+   * L'interface affichait « 1 jours », « 1 Badges », « 0 jours d'affilee » :
+   * le nombre etait colle a un libelle invariable. Le probleme n'est pas
+   * cosmetique — l'anglais et le francais coupent a un endroit different (0 est
+   * singulier en anglais, pluriel en francais), le turc n'accorde pas, et
+   * l'arabe distingue six formes. Aucune concatenation ne peut couvrir cela.
+   */
+  const pluriels = (() => {
+    try {
+      return new Intl.PluralRules(LOCALE_META[locale].intl);
+    } catch {
+      return null;
+    }
+  })();
+
   return (key, values) => {
-    let text = dictionary[key] ?? fallback[key] ?? key;
+    let cle: string = key;
+
+    /*
+     * Une cle a pluriel n'existe QUE sous ses formes suffixees. Quand un
+     * `count` est fourni, on cherche la forme de la categorie, puis `_other`
+     * — l'arabe peut ne pas definir `_few` la ou le francais n'a que deux
+     * formes, et l'inverse ne doit jamais produire une cle brute a l'ecran.
+     */
+    const count = values?.count;
+    if (typeof count === 'number' && pluriels) {
+      const categorie = pluriels.select(count);
+      const candidates = [`${key}_${categorie}`, `${key}_other`, key];
+      cle = candidates.find((essai) => essai in dictionary || essai in fallback) ?? key;
+    }
+
+    const table = dictionary as Record<string, string | undefined>;
+    const secours = fallback as Record<string, string | undefined>;
+    let text = table[cle] ?? secours[cle] ?? key;
+
     if (values) {
       for (const [name, value] of Object.entries(values)) {
-        text = text.replaceAll(`{${name}}`, String(value));
+        /*
+         * Les nombres passent par `Intl.NumberFormat` : sans cela, l'arabe
+         * melangeait sur un meme ecran des chiffres arabo-indiens rendus par
+         * `Intl` et des chiffres occidentaux issus de `String(value)`.
+         */
+        const rendu = typeof value === 'number' ? formatNumber(locale, value) : String(value);
+        text = text.replaceAll(`{${name}}`, rendu);
       }
     }
     return text;

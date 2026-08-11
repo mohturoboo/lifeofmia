@@ -1,4 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
+import { motifExact } from './texte';
 
 /**
  * Le suivi d'hydratation, de bout en bout.
@@ -104,7 +105,7 @@ test('le total passe au litre au-dela de 1000 ml, sans arrondi trompeur', async 
 test('la contenance du verre est reglable', async ({ page }) => {
   await page.goto('/settings');
   // Le reglage vit dans l'onglet « Langue et region », avec les unites.
-  await page.getByRole('button', { name: 'Langue et region' }).click();
+  await page.getByRole('button', { name: motifExact('Langue et region') }).click();
 
   const champ = page.locator('#glass-size');
   await expect(champ).toHaveValue('250');
