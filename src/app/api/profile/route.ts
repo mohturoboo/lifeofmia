@@ -69,12 +69,24 @@ export const PATCH = route(
     if (body.city !== undefined) {
       data.city = body.city;
 
+      /*
+       * Le fuseau est rededuit quand la ville CHANGE reellement.
+       *
+       * Le formulaire renvoie tous ses champs a chaque enregistrement : sans
+       * cette comparaison, modifier son fuseau seul le verrait ecrase par celui
+       * de la ville. Et sans rededuction du tout, une ville nouvelle gardait
+       * l'ancien fuseau — c'est ainsi qu'un profil se retrouve a Paris avec
+       * l'heure de Casablanca.
+       */
+      const villeChange = body.city !== user.city;
+
       if (body.latitude === undefined || body.longitude === undefined) {
         const fallback = FALLBACK_CITIES[body.city];
         if (fallback) {
           data.latitude = fallback.latitude;
           data.longitude = fallback.longitude;
-          data.timezone = data.timezone ?? fallback.timezone;
+          if (villeChange) data.timezone = fallback.timezone;
+          else data.timezone = data.timezone ?? fallback.timezone;
         } else {
           const [match] = await searchCity(body.city);
           if (match) {

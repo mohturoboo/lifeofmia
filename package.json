@@ -25,6 +25,7 @@
     "db:reset": "prisma db push --force-reset && npm run db:seed",
     "db:reset-account": "tsx scripts/reset-account.ts",
     "db:use": "node scripts/use-db.mjs",
+    "db:fix-timezones": "tsx scripts/fix-timezones.ts",
     "setup": "npm install && npm run db:use sqlite && npm run db:push && npm run db:seed"
   },
   "prisma": {

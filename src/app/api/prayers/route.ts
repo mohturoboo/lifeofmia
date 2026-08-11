@@ -1,9 +1,10 @@
 import { prisma } from '@/lib/prisma';
 import { route } from '@/lib/api/handler';
-import { ok } from '@/lib/api/response';
+import { ok, ApiError } from '@/lib/api/response';
 import { prayerLogSchema, prayerSettingsSchema } from '@/lib/validation/modules';
 import { dateKeyIn, isDateKey, startOfMonthKey } from '@/lib/date';
-import { currentAndNext, fetchPrayerTimes, PRAYER_METHODS } from '@/lib/prayer';
+import { currentAndNext, PRAYER_METHODS } from '@/lib/prayer';
+import { getPrayerTimes, prayerSettingsFor } from '@/lib/prayer-service';
 import { formatTimeIn } from '@/lib/date';
 import { recomputeDay } from '@/lib/stats';
 import { awardXp, evaluateBadges } from '@/lib/gamification';
@@ -20,30 +21,32 @@ export const GET = route(async ({ user, searchParams }) => {
   const raw = searchParams.get('date');
   const date = isDateKey(raw) ? raw : dateKeyIn(user.timezone);
 
-  const settings =
-    (await prisma.prayerSettings.findUnique({ where: { userId: user.id } })) ??
-    (await prisma.prayerSettings.create({ data: { userId: user.id } }));
-
-  const latitude = user.latitude ?? 48.8566;
-  const longitude = user.longitude ?? 2.3522;
+  const settings = await prayerSettingsFor(user.id);
 
   const monthStart = startOfMonthKey(date);
 
   const [result, logs, monthLogs] = await Promise.all([
-    fetchPrayerTimes({
-      date,
-      latitude,
-      longitude,
-      timezone: user.timezone,
-      method: settings.method,
-      school: settings.school as 0 | 1,
-    }),
+    // Meme service que le tableau de bord : les deux ne peuvent plus diverger.
+    getPrayerTimes(user, date),
     prisma.prayerLog.findMany({ where: { userId: user.id, date } }),
     prisma.prayerLog.findMany({
       where: { userId: user.id, date: { gte: monthStart, lte: date } },
       select: { date: true, name: true, status: true },
     }),
   ]);
+
+  /*
+   * Sans coordonnees exploitables, le service renonce plutot que de retomber
+   * sur une capitale arbitraire. On le dit explicitement : des horaires faux
+   * seraient pires qu'une absence d'horaires.
+   */
+  if (!result) {
+    throw new ApiError(
+      'VALIDATION',
+      'Horaires indisponibles : renseignez votre ville dans les reglages.',
+      { city: 'Ville inconnue ou sans coordonnees.' },
+    );
+  }
 
   const nowHHmm = formatTimeIn(user.timezone, '24h');
   const { current, next, minutesToNext } = currentAndNext(result.times, nowHHmm);
@@ -69,7 +72,13 @@ export const GET = route(async ({ user, searchParams }) => {
       notifications: settings.notifications,
     },
     methods: PRAYER_METHODS.map((method) => ({ id: method.id, name: method.name })),
-    location: { city: user.city, country: user.country, latitude, longitude, timezone: user.timezone },
+    location: {
+      city: user.city,
+      country: user.country,
+      latitude: result.latitude,
+      longitude: result.longitude,
+      timezone: user.timezone,
+    },
     monthlyRate: Math.min(100, Math.round((performed / expected) * 100)),
     monthLogs,
   });

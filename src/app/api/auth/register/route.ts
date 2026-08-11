@@ -7,6 +7,7 @@ import { hashPassword } from '@/lib/auth/password';
 import { createSession } from '@/lib/auth/session';
 import { RATE_LIMITS } from '@/lib/auth/rate-limit';
 import { seedUserWorkspace } from '@/lib/onboarding';
+import { FALLBACK_CITIES } from '@/lib/cities';
 import { audit } from '@/lib/audit';
 
 /**
@@ -35,6 +36,17 @@ export const POST = publicRoute(
 
     const birthDate = body.birthDate ? new Date(body.birthDate) : null;
 
+    /*
+     * Le fuseau suit la ville declaree, pas le navigateur.
+     *
+     * Le formulaire envoyait `Intl.DateTimeFormat().resolvedOptions().timeZone`,
+     * c'est-a-dire le reglage de l'appareil. Quelqu'un choisissant « Paris »
+     * depuis un telephone regle sur Casablanca se retrouvait avec des
+     * coordonnees parisiennes et un fuseau marocain — une incoherence qui
+     * decale silencieusement toutes les heures affichees.
+     */
+    const ville = FALLBACK_CITIES[body.city];
+
     const user = await prisma.user.create({
       data: {
         email: body.email,
@@ -43,7 +55,9 @@ export const POST = publicRoute(
         lastName: body.lastName,
         country: body.country,
         city: body.city,
-        timezone: body.timezone,
+        timezone: ville?.timezone ?? body.timezone,
+        latitude: ville?.latitude ?? null,
+        longitude: ville?.longitude ?? null,
         locale: body.locale,
         gender: body.gender ?? null,
         birthDate: birthDate && !Number.isNaN(birthDate.getTime()) ? birthDate : null,

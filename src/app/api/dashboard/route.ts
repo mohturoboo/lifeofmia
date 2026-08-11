@@ -4,7 +4,8 @@ import { ok } from '@/lib/api/response';
 import { dateKeyIn, formatTimeIn, lastNDays, weekDayOf } from '@/lib/date';
 import { readRange, recomputeDay } from '@/lib/stats';
 import { effectiveStreak, levelProgress } from '@/lib/gamification';
-import { fetchPrayerTimes, currentAndNext } from '@/lib/prayer';
+import { currentAndNext } from '@/lib/prayer';
+import { getPrayerTimes } from '@/lib/prayer-service';
 import { fetchWeather } from '@/lib/weather';
 import { quoteOfTheDay } from '@/lib/quotes';
 import { parseNumberArray } from '@/lib/json';
@@ -26,7 +27,7 @@ export const GET = route(async ({ user }) => {
   const latitude = user.latitude ?? 48.8566;
   const longitude = user.longitude ?? 2.3522;
 
-  const [stats, habits, habitLogs, tasks, weekStats, prayerSettings, prayerLogs, weather, prayerTimes, activeGoal, badgeCount] =
+  const [stats, habits, habitLogs, tasks, weekStats, prayerLogs, weather, prayerTimes, activeGoal, badgeCount] =
     await Promise.all([
       recomputeDay(user.id, today),
       prisma.habit.findMany({
@@ -46,17 +47,10 @@ export const GET = route(async ({ user }) => {
         select: { id: true, title: true, priority: true, dueDate: true, status: true },
       }),
       readRange(user.id, lastNDays(7, today)),
-      prisma.prayerSettings.findUnique({ where: { userId: user.id } }),
       prisma.prayerLog.findMany({ where: { userId: user.id, date: today } }),
       fetchWeather(latitude, longitude, user.timezone).catch(() => null),
-      fetchPrayerTimes({
-        date: today,
-        latitude,
-        longitude,
-        timezone: user.timezone,
-        method: 3,
-        school: 0,
-      }).catch(() => null),
+      // Source unique : methode, madhhab et coordonnees viennent du profil.
+      getPrayerTimes(user, today).catch(() => null),
       prisma.goal.findFirst({
         where: { userId: user.id, status: 'active' },
         orderBy: [{ priority: 'desc' }, { deadline: 'asc' }],
@@ -138,7 +132,7 @@ export const GET = route(async ({ user }) => {
           next: nextPrayer?.next ?? null,
           minutesToNext: nextPrayer?.minutesToNext ?? null,
           logged: prayerLogs.map((log) => ({ name: log.name, status: log.status })),
-          method: prayerSettings?.method ?? 3,
+          method: prayerTimes.method,
         }
       : null,
     quote: quoteOfTheDay(today, locale, user.id),

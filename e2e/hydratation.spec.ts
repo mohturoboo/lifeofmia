@@ -28,9 +28,23 @@ async function remettreAZero(page: Page) {
   const journee = await page.request.get(`/api/meals?date=${jour}`);
   const { data } = (await journee.json()) as { data?: { waterMl?: number } };
   const restant = data?.waterMl ?? 0;
-  if (restant !== 0) {
-    await page.request.post('/api/water', { data: { date: jour, amountMl: -restant } });
-  }
+  if (restant === 0) return;
+
+  await page.request.post('/api/water', { data: { date: jour, amountMl: -restant } });
+
+  /*
+   * On confirme que la remise a zero a bien atterri avant de continuer.
+   * Sans cette verification, le test enchaine parfois sur une page qui lit
+   * encore l'ancien total, et echoue une fois sur plusieurs sans rien dire
+   * du code teste.
+   */
+  await expect
+    .poll(async () => {
+      const controle = await page.request.get(`/api/meals?date=${jour}`);
+      const { data: apres } = (await controle.json()) as { data?: { waterMl?: number } };
+      return apres?.waterMl ?? 0;
+    }, { timeout: 10_000 })
+    .toBe(0);
 }
 
 test.beforeEach(async ({ page }) => {
