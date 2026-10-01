@@ -4,7 +4,7 @@ import { RATE_LIMITS } from '@/lib/auth/rate-limit';
 import { ok } from '@/lib/api/response';
 import { addDaysToKey, dateKeyIn, dateKeyRange, COMPARE_PERIODS, type ComparePeriod } from '@/lib/date';
 import { aggregate, habitCountsOn, heatmap, readRange } from '@/lib/stats';
-import { levelProgress } from '@/lib/gamification';
+import { effectiveStreak, levelProgress } from '@/lib/gamification';
 import { buildRadar } from '@/lib/analytics';
 import { methodeRefusee, optionsPour, type MethodeHttp } from '@/lib/api/methodes';
 
@@ -16,7 +16,8 @@ import { methodeRefusee, optionsPour, type MethodeHttp } from '@/lib/api/methode
  */
 export const GET = route(async ({ user, searchParams }) => {
   const period = (searchParams.get('period') ?? '30d') as ComparePeriod;
-  const days = COMPARE_PERIODS[period] ?? 30;
+  // `Object.hasOwn` : « ?period=constructor » resolvait une fonction et faisait echouer la route.
+  const days = Object.hasOwn(COMPARE_PERIODS, period) ? COMPARE_PERIODS[period] : 30;
   const today = dateKeyIn(user.timezone);
 
   /*
@@ -106,7 +107,7 @@ export const GET = route(async ({ user, searchParams }) => {
     perHabit,
     radar,
     progress: levelProgress(user.xp),
-    streak: { current: user.currentStreak, longest: user.longestStreak },
+    streak: { current: effectiveStreak(user, user.timezone), longest: user.longestStreak },
     badges: badges.map((entry) => ({ ...entry.badge, unlockedAt: entry.unlockedAt })),
   });
 }, { rateLimit: { key: 'analytics', ...RATE_LIMITS.analytics } });

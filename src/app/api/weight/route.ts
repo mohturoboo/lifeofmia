@@ -85,6 +85,11 @@ export const POST = route(
       });
     }
 
+    const existante = await prisma.weightEntry.findUnique({
+      where: { userId_date: { userId: user.id, date: body.date } },
+      select: { id: true },
+    });
+
     const entry = await prisma.weightEntry.upsert({
       where: { userId_date: { userId: user.id, date: body.date } },
       create: {
@@ -105,8 +110,13 @@ export const POST = route(
       },
     });
 
+    /*
+     * L'XP n'est accordee qu'a la premiere pesee du jour : corriger sa mesure
+     * la remplace, et rapportait jusqu'ici 5 XP a chaque nouvel envoi.
+     * Elle est versee AVANT le recalcul, pour que l'XP du jour en tienne compte.
+     */
+    if (!existante) await awardXp(user.id, 5, 'Pesee enregistree', 'weight');
     await recomputeDay(user.id, body.date);
-    await awardXp(user.id, 5, 'Pesee enregistree', 'weight');
     await evaluateBadges(user.id);
 
     return created(sansUserId(entry));

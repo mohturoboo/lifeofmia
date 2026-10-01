@@ -85,6 +85,13 @@ export const GET = route(async ({ user, searchParams }) => {
   });
 });
 
+/** XP associee a un statut de priere : 8 a l'heure, 4 en retard, rien sinon. */
+function xpPriere(status: string | undefined): number {
+  if (status === 'done') return 8;
+  if (status === 'late') return 4;
+  return 0;
+}
+
 /** POST /api/prayers — enregistre l'accomplissement d'une priere. */
 export const POST = route(
   async ({ user, body }) => {
@@ -99,10 +106,21 @@ export const POST = route(
       update: { status: body.status },
     });
 
-    // XP uniquement au premier enregistrement non manque de cette priere.
-    if (body.status !== 'missed' && (!existing || existing.status === 'missed')) {
-      await awardXp(user.id, body.status === 'done' ? 8 : 4, `Priere : ${body.name}`, 'prayer');
-      await evaluateBadges(user.id);
+    /*
+     * L'XP suit l'ecart entre l'ancien et le nouveau statut. Une version
+     * precedente n'en accordait qu'au passage de « manquee » a « faite », sans
+     * jamais rien retirer : alterner faite / manquee rapportait 8 XP a chaque
+     * aller-retour.
+     */
+    const ecart = xpPriere(body.status) - xpPriere(existing?.status);
+    if (ecart !== 0) {
+      await awardXp(
+        user.id,
+        ecart,
+        ecart > 0 ? `Priere : ${body.name}` : `Annulation : priere ${body.name}`,
+        'prayer',
+      );
+      if (ecart > 0) await evaluateBadges(user.id);
     }
 
     await recomputeDay(user.id, body.date);

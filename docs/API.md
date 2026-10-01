@@ -204,7 +204,7 @@ Horizons : `short`, `mid`, `long` · Catégories : `health`, `career`, `finance`
 `spiritual`, `learning`, `personal`.
 
 La progression est recalculée automatiquement depuis les étapes cochées.
-Atteindre un objectif accorde 200 XP.
+Atteindre un objectif accorde 200 XP ; le rouvrir les retire.
 
 **Modifier une étape**
 ```json

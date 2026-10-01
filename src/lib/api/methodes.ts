@@ -15,8 +15,6 @@ import { fail } from '@/lib/api/response';
 
 export type MethodeHttp = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
-const TOUTES: MethodeHttp[] = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'];
-
 export function methodeRefusee(autorisees: MethodeHttp[]) {
   const allow = [...autorisees, 'OPTIONS'].join(', ');
 
@@ -27,14 +25,6 @@ export function methodeRefusee(autorisees: MethodeHttp[]) {
       undefined,
       { Allow: allow },
     );
-}
-
-/**
- * Liste des methodes a refuser pour une route, deduite de celles qu'elle
- * accepte. Evite d'avoir a tenir la liste complementaire a la main.
- */
-export function methodesAbsentes(autorisees: MethodeHttp[]): MethodeHttp[] {
-  return TOUTES.filter((methode) => !autorisees.includes(methode));
 }
 
 /** Reponse a une requete `OPTIONS` : la norme attend 204 et un en-tete `Allow`. */

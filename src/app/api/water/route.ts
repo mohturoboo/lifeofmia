@@ -16,9 +16,26 @@ import { methodeRefusee, optionsPour, type MethodeHttp } from '@/lib/api/methode
  */
 export const POST = route(
   async ({ user, body }) => {
-    await prisma.waterLog.create({
-      data: { userId: user.id, date: body.date, amountMl: body.amountMl },
-    });
+    /*
+     * Un retrait est borne au total deja enregistre. Sans cette borne, retirer
+     * un verre a 0 ml inscrivait -250 ml : l'affichage restait a 0, mais le
+     * verre suivant ne faisait que compenser la dette et le total ne bougeait
+     * pas.
+     */
+    let amountMl = body.amountMl;
+    if (amountMl < 0) {
+      const { _sum } = await prisma.waterLog.aggregate({
+        where: { userId: user.id, date: body.date },
+        _sum: { amountMl: true },
+      });
+      amountMl = Math.max(amountMl, -Math.max(0, _sum.amountMl ?? 0));
+    }
+
+    if (amountMl !== 0) {
+      await prisma.waterLog.create({
+        data: { userId: user.id, date: body.date, amountMl },
+      });
+    }
 
     const stats = await recomputeDay(user.id, body.date);
 

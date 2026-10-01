@@ -81,13 +81,11 @@ export const PUT = route(
       update: payload,
     });
 
+    // L'XP n'est accordee qu'a la premiere ecriture du jour, avant le recalcul
+    // pour que l'XP du jour en tienne compte.
+    if (!existing) await awardXp(user.id, 10, 'Entree de journal', 'journal');
     await recomputeDay(user.id, body.date);
-
-    // L'XP n'est accordee qu'a la premiere ecriture du jour.
-    if (!existing) {
-      await awardXp(user.id, 10, 'Entree de journal', 'journal');
-      await evaluateBadges(user.id);
-    }
+    if (!existing) await evaluateBadges(user.id);
 
     return ok({ ...entry, tags: parseStringArray(entry.tags), media: parseJson<Media[]>(entry.media, []) });
   },

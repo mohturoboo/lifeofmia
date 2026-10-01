@@ -29,10 +29,12 @@ export const PATCH = route(
     if (parentId !== undefined) data.parentId = parentId;
 
     const becameDone = body.status === 'done' && existing.status !== 'done';
+    const becameUndone = body.status !== undefined && body.status !== 'done' && existing.status === 'done';
     if (becameDone) {
       data.completedAt = new Date();
       data.progress = 100;
     }
+    if (becameUndone) data.completedAt = null;
 
     const goal = await prisma.goal.update({
       where: { id: params.id },
@@ -45,6 +47,10 @@ export const PATCH = route(
       // que l'application cherche a encourager.
       await awardXp(user.id, 200, `Objectif atteint : ${existing.title}`, 'goal');
       await evaluateBadges(user.id);
+    } else if (becameUndone) {
+      // Retrait symetrique, comme pour les taches : sans lui, rouvrir puis
+      // reclore un objectif rapportait 200 XP a chaque fois.
+      await awardXp(user.id, -200, `Annulation : ${existing.title}`, 'goal');
     }
 
     return ok(goal);

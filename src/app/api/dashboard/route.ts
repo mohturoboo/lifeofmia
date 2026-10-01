@@ -72,11 +72,6 @@ export const GET = route(async ({ user }) => {
   const localTime = formatTimeIn(user.timezone, user.timeFormat as '12h' | '24h', now);
   const nextPrayer = prayerTimes ? currentAndNext(prayerTimes.times, formatTimeIn(user.timezone, '24h', now)) : null;
 
-  const userStreak = await prisma.user.findUniqueOrThrow({
-    where: { id: user.id },
-    select: { lastActiveDate: true },
-  });
-
   // Derniere pesee connue, meme si elle date de plusieurs jours.
   const lastWeight = await prisma.weightEntry.findFirst({
     where: { userId: user.id },
@@ -96,10 +91,7 @@ export const GET = route(async ({ user }) => {
       mainGoal: user.mainGoal,
       // Serie recalculee a la lecture : une serie rompue ne doit pas rester
       // affichee tant que l'utilisateur n'a rien valide.
-      currentStreak: effectiveStreak(
-        { currentStreak: user.currentStreak, lastActiveDate: userStreak.lastActiveDate },
-        user.timezone,
-      ),
+      currentStreak: effectiveStreak(user, user.timezone),
       longestStreak: user.longestStreak,
     },
     progress: levelProgress(user.xp),
