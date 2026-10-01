@@ -423,8 +423,11 @@ const EXECUTORS: Record<string, Executor> = {
       notes: input.notes ?? null,
     });
 
+    // `saveAsTemplate` est une intention de formulaire, pas une colonne :
+    // le transmettre a Prisma faisait echouer chaque creation de repas.
+    const { saveAsTemplate: _saveAsTemplate, ...valeurs } = parsed;
     const meal = await prisma.meal.create({
-      data: { userId: user.id, ...parsed, aiGenerated: true },
+      data: { userId: user.id, ...valeurs, aiGenerated: true },
     });
     if (!parsed.isTemplate) await recomputeDay(user.id, date);
 
@@ -560,7 +563,9 @@ export async function executeTool(
   name: string,
   input: Record<string, unknown>,
 ): Promise<ToolResult> {
-  const executor = EXECUTORS[name];
+  // `Object.hasOwn` : un nom comme « constructor » ne doit pas resoudre une
+  // methode heritee d'Object.prototype.
+  const executor = Object.hasOwn(EXECUTORS, name) ? EXECUTORS[name] : undefined;
   if (!executor) return { ok: false, summary: `Outil inconnu : ${name}` };
 
   try {

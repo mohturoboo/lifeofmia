@@ -10,6 +10,7 @@ import { useToast } from '@/components/ui/toast';
 import { PageHeader } from '@/components/page-header';
 import { useI18n } from '@/i18n/provider';
 import { FIN_AVANT_DEBUT } from '@/lib/validation/common';
+import { toDateKey } from '@/lib/date';
 
 interface CalendarEvent {
   id: string;
@@ -53,7 +54,7 @@ export default function CalendarPage() {
   const [form, setForm] = useState({
     title: '',
     description: '',
-    date: new Date().toISOString().slice(0, 10),
+    date: toDateKey(new Date()),
     startTime: '09:00',
     endTime: '10:00',
     location: '',
@@ -80,7 +81,9 @@ export default function CalendarPage() {
       const day = new Date(start);
       day.setDate(start.getDate() + index);
       return {
-        key: day.toISOString().slice(0, 10),
+        // Cle locale : `toISOString()` sur un minuit local renvoie la veille
+        // a l'est de Greenwich, et toute la grille glissait d'un jour.
+        key: toDateKey(day),
         day: day.getDate(),
         inMonth: day.getMonth() === cursor.getMonth(),
         isToday: day.toDateString() === new Date().toDateString(),
@@ -97,7 +100,7 @@ export default function CalendarPage() {
     };
 
     for (const event of data?.events ?? []) {
-      push(event.startAt.slice(0, 10), { id: event.id, title: event.title, color: event.color, type: 'event' });
+      push(toDateKey(new Date(event.startAt)), { id: event.id, title: event.title, color: event.color, type: 'event' });
     }
     for (const task of data?.tasks ?? []) {
       push(task.dueDate.slice(0, 10), {
@@ -132,8 +135,10 @@ export default function CalendarPage() {
     const saved = await mutate(() => api.post('/api/events', {
         title: form.title,
         description: form.description || null,
-        startAt: `${form.date}T${form.startTime}:00`,
-        endAt: `${form.date}T${form.endTime}:00`,
+        // Converties ici, dans le fuseau du navigateur : une heure sans decalage
+        // etait interpretee dans celui du serveur, et 9 h a Paris devenait 11 h.
+        startAt: new Date(`${form.date}T${form.startTime}:00`).toISOString(),
+        endAt: new Date(`${form.date}T${form.endTime}:00`).toISOString(),
         location: form.location || null,
         color: form.color,
         allDay: false,

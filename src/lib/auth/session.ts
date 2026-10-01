@@ -6,8 +6,6 @@ import { env } from '@/lib/env';
 import { signAccessToken, verifyAccessToken } from '@/lib/auth/jwt';
 import { SESSION_COOKIE } from '@/lib/auth/constants';
 
-export { SESSION_COOKIE };
-
 /** Utilisateur authentifie tel qu'expose au reste de l'application. */
 export type SessionUser = Pick<
   User,
@@ -31,6 +29,9 @@ export type SessionUser = Pick<
   | 'level'
   | 'currentStreak'
   | 'longestStreak'
+  // Necessaire a `effectiveStreak` : la serie stockee ne se remet a zero qu'a
+  // la prochaine ecriture.
+  | 'lastActiveDate'
   | 'twoFactorEnabled'
   | 'heightCm'
   | 'birthDate'
@@ -61,6 +62,7 @@ const SESSION_USER_SELECT = {
   level: true,
   currentStreak: true,
   longestStreak: true,
+  lastActiveDate: true,
   twoFactorEnabled: true,
   heightCm: true,
   birthDate: true,
@@ -158,17 +160,6 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
     where: { id: payload.sub, deletedAt: null },
     select: SESSION_USER_SELECT,
   });
-  return user;
-}
-
-/** Variante levant une erreur — utilisee par les route handlers proteges. */
-export async function requireUser(): Promise<SessionUser> {
-  const user = await getCurrentUser();
-  if (!user) {
-    const error = new Error('UNAUTHORIZED');
-    error.name = 'UnauthorizedError';
-    throw error;
-  }
   return user;
 }
 

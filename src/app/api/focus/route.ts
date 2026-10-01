@@ -32,8 +32,9 @@ export const POST = route(
       },
     });
 
-    await recomputeDay(user.id, body.date);
+    // XP d'abord : le recalcul du jour doit l'inclure.
     await awardXp(user.id, Math.min(40, Math.floor(body.minutes / 5)), 'Session de concentration', 'task');
+    await recomputeDay(user.id, body.date);
 
     return created(session);
   },

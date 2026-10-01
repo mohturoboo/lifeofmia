@@ -1,4 +1,5 @@
 import { headers } from 'next/headers';
+import { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 import { clientIp, publicRoute } from '@/lib/api/handler';
 import { created, fail } from '@/lib/api/response';
@@ -107,7 +108,17 @@ export const POST = publicRoute(
         emailVerified: new Date(),
         consentAt: new Date(),
       },
+    }).catch((error: unknown) => {
+      // Deux inscriptions simultanees passent toutes deux la verification
+      // ci-dessus : la contrainte d'unicite tranche, et la seconde recevait 500.
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') return null;
+      throw error;
     });
+    if (!user) {
+      return fail('CONFLICT', 'Un compte existe deja avec cette adresse.', {
+        email: 'Cette adresse est deja utilisee.',
+      });
+    }
 
     await seedUserWorkspace(user.id, body.city, body.mainGoal);
     await createSession(user);

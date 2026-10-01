@@ -67,21 +67,16 @@ function optional(name: string, fallback = ''): string {
 let authSecretCache: string | null = null;
 
 export const env = {
-  nodeEnv: optional('NODE_ENV', 'development'),
   isProduction: process.env.NODE_ENV === 'production',
-  isTest: process.env.NODE_ENV === 'test',
 
   appUrl: optional('NEXT_PUBLIC_APP_URL', 'http://localhost:3000'),
-  databaseUrl: optional('DATABASE_URL', 'file:./dev.db'),
 
   /** Lu a la demande, jamais a l'import : voir `required()`. */
   get authSecret(): string {
     authSecretCache ??= required('AUTH_SECRET', INSECURE_PLACEHOLDER);
     return authSecretCache;
   },
-  accessTokenTtl: optional('ACCESS_TOKEN_TTL', '15m'),
   refreshTokenTtlDays: Number(optional('REFRESH_TOKEN_TTL_DAYS', '30')),
-  encryptionKey: optional('ENCRYPTION_KEY'),
 
   anthropicApiKey: optional('ANTHROPIC_API_KEY'),
   aiModel: optional('AI_MODEL', 'claude-sonnet-5'),
@@ -95,8 +90,6 @@ export const env = {
   openWeatherApiKey: optional('OPENWEATHER_API_KEY'),
   aladhanApiUrl: optional('ALADHAN_API_URL', 'https://api.aladhan.com/v1'),
   nominatimUrl: optional('NOMINATIM_URL', 'https://nominatim.openstreetmap.org'),
-
-  storageDriver: optional('STORAGE_DRIVER', 'local'),
 } as const;
 
 /** L'agent IA n'est actif que si une cle API est fournie. */

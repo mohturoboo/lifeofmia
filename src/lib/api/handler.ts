@@ -114,9 +114,6 @@ function toResponse(error: unknown): NextResponse {
   if (error instanceof ApiError) {
     return fail(error.code, error.message, error.fields);
   }
-  if (error instanceof Error && error.name === 'UnauthorizedError') {
-    return fail('UNAUTHORIZED', 'Authentification requise.');
-  }
   console.error('[api] erreur non geree', error);
   return fail('SERVER_ERROR', 'Une erreur interne est survenue.');
 }

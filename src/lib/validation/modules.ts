@@ -112,11 +112,6 @@ export const goalCreateSchema = z.object({
 
 export const goalUpdateSchema = updatableFrom(goalCreateSchema).omit({ steps: true });
 
-export const goalStepSchema = z.object({
-  title: z.string().trim().min(1).max(160).optional(),
-  done: z.boolean().optional(),
-});
-
 // --- Nutrition ---------------------------------------------------------------
 
 export const mealCreateSchema = z.object({
@@ -353,9 +348,3 @@ export const calendarEventSchema = calendarEventFields.superRefine((valeur, ctx)
 });
 
 export const calendarEventUpdateSchema = updatableFrom(calendarEventFields);
-
-export type HabitCreateInput = z.infer<typeof habitCreateSchema>;
-export type TaskCreateInput = z.infer<typeof taskCreateSchema>;
-export type GoalCreateInput = z.infer<typeof goalCreateSchema>;
-export type MealCreateInput = z.infer<typeof mealCreateSchema>;
-export type WorkoutCreateInput = z.infer<typeof workoutCreateSchema>;

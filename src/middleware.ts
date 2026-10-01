@@ -7,7 +7,7 @@ import { SESSION_COOKIE } from '@/lib/auth/constants';
  *
  * Il ne fait qu'une chose : verifier la signature du jeton de session pour
  * decider d'une redirection. La revocation cote base est verifiee plus loin,
- * dans `requireUser()` — le middleware ne peut pas interroger la base depuis le
+ * dans `getCurrentUser()` — le middleware ne peut pas interroger la base depuis le
  * runtime Edge, et n'a pas besoin de le faire pour un simple aiguillage.
  */
 

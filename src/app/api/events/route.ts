@@ -1,8 +1,8 @@
 import { prisma } from '@/lib/prisma';
 import { route } from '@/lib/api/handler';
-import { created, ok } from '@/lib/api/response';
+import { ApiError, created, ok } from '@/lib/api/response';
 import { calendarEventSchema } from '@/lib/validation/modules';
-import { assertIntervalle } from '@/lib/api/intervalles';
+import { assertIntervalle, DATE_INVALIDE } from '@/lib/api/intervalles';
 import { methodeRefusee, optionsPour, type MethodeHttp } from '@/lib/api/methodes';
 
 /**
@@ -16,6 +16,10 @@ export const GET = route(async ({ user, searchParams }) => {
   const now = new Date();
   const from = new Date(searchParams.get('from') ?? new Date(now.getFullYear(), now.getMonth() - 1, 1));
   const to = new Date(searchParams.get('to') ?? new Date(now.getFullYear(), now.getMonth() + 2, 0));
+
+  // Une borne illisible etait transmise telle quelle a Prisma, qui repondait 500.
+  if (Number.isNaN(from.getTime())) throw new ApiError('VALIDATION', DATE_INVALIDE, { from: DATE_INVALIDE });
+  if (Number.isNaN(to.getTime())) throw new ApiError('VALIDATION', DATE_INVALIDE, { to: DATE_INVALIDE });
 
   const [events, tasks] = await Promise.all([
     prisma.calendarEvent.findMany({
