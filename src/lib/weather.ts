@@ -22,7 +22,7 @@ export interface Weather {
 
 /** Codes WMO d'Open-Meteo vers nos identifiants d'icone. */
 function iconFromWmo(code: number): { icon: string; condition: string } {
-  if (code === 0) return { icon: 'clear', condition: 'Ciel degage' };
+  if (code === 0) return { icon: 'clear', condition: 'Ciel dégagé' };
   if (code <= 2) return { icon: 'partly', condition: 'Partiellement nuageux' };
   if (code === 3) return { icon: 'cloudy', condition: 'Couvert' };
   if (code <= 48) return { icon: 'fog', condition: 'Brouillard' };

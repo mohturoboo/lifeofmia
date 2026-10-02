@@ -8,7 +8,7 @@ import { Badge, Button, Card, CardHeader, EmptyState, Progress, Skeleton, cx } f
 import { Icon, type IconName } from '@/components/ui/icons';
 import { BarChart, RingProgress, Sparkline } from '@/components/charts';
 import { useI18n } from '@/i18n/provider';
-import { formatFullDate } from '@/i18n';
+import { formatFullDate, type DictionaryKey } from '@/i18n';
 import type { DayStats } from '@/lib/stats';
 import type { LevelProgress } from '@/lib/levels';
 
@@ -81,6 +81,17 @@ const WEATHER_ICONS: Record<string, IconName> = {
   storm: 'zap',
   fog: 'cloud',
   unavailable: 'cloud',
+};
+
+const WEATHER_KEYS: Record<string, DictionaryKey> = {
+  clear: 'weather.clear',
+  partly: 'weather.partly',
+  cloudy: 'weather.cloudy',
+  rain: 'weather.rain',
+  drizzle: 'weather.drizzle',
+  snow: 'weather.snow',
+  storm: 'weather.storm',
+  fog: 'weather.fog',
 };
 
 export default function DashboardPage() {
@@ -242,7 +253,10 @@ export default function DashboardPage() {
               <span className="text-brand-300/50">◆</span>
               <span className="inline-flex items-center gap-1.5 normal-case tracking-normal">
                 <Icon name={WEATHER_ICONS[data.weather.icon] ?? 'cloud'} size={13} />
-                {data.weather.temperature}° {data.weather.condition}
+                {/* Libelle traduit d'apres l'icone : `condition` vient du fournisseur, en francais. */}
+                {data.weather.icon === 'unavailable'
+                  ? t('weather.unavailable')
+                  : `${data.weather.temperature}° ${WEATHER_KEYS[data.weather.icon] ? t(WEATHER_KEYS[data.weather.icon]) : data.weather.condition}`}
               </span>
             </>
           )}

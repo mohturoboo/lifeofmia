@@ -10,6 +10,7 @@ import { Modal } from '@/components/ui/modal';
 import { useToast } from '@/components/ui/toast';
 import { PageHeader } from '@/components/page-header';
 import { useI18n } from '@/i18n/provider';
+import type { DictionaryKey } from '@/i18n';
 import { GOAL_CATEGORIES } from '@/lib/validation/modules';
 
 interface GoalStep {
@@ -53,8 +54,20 @@ const EMPTY_FORM = {
   steps: [''],
 };
 
+const CATEGORY_KEYS: Record<(typeof GOAL_CATEGORIES)[number], DictionaryKey> = {
+  health: 'goals.categoryHealth',
+  career: 'goals.categoryCareer',
+  finance: 'goals.categoryFinance',
+  spiritual: 'goals.categorySpiritual',
+  learning: 'goals.categoryLearning',
+  personal: 'goals.categoryPersonal',
+};
+
 export default function GoalsPage() {
   const { t } = useI18n();
+  // Une categorie inconnue (ancienne donnee) reste affichee telle quelle.
+  const categoryLabel = (category: string) =>
+    category in CATEGORY_KEYS ? t(CATEGORY_KEYS[category as keyof typeof CATEGORY_KEYS]) : category;
   const toast = useToast();
   const { run: mutate, fields: erreurs, clearField } = useMutate();
   // Ouvrir un formulaire de creation ne demande aucune donnee.
@@ -243,7 +256,7 @@ export default function GoalsPage() {
                               )}
 
                               <div className="mt-2 flex flex-wrap items-center gap-1.5">
-                                <Badge color={goal.color}>{goal.category}</Badge>
+                                <Badge color={goal.color}>{categoryLabel(goal.category)}</Badge>
                                 {goal.targetValue !== null && (
                                   <Badge color="#b4b4b4">
                                     {goal.currentValue ?? 0} / {goal.targetValue} {goal.unit}
@@ -384,7 +397,7 @@ export default function GoalsPage() {
               <Select id="goal-category" value={form.category} onChange={(event) => set('category', event.target.value)}>
                 {GOAL_CATEGORIES.map((category) => (
                   <option key={category} value={category}>
-                    {category}
+                    {categoryLabel(category)}
                   </option>
                 ))}
               </Select>
