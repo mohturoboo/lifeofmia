@@ -45,7 +45,6 @@ services:
       # OBLIGATOIRE en production : definissez AUTH_SECRET dans un fichier .env
       # a cote de ce docker-compose.yml.
       AUTH_SECRET: ${AUTH_SECRET:?AUTH_SECRET est requis}
-      ACCESS_TOKEN_TTL: ${ACCESS_TOKEN_TTL:-15m}
       REFRESH_TOKEN_TTL_DAYS: ${REFRESH_TOKEN_TTL_DAYS:-30}
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
       AI_MODEL: ${AI_MODEL:-claude-sonnet-5}
@@ -57,10 +56,6 @@ services:
       EMAIL_FROM: ${EMAIL_FROM:-LifeofM <no-reply@lifeofm.app>}
     ports:
       - '3000:3000'
-    volumes:
-      # Fichiers televerses, conserves entre deux redemarrages.
-      - uploads:/app/public/uploads
 
 volumes:
   postgres-data:
-  uploads:
