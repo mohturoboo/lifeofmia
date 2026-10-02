@@ -466,6 +466,18 @@
     color: transparent;
   }
 
+  /*
+   * Texte teinte par une couleur de module (variable --tint). Le pastel n'est
+   * lisible que sur fond sombre : en clair il est fonce vers l'encre du theme.
+   */
+  .lm-tint {
+    color: color-mix(in srgb, var(--tint) 45%, var(--text));
+  }
+
+  .dark .lm-tint {
+    color: var(--tint);
+  }
+
   .lm-gradient-bg {
     background: var(--pink);
     color: var(--on-pink);

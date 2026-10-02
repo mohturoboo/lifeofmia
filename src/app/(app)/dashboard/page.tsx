@@ -461,14 +461,27 @@ export default function DashboardPage() {
                     <span
                       className={cx(
                         'flex items-center gap-2',
-                        isNext ? 'font-medium text-[#dcc7ea]' : 'text-[var(--text-muted)]',
+                        isNext
+                          ? 'font-medium text-[color-mix(in_srgb,#dcc7ea_45%,var(--text))] dark:text-[#dcc7ea]'
+                          : 'text-[var(--text-muted)]',
                       )}
                     >
-                      {logged?.status === 'done' && <Icon name="check" size={13} className="text-[#f6d9e4]" />}
+                      {logged?.status === 'done' && (
+                        <Icon
+                          name="check"
+                          size={13}
+                          className="text-[color-mix(in_srgb,#f6d9e4_45%,var(--text))] dark:text-[#f6d9e4]"
+                        />
+                      )}
                       {t(`prayers.${name.toLowerCase()}` as 'prayers.fajr')}
                     </span>
                     <span
-                      className={cx('tabular-nums', isNext ? 'font-semibold text-[#dcc7ea]' : 'text-[var(--text)]')}
+                      className={cx(
+                        'tabular-nums',
+                        isNext
+                          ? 'font-semibold text-[color-mix(in_srgb,#dcc7ea_45%,var(--text))] dark:text-[#dcc7ea]'
+                          : 'text-[var(--text)]',
+                      )}
                     >
                       {data.prayers!.times[name]}
                     </span>
@@ -510,11 +523,19 @@ export default function DashboardPage() {
             <Progress value={data.progress.percent} color="var(--color-accent-500)" label={t('dash.xp')} />
             <div className="mt-3 flex items-center justify-between text-xs text-[var(--text-faint)]">
               <span className="flex items-center gap-1.5">
-                <Icon name="flame" size={13} className="text-[#ff9fbf]" />
+                <Icon
+                  name="flame"
+                  size={13}
+                  className="text-[color-mix(in_srgb,#ff9fbf_45%,var(--text))] dark:text-[#ff9fbf]"
+                />
                 {t('common.dayCount', { count: data.user.currentStreak })}
               </span>
               <span className="flex items-center gap-1.5">
-                <Icon name="award" size={13} className="text-[#ff9fbf]" />
+                <Icon
+                  name="award"
+                  size={13}
+                  className="text-[color-mix(in_srgb,#ff9fbf_45%,var(--text))] dark:text-[#ff9fbf]"
+                />
                 {t('dash.badgeCount', { count: data.badgeCount })}
               </span>
             </div>

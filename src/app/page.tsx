@@ -212,7 +212,7 @@ export default async function LandingPage() {
           <div data-reveal className="lm-card relative overflow-hidden p-8 text-center sm:p-14">
             <div className="lm-aura opacity-70" aria-hidden="true" />
             <div className="relative">
-              <span className="mx-auto grid size-12 place-items-center rounded-2xl bg-[#f6d9e4]/12 text-[#f6d9e4]">
+              <span className="mx-auto grid size-12 place-items-center rounded-2xl bg-[#f6d9e4]/12 text-[color-mix(in_srgb,#f6d9e4_45%,var(--text))] dark:text-[#f6d9e4]">
                 <Icon name="shield" size={23} />
               </span>
               <h2 className="font-display mt-5 text-2xl font-semibold text-[var(--text)] sm:text-3xl">

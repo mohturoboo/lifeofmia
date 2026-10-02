@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, type CSSProperties } from 'react';
 import { api, useResource } from '@/lib/client/api';
 import { useMutate } from '@/lib/client/mutate';
 import {
@@ -200,7 +200,7 @@ export default function FinancePage() {
             >
               <Icon name={tile.icon} size={16} />
             </span>
-            <p className="mt-2.5 text-xl font-semibold" style={{ color: tile.color }}>
+            <p className="lm-tint mt-2.5 text-xl font-semibold" style={{ '--tint': tile.color } as CSSProperties}>
               {money(tile.value)}
             </p>
             <p className="text-[11px] text-[var(--text-faint)]">{tile.label}</p>
@@ -234,7 +234,9 @@ export default function FinancePage() {
                   <span
                     className={cx(
                       'grid size-8 shrink-0 place-items-center rounded-lg',
-                      transaction.type === 'income' ? 'bg-[#f6d9e4]/12 text-[#f6d9e4]' : 'bg-red-500/12 text-red-500',
+                      transaction.type === 'income'
+                        ? 'bg-[#f6d9e4]/12 text-[color-mix(in_srgb,#f6d9e4_45%,var(--text))] dark:text-[#f6d9e4]'
+                        : 'bg-red-500/12 text-red-500',
                     )}
                   >
                     <Icon name={transaction.type === 'income' ? 'arrowUp' : 'arrowDown'} size={14} />
@@ -257,7 +259,9 @@ export default function FinancePage() {
                   <span
                     className={cx(
                       'shrink-0 text-sm font-medium tabular-nums',
-                      transaction.type === 'income' ? 'text-[#f6d9e4]' : 'text-[var(--text)]',
+                      transaction.type === 'income'
+                        ? 'text-[color-mix(in_srgb,#f6d9e4_45%,var(--text))] dark:text-[#f6d9e4]'
+                        : 'text-[var(--text)]',
                     )}
                   >
                     {transaction.type === 'income' ? '+' : '−'}
@@ -323,7 +327,7 @@ export default function FinancePage() {
                   'rounded-xl border py-3 text-sm transition-colors',
                   form.type === type
                     ? type === 'income'
-                      ? 'border-[#f6d9e4]/40 bg-[#f6d9e4]/8 text-[#f6d9e4]'
+                      ? 'border-[#f6d9e4]/40 bg-[#f6d9e4]/8 text-[color-mix(in_srgb,#f6d9e4_45%,var(--text))] dark:text-[#f6d9e4]'
                       : 'border-red-500/40 bg-red-500/8 text-red-500'
                     : 'border-[var(--border)] text-[var(--text-muted)]',
                 )}

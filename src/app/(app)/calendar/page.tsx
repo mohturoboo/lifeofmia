@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState, type CSSProperties } from 'react';
 import { api, useResource } from '@/lib/client/api';
 import { useMutate } from '@/lib/client/mutate';
 import { Button, Card, cx, Field, IconButton, Input, Skeleton, Textarea } from '@/components/ui/primitives';
@@ -224,7 +224,6 @@ export default function CalendarPage() {
                   onClick={() => setSelected(cell.key === selected ? null : cell.key)}
                   className={cx(
                     'min-h-24 border-b border-e border-[var(--border)] p-1.5 text-start align-top transition-colors',
-                    !cell.inMonth && 'opacity-35',
                     selected === cell.key && 'bg-[var(--surface-2)]',
                     'hover:bg-[var(--surface-2)]',
                   )}
@@ -232,7 +231,11 @@ export default function CalendarPage() {
                   <span
                     className={cx(
                       'inline-grid size-6 place-items-center rounded-full text-[12px]',
-                      cell.isToday ? 'lm-gradient-bg font-semibold' : 'text-[var(--text-muted)]',
+                      cell.isToday
+                        ? 'lm-gradient-bg font-semibold'
+                        : cell.inMonth
+                          ? 'text-[var(--text-muted)]'
+                          : 'text-[var(--text-faint)]',
                     )}
                   >
                     {cell.day}
@@ -242,8 +245,8 @@ export default function CalendarPage() {
                     {items.slice(0, 3).map((item) => (
                       <div
                         key={`${item.type}-${item.id}`}
-                        className="truncate rounded px-1 py-0.5 text-[11px] leading-tight"
-                        style={{ background: `${item.color}22`, color: item.color }}
+                        className="lm-tint truncate rounded px-1 py-0.5 text-[11px] leading-tight"
+                        style={{ background: `${item.color}22`, '--tint': item.color } as CSSProperties}
                       >
                         {item.title}
                       </div>
@@ -302,7 +305,7 @@ export default function CalendarPage() {
 
       <Card className="mt-4">
         <div className="flex items-start gap-3">
-          <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-[#d9c7f0]/12 text-[#d9c7f0]">
+          <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-[#d9c7f0]/12 text-[color-mix(in_srgb,#d9c7f0_45%,var(--text))] dark:text-[#d9c7f0]">
             <Icon name="globe" size={17} />
           </span>
           <div>

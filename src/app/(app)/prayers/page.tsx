@@ -78,7 +78,7 @@ export default function PrayersPage() {
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
               <p className="text-xs text-[var(--text-faint)]">{t('dash.nextPrayer')}</p>
-              <p className="mt-0.5 text-2xl font-semibold text-[#dcc7ea]">
+              <p className="mt-0.5 text-2xl font-semibold text-[color-mix(in_srgb,#dcc7ea_45%,var(--text))] dark:text-[#dcc7ea]">
                 {t(`prayers.${data.next.toLowerCase()}` as 'prayers.fajr')}
                 <span className="ms-2 text-base font-normal text-[var(--text-muted)]">{data.times[data.next]}</span>
               </p>
@@ -133,7 +133,14 @@ export default function PrayersPage() {
                   </span>
 
                   <div className="min-w-0 flex-1">
-                    <p className={cx('text-sm', isNext ? 'font-medium text-[#dcc7ea]' : 'text-[var(--text)]')}>
+                    <p
+                      className={cx(
+                        'text-sm',
+                        isNext
+                          ? 'font-medium text-[color-mix(in_srgb,#dcc7ea_45%,var(--text))] dark:text-[#dcc7ea]'
+                          : 'text-[var(--text)]',
+                      )}
+                    >
                       {t(`prayers.${name.toLowerCase()}` as 'prayers.fajr')}
                     </p>
                     {!isObligatory && <p className="text-[11px] text-[var(--text-faint)]">{t('dash.sunrise')}</p>}

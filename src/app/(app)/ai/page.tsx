@@ -117,7 +117,7 @@ export default function AiPage() {
         <PageHeader title={t('ai.title')} subtitle={t('ai.subtitle')} icon="sparkles" color="#fbc7da" />
         <Card>
           <div className="flex flex-col items-center gap-3 py-10 text-center">
-            <span className="grid size-14 place-items-center rounded-2xl bg-[#ff9fbf]/12 text-[#ff9fbf]">
+            <span className="grid size-14 place-items-center rounded-2xl bg-[#ff9fbf]/12 text-[color-mix(in_srgb,#ff9fbf_45%,var(--text))] dark:text-[#ff9fbf]">
               <Icon name="lock" size={24} />
             </span>
             {/*
@@ -228,7 +228,11 @@ export default function AiPage() {
                               <Icon
                                 name={action.ok ? 'checkCircle' : 'close'}
                                 size={12}
-                                className={action.ok ? 'text-[#f6d9e4]' : 'text-red-500'}
+                                className={
+                                  action.ok
+                                    ? 'text-[color-mix(in_srgb,#f6d9e4_45%,var(--text))] dark:text-[#f6d9e4]'
+                                    : 'text-red-500'
+                                }
                               />
                               <span className="text-[var(--text-muted)]">{action.summary}</span>
                             </div>

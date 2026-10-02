@@ -290,7 +290,11 @@ export default function HabitsPage() {
 
                       <div className="mt-2.5 flex items-center justify-between text-[11px] text-[var(--text-faint)]">
                         <span className="flex items-center gap-1">
-                          <Icon name="flame" size={12} className="text-[#ff9fbf]" />
+                          <Icon
+                            name="flame"
+                            size={12}
+                            className="text-[color-mix(in_srgb,#ff9fbf_45%,var(--text))] dark:text-[#ff9fbf]"
+                          />
                           {t('habits.streakCount', { count: habit.streak })}
                         </span>
                         <span>

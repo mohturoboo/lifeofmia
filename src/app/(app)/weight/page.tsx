@@ -197,7 +197,9 @@ export default function WeightPage() {
             {data.latest ? formatWeight(data.latest.weightKg, locale) : '—'}
           </p>
           {totalDelta !== null && (
-            <p className={`mt-0.5 text-[11px] ${totalDelta < 0 ? 'text-[#f6d9e4]' : 'text-[#ff9fbf]'}`}>
+            <p
+              className={`mt-0.5 text-[11px] ${totalDelta < 0 ? 'text-[color-mix(in_srgb,#f6d9e4_45%,var(--text))] dark:text-[#f6d9e4]' : 'text-[color-mix(in_srgb,#ff9fbf_45%,var(--text))] dark:text-[#ff9fbf]'}`}
+            >
               {formatWeightDelta(totalDelta, locale)} {t('weight.sinceStart').toLowerCase()}
             </p>
           )}
@@ -279,7 +281,7 @@ export default function WeightPage() {
 
                   {delta !== null && delta !== 0 && (
                     <span
-                      className={`flex items-center gap-0.5 text-[11px] ${delta < 0 ? 'text-[#f6d9e4]' : 'text-[#ff9fbf]'}`}
+                      className={`flex items-center gap-0.5 text-[11px] ${delta < 0 ? 'text-[color-mix(in_srgb,#f6d9e4_45%,var(--text))] dark:text-[#f6d9e4]' : 'text-[color-mix(in_srgb,#ff9fbf_45%,var(--text))] dark:text-[#ff9fbf]'}`}
                     >
                       <Icon name={delta < 0 ? 'arrowDown' : 'arrowUp'} size={11} />
                       {formatWeight(Math.abs(delta), locale)}

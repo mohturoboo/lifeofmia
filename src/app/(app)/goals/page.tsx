@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, type CSSProperties } from 'react';
 import { api, useResource } from '@/lib/client/api';
 import { useHydrated } from '@/lib/client/hydrated';
 import { useMutate } from '@/lib/client/mutate';
@@ -295,7 +295,10 @@ export default function GoalsPage() {
                             </div>
 
                             <div className="flex shrink-0 items-center gap-2">
-                              <span className="text-lg font-semibold" style={{ color: goal.color }}>
+                              <span
+                                className="lm-tint text-lg font-semibold"
+                                style={{ '--tint': goal.color } as CSSProperties}
+                              >
                                 {goal.progress}%
                               </span>
                               <div className="flex gap-0.5">

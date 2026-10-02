@@ -50,7 +50,7 @@ function ResetForm() {
   if (done) {
     return (
       <div className="text-center">
-        <span className="mx-auto grid size-14 place-items-center rounded-2xl bg-[#f6d9e4]/12 text-[#f6d9e4]">
+        <span className="mx-auto grid size-14 place-items-center rounded-2xl bg-[#f6d9e4]/12 text-[color-mix(in_srgb,#f6d9e4_45%,var(--text))] dark:text-[#f6d9e4]">
           <Icon name="checkCircle" size={24} />
         </span>
         <h1 className="mt-5 text-xl font-semibold text-[var(--text)]">{t('common.success')}</h1>
