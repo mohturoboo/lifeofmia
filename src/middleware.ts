@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { verifyAccessToken } from '@/lib/auth/jwt';
 import { SESSION_COOKIE } from '@/lib/auth/constants';
+import { GUEST_ONLY_PAGES, PROTECTED_PREFIXES } from '@/config/routes';
 
 /**
  * Middleware de routage (runtime Edge).
@@ -11,36 +12,13 @@ import { SESSION_COOKIE } from '@/lib/auth/constants';
  * runtime Edge, et n'a pas besoin de le faire pour un simple aiguillage.
  */
 
-/** Pages accessibles uniquement lorsqu'on n'est PAS connecte. */
-const GUEST_ONLY = ['/login', '/register', '/forgot-password', '/reset-password'];
-
-/** Prefixes proteges : toute autre page applicative exige une session. */
-const PROTECTED_PREFIXES = [
-  '/dashboard',
-  '/habits',
-  '/tasks',
-  '/goals',
-  '/nutrition',
-  '/weight',
-  '/sport',
-  '/journal',
-  '/prayers',
-  '/calendar',
-  '/finance',
-  '/notes',
-  '/stats',
-  '/compare',
-  '/ai',
-  '/settings',
-];
-
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const token = request.cookies.get(SESSION_COOKIE)?.value;
   const payload = token ? await verifyAccessToken(token) : null;
   const isAuthenticated = Boolean(payload);
 
-  if (isAuthenticated && GUEST_ONLY.some((path) => pathname.startsWith(path))) {
+  if (isAuthenticated && GUEST_ONLY_PAGES.some((path) => pathname.startsWith(path))) {
     return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 

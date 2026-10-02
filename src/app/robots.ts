@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { env } from '@/lib/env';
+import { INDEXABLE_PAGES, PROTECTED_PREFIXES } from '@/config/routes';
 
 /**
  * robots.txt
@@ -20,27 +21,8 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: '*',
-        allow: ['/', '/login', '/register', '/forgot-password'],
-        disallow: [
-          '/api/',
-          '/dashboard',
-          '/habits',
-          '/tasks',
-          '/goals',
-          '/nutrition',
-          '/weight',
-          '/sport',
-          '/journal',
-          '/prayers',
-          '/calendar',
-          '/finance',
-          '/notes',
-          '/stats',
-          '/compare',
-          '/ai',
-          '/settings',
-          '/reset-password',
-        ],
+        allow: INDEXABLE_PAGES.map(({ path }) => path || '/'),
+        disallow: ['/api/', ...PROTECTED_PREFIXES, '/reset-password'],
       },
     ],
     sitemap: `${env.appUrl}/sitemap.xml`,

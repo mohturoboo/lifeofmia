@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { env } from '@/lib/env';
+import { INDEXABLE_PAGES } from '@/config/routes';
 
 /**
  * sitemap.xml
@@ -13,15 +14,10 @@ import { env } from '@/lib/env';
 export default function sitemap(): MetadataRoute.Sitemap {
   const maintenant = new Date();
 
-  return [
-    { url: env.appUrl, lastModified: maintenant, changeFrequency: 'monthly', priority: 1 },
-    { url: `${env.appUrl}/login`, lastModified: maintenant, changeFrequency: 'yearly', priority: 0.5 },
-    { url: `${env.appUrl}/register`, lastModified: maintenant, changeFrequency: 'yearly', priority: 0.8 },
-    {
-      url: `${env.appUrl}/forgot-password`,
-      lastModified: maintenant,
-      changeFrequency: 'yearly',
-      priority: 0.2,
-    },
-  ];
+  return INDEXABLE_PAGES.map(({ path, changeFrequency, priority }) => ({
+    url: `${env.appUrl}${path}`,
+    lastModified: maintenant,
+    changeFrequency,
+    priority,
+  }));
 }
