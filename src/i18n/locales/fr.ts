@@ -138,7 +138,6 @@ export const fr = {
   'dash.habitsDone': 'Habitudes réalisées',
   'dash.calories': 'Calories',
   'dash.currentWeight': 'Poids actuel',
-  'dash.focusTime': 'Temps de concentration',
   'dash.tasksDone': 'Tâches terminées',
   'dash.streak': 'Série actuelle',
   'dash.disciplineScore': 'Score de discipline',

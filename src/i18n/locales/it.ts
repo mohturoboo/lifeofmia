@@ -118,7 +118,6 @@ export const it: Dictionary = {
   'dash.habitsDone': 'Abitudini completate',
   'dash.calories': 'Calorie',
   'dash.currentWeight': 'Peso attuale',
-  'dash.focusTime': 'Tempo di concentrazione',
   'dash.tasksDone': 'Attivita completate',
   'dash.streak': 'Serie attuale',
   'dash.disciplineScore': 'Punteggio di disciplina',

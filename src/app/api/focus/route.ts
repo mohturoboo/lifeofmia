@@ -10,7 +10,7 @@ import { methodeRefusee, optionsPour, type MethodeHttp } from '@/lib/api/methode
 
 /**
  * POST /api/focus — enregistre une session de concentration.
- * Alimente le compteur « temps de concentration » du tableau de bord et le
+ * Alimente les statistiques et le
  * calcul du score de discipline.
  */
 export const POST = route(

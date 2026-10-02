@@ -119,7 +119,6 @@ export const ar: Dictionary = {
   'dash.habitsDone': 'العادات المنجزة',
   'dash.calories': 'السعرات الحرارية',
   'dash.currentWeight': 'الوزن الحالي',
-  'dash.focusTime': 'وقت التركيز',
   'dash.tasksDone': 'المهام المنجزة',
   'dash.streak': 'السلسلة الحالية',
   'dash.disciplineScore': 'درجة الانضباط',

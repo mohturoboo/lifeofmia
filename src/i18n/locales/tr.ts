@@ -118,7 +118,6 @@ export const tr: Dictionary = {
   'dash.habitsDone': 'Tamamlanan aliskanliklar',
   'dash.calories': 'Kalori',
   'dash.currentWeight': 'Mevcut kilo',
-  'dash.focusTime': 'Odaklanma suresi',
   'dash.tasksDone': 'Tamamlanan gorevler',
   'dash.streak': 'Mevcut seri',
   'dash.disciplineScore': 'Disiplin puani',
