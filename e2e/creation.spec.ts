@@ -144,3 +144,26 @@ test('une priere marquee accomplie survit au rechargement', async ({ page }) => 
   await page.reload();
   await expect(compteur).toHaveText(/1\s*\/\s*5/);
 });
+
+test('une habitude a objectif multiple atteint peut etre annulee', async ({ page }) => {
+  const nom = `Multiple E2E ${Date.now().toString(36)}`;
+  const reponse = await page.request.post('/api/habits', { data: { name: nom, targetPerDay: 2 } });
+  expect(reponse.ok()).toBe(true);
+
+  await page.goto('/habits');
+  // Le bouton de validation est le premier de la carte qui porte ce titre.
+  const bouton = page
+    .getByRole('heading', { name: nom })
+    .locator('xpath=ancestor::div[contains(@class, "items-start")][last()]/button');
+
+  await bouton.click();
+  await expect(page.getByText(`1/2`).first()).toBeVisible();
+  await bouton.click();
+  await expect(bouton).toHaveAttribute('aria-pressed', 'true');
+
+  // Le bouton s'appelle alors « Annuler » : il doit annuler, pas plafonner.
+  await bouton.click();
+  await expect(bouton).toHaveAttribute('aria-pressed', 'false');
+  await page.reload();
+  await expect(bouton).toHaveAttribute('aria-pressed', 'false');
+});

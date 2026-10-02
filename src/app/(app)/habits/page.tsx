@@ -209,7 +209,9 @@ export default function HabitsPage() {
                   <div className="flex items-start gap-3">
                     <button
                       type="button"
-                      onClick={() => (multi ? increment(habit) : toggle(habit))}
+                      // Une fois l'objectif atteint, le bouton « Annuler » remet le compteur a zero :
+                      // l'incrementer restait bloque au plafond et ne faisait rien.
+                      onClick={() => (multi && !done ? increment(habit) : toggle(habit))}
                       aria-pressed={done}
                       aria-label={done ? t('habits.markUndone') : t('habits.markDone')}
                       className="grid size-11 shrink-0 place-items-center rounded-xl transition-all hover:scale-105"
