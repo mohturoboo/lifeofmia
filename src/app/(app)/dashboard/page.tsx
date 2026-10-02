@@ -10,6 +10,7 @@ import { BarChart, RingProgress, Sparkline } from '@/components/charts';
 import { useI18n } from '@/i18n/provider';
 import { formatFullDate, type DictionaryKey } from '@/i18n';
 import type { DayStats } from '@/lib/stats';
+import { formatTimeIn } from '@/lib/date';
 import type { LevelProgress } from '@/lib/levels';
 
 /**
@@ -101,7 +102,11 @@ export default function DashboardPage() {
   const { data, loading, refresh, setData } = useResource<DashboardData>('/api/dashboard');
 
   const greetingKey = useMemo(() => {
-    const hour = data ? new Date(data.localDate).getHours() : new Date().getHours();
+    // Heure du fuseau du profil, comme l'heure affichee : celle du navigateur
+    // donnait « Bonjour » a 20 h quand les deux fuseaux different.
+    const hour = data
+      ? Number(formatTimeIn(data.user.timezone, '24h', new Date(data.localDate)).slice(0, 2))
+      : new Date().getHours();
     if (hour < 12) return 'dash.greetingMorning' as const;
     if (hour < 18) return 'dash.greetingAfternoon' as const;
     return 'dash.greetingEvening' as const;
