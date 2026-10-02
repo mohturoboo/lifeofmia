@@ -26,9 +26,9 @@
     "db:reset": "prisma db push --force-reset && npm run db:seed",
     "db:reset-account": "tsx scripts/reset-account.ts",
     "db:use": "node scripts/use-db.mjs",
-    "db:fix-timezones": "tsx scripts/fix-timezones.ts",
-    "db:recompute-stats": "tsx scripts/recompute-stats.ts",
-    "db:fix-intervalles": "tsx scripts/fix-intervalles.ts",
+    "db:fix-timezones": "tsx scripts/maintenance/fix-timezones.ts",
+    "db:recompute-stats": "tsx scripts/maintenance/recompute-stats.ts",
+    "db:fix-intervalles": "tsx scripts/maintenance/fix-intervalles.ts",
     "setup": "npm install && npm run db:use sqlite && npm run db:push && npm run db:seed"
   },
   "prisma": {
@@ -64,7 +64,6 @@
     "tailwindcss": "^4.1.14",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.66.0",
     "vitest": "^3.2.4"
   }
 }
