@@ -332,7 +332,7 @@ export default function HabitsPage() {
                   key={icon}
                   type="button"
                   onClick={() => set('icon', icon)}
-                  aria-label={icon}
+                  aria-label={t(`icons.${icon}` as 'icons.target')}
                   aria-pressed={form.icon === icon}
                   className={cx(
                     'grid size-9 place-items-center rounded-lg border transition-all',
@@ -350,12 +350,12 @@ export default function HabitsPage() {
 
           <Field label={t('habits.color')}>
             <div className="flex flex-wrap gap-2">
-              {COLORS.map((color) => (
+              {COLORS.map((color, index) => (
                 <button
                   key={color}
                   type="button"
                   onClick={() => set('color', color)}
-                  aria-label={color}
+                  aria-label={t('common.colorNumber', { n: index + 1 })}
                   aria-pressed={form.color === color}
                   className={cx(
                     'size-8 rounded-lg transition-transform',

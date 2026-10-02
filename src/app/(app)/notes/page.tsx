@@ -205,12 +205,12 @@ export default function NotesPage() {
 
           <Field label={t('habits.color')}>
             <div className="flex gap-2">
-              {COLORS.map((color) => (
+              {COLORS.map((color, index) => (
                 <button
                   key={color}
                   type="button"
                   onClick={() => set('color', color)}
-                  aria-label={color}
+                  aria-label={t('common.colorNumber', { n: index + 1 })}
                   aria-pressed={form.color === color}
                   className={cx('size-8 rounded-lg transition-transform', form.color === color && 'scale-110')}
                   style={{ background: color, boxShadow: form.color === color ? `0 0 0 2px ${color}` : undefined }}
