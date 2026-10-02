@@ -128,7 +128,7 @@ export function route<TBody = unknown>(
   return async (request: NextRequest, args?: NextRouteArgs): Promise<NextResponse> => {
     try {
       if (!isSameOrigin(request)) {
-        return fail('FORBIDDEN', 'Origine de la requete non autorisee.');
+        return fail('FORBIDDEN', 'Origine de la requête non autorisée.');
       }
 
       const user = await getCurrentUser();
@@ -147,7 +147,7 @@ export function route<TBody = unknown>(
       if (limit) {
         const result = consume(`${limit.key}:${user.id}`, limit.limit, limit.windowMs);
         if (!result.allowed) {
-          return fail('RATE_LIMITED', 'Trop de requetes, reessayez dans un instant.', undefined, {
+          return fail('RATE_LIMITED', 'Trop de requêtes, réessayez dans un instant.', undefined, {
             'Retry-After': String(result.retryAfterSeconds),
           });
         }
@@ -177,7 +177,7 @@ export function publicRoute<TBody = unknown>(
   return async (request: NextRequest, args?: NextRouteArgs): Promise<NextResponse> => {
     try {
       if (!isSameOrigin(request)) {
-        return fail('FORBIDDEN', 'Origine de la requete non autorisee.');
+        return fail('FORBIDDEN', 'Origine de la requête non autorisée.');
       }
 
       if (options.rateLimit) {
@@ -189,7 +189,7 @@ export function publicRoute<TBody = unknown>(
         if (!result.allowed) {
           return fail(
             'RATE_LIMITED',
-            `Trop de tentatives. Reessayez dans ${result.retryAfterSeconds} secondes.`,
+            `Trop de tentatives. Réessayez dans ${result.retryAfterSeconds} secondes.`,
             undefined,
             { 'Retry-After': String(result.retryAfterSeconds) },
           );

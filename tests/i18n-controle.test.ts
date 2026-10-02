@@ -1,6 +1,8 @@
+import { readdirSync, readFileSync, statSync } from 'node:fs';
+import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { DICTIONARIES } from '@/i18n';
-import { controlerDictionnaires, motsDesaccentues } from '@/i18n/controle';
+import { SOURCES_FRANCAISES, controlerDictionnaires, controlerSource, motsDesaccentues } from '@/i18n/controle';
 import type { Dictionary } from '@/i18n/locales/fr';
 
 /** Les memes verifications que `npm run lint:i18n`, executees avec la suite. */
@@ -23,5 +25,14 @@ describe('controle des dictionnaires', () => {
   it('ne confond pas un mot accentue avec sa forme desaccentuee', () => {
     expect(motsDesaccentues('Été, réglages, prières, début')).toEqual([]);
     expect(motsDesaccentues('Ete, reglages, prieres')).toEqual(['Ete', 'reglages', 'prieres']);
+  });
+
+  it('ne laisse aucun message francais desaccentue dans les sources affichees', () => {
+    const fichiers = (chemin: string): string[] =>
+      statSync(chemin).isFile() ? [chemin] : readdirSync(chemin).flatMap((nom) => fichiers(join(chemin, nom)));
+    const fautes = SOURCES_FRANCAISES.flatMap(fichiers)
+      .filter((fichier) => /\.tsx?$/.test(fichier))
+      .flatMap((fichier) => controlerSource(readFileSync(fichier, 'utf8')).map(({ ligne, mots }) => `${fichier}:${ligne} ${mots}`));
+    expect(fautes).toEqual([]);
   });
 });

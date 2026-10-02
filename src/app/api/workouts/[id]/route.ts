@@ -12,11 +12,11 @@ export const PATCH = route(
       where: { id: params.id, userId: user.id },
       select: { id: true, date: true },
     });
-    if (!existing) throw new ApiError('NOT_FOUND', 'Seance introuvable.');
+    if (!existing) throw new ApiError('NOT_FOUND', 'Séance introuvable.');
 
     // Meme regle qu'a la creation : deplacer une seance ne doit pas permettre
     // de contourner la borne.
-    if (body.date) assertPasDansLeFutur(body.date, user.timezone, 'date', 'Une seance');
+    if (body.date) assertPasDansLeFutur(body.date, user.timezone, 'date', 'Une séance');
 
     const { exercises, ...fields } = body;
 
@@ -59,7 +59,7 @@ export const DELETE = route(async ({ user, params }) => {
     where: { id: params.id, userId: user.id },
     select: { id: true, date: true },
   });
-  if (!workout) throw new ApiError('NOT_FOUND', 'Seance introuvable.');
+  if (!workout) throw new ApiError('NOT_FOUND', 'Séance introuvable.');
 
   await prisma.workout.delete({ where: { id: params.id } });
   await recomputeDay(user.id, workout.date);

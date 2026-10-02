@@ -77,7 +77,7 @@ export async function refreshStreak(userId: string, timezone: string): Promise<n
 
   // Bonus de palier : recompense les series remarquables.
   if ([7, 30, 100, 365].includes(currentStreak)) {
-    await awardXp(userId, currentStreak * 2, `Serie de ${currentStreak} jours`, 'streak');
+    await awardXp(userId, currentStreak * 2, `Série de ${currentStreak} jours`, 'streak');
   }
 
   return currentStreak;
@@ -106,16 +106,16 @@ export function effectiveStreak(
 
 /** Definition des badges installes par le seed et evalues apres chaque action. */
 export const BADGE_DEFINITIONS = [
-  { code: 'first_step', name: 'Premier pas', description: 'Valider sa toute premiere habitude', icon: 'sparkles', tier: 'bronze', xpReward: 25 },
-  { code: 'week_streak', name: 'Une semaine', description: '7 jours consecutifs d\'activite', icon: 'flame', tier: 'bronze', xpReward: 50 },
-  { code: 'month_streak', name: 'Un mois de fer', description: '30 jours consecutifs d\'activite', icon: 'flame', tier: 'silver', xpReward: 200 },
-  { code: 'century_streak', name: 'Centurion', description: '100 jours consecutifs d\'activite', icon: 'crown', tier: 'gold', xpReward: 800 },
-  { code: 'year_streak', name: 'Immuable', description: '365 jours consecutifs d\'activite', icon: 'crown', tier: 'platinum', xpReward: 3000 },
-  { code: 'task_master', name: 'Executant', description: 'Terminer 100 taches', icon: 'check', tier: 'silver', xpReward: 150 },
+  { code: 'first_step', name: 'Premier pas', description: 'Valider sa toute première habitude', icon: 'sparkles', tier: 'bronze', xpReward: 25 },
+  { code: 'week_streak', name: 'Une semaine', description: '7 jours consécutifs d\'activité', icon: 'flame', tier: 'bronze', xpReward: 50 },
+  { code: 'month_streak', name: 'Un mois de fer', description: '30 jours consécutifs d\'activité', icon: 'flame', tier: 'silver', xpReward: 200 },
+  { code: 'century_streak', name: 'Centurion', description: '100 jours consécutifs d\'activité', icon: 'crown', tier: 'gold', xpReward: 800 },
+  { code: 'year_streak', name: 'Immuable', description: '365 jours consécutifs d\'activité', icon: 'crown', tier: 'platinum', xpReward: 3000 },
+  { code: 'task_master', name: 'Exécutant', description: 'Terminer 100 tâches', icon: 'check', tier: 'silver', xpReward: 150 },
   { code: 'goal_achiever', name: 'Visionnaire', description: 'Atteindre 5 objectifs', icon: 'target', tier: 'gold', xpReward: 300 },
-  { code: 'iron_body', name: 'Corps d\'acier', description: 'Enregistrer 50 seances de sport', icon: 'dumbbell', tier: 'gold', xpReward: 300 },
-  { code: 'devoted', name: 'Assidu', description: '100 prieres enregistrees', icon: 'moon', tier: 'gold', xpReward: 300 },
-  { code: 'scribe', name: 'Le scribe', description: '30 entrees de journal', icon: 'book', tier: 'silver', xpReward: 150 },
+  { code: 'iron_body', name: 'Corps d\'acier', description: 'Enregistrer 50 séances de sport', icon: 'dumbbell', tier: 'gold', xpReward: 300 },
+  { code: 'devoted', name: 'Assidu', description: '100 prières enregistrées', icon: 'moon', tier: 'gold', xpReward: 300 },
+  { code: 'scribe', name: 'Le scribe', description: '30 entrées de journal', icon: 'book', tier: 'silver', xpReward: 150 },
   { code: 'level_10', name: 'Niveau 10', description: 'Atteindre le niveau 10', icon: 'award', tier: 'silver', xpReward: 100 },
   { code: 'level_25', name: 'Niveau 25', description: 'Atteindre le niveau 25', icon: 'award', tier: 'gold', xpReward: 400 },
   { code: 'transformation', name: 'Transformation', description: 'Perdre ou gagner 5 kg vers son objectif', icon: 'trending', tier: 'gold', xpReward: 400 },

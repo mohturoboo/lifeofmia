@@ -19,7 +19,7 @@ export const dateKeySchema = z
 
 export const hexColorSchema = z
   .string()
-  .regex(/^#[0-9a-fA-F]{6}$/, 'Couleur hexadecimale invalide');
+  .regex(/^#[0-9a-fA-F]{6}$/, 'Couleur hexadécimale invalide');
 
 export const timeSchema = z
   .string()
@@ -31,7 +31,7 @@ export const timeSchema = z
  * Ils vivent ici plutot que dans la couche API : les schemas ne doivent pas
  * dependre de `next/server`, qui n'a rien a faire dans un bundle client.
  */
-export const FIN_AVANT_DEBUT = 'La fin doit etre posterieure au debut.';
+export const FIN_AVANT_DEBUT = 'La fin doit être postérieure au début.';
 export const DATE_INVALIDE = 'Date invalide.';
 
 /**

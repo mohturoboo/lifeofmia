@@ -28,7 +28,7 @@ export const GET = route(async ({ user, searchParams }) => {
    */
   if (!SCOPES.includes(demande as Scope)) {
     throw new ApiError('VALIDATION', `Filtre inconnu : « ${demande} ».`, {
-      scope: `Valeurs acceptees : ${SCOPES.join(', ')}.`,
+      scope: `Valeurs acceptées : ${SCOPES.join(', ')}.`,
     });
   }
   const scope = demande as Scope;

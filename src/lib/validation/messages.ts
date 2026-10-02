@@ -42,23 +42,23 @@ export function messageDeValidation(issue: z.core.$ZodRawIssue): string | undefi
       if (issue.origin === 'string') {
         // `min(1)` sur une chaine, c'est « champ requis », pas une longueur.
         if (minimum <= 1) return OBLIGATOIRE;
-        return `Au moins ${minimum} ${accordePluriel(minimum, 'caractere', 'caracteres')}.`;
+        return `Au moins ${minimum} ${accordePluriel(minimum, 'caractère', 'caractères')}.`;
       }
       if (issue.origin === 'array') {
-        return `Selectionnez au moins ${minimum} ${accordePluriel(minimum, 'element', 'elements')}.`;
+        return `Sélectionnez au moins ${minimum} ${accordePluriel(minimum, 'élément', 'éléments')}.`;
       }
-      return `La valeur doit etre superieure ou egale a ${minimum}.`;
+      return `La valeur doit être supérieure ou égale à ${minimum}.`;
     }
 
     case 'too_big': {
       const maximum = Number(issue.maximum);
       if (issue.origin === 'string') {
-        return `Ce champ ne peut pas depasser ${maximum} ${accordePluriel(maximum, 'caractere', 'caracteres')}.`;
+        return `Ce champ ne peut pas dépasser ${maximum} ${accordePluriel(maximum, 'caractère', 'caractères')}.`;
       }
       if (issue.origin === 'array') {
-        return `Pas plus de ${maximum} ${accordePluriel(maximum, 'element', 'elements')}.`;
+        return `Pas plus de ${maximum} ${accordePluriel(maximum, 'élément', 'éléments')}.`;
       }
-      return `La valeur ne peut pas depasser ${maximum}.`;
+      return `La valeur ne peut pas dépasser ${maximum}.`;
     }
 
     /*
@@ -90,7 +90,7 @@ export function messageDeValidation(issue: z.core.$ZodRawIssue): string | undefi
     }
 
     case 'not_multiple_of':
-      return `La valeur doit etre un multiple de ${issue.divisor}.`;
+      return `La valeur doit être un multiple de ${issue.divisor}.`;
 
     case 'invalid_union':
       return 'Valeur invalide.';

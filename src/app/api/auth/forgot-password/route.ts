@@ -34,7 +34,7 @@ export const POST = publicRoute(
     if (bloque) {
       return fail(
         'RATE_LIMITED',
-        `Trop de demandes. Reessayez dans ${Math.ceil(bloque.retryAfterSeconds / 60)} minute(s).`,
+        `Trop de demandes. Réessayez dans ${Math.ceil(bloque.retryAfterSeconds / 60)} minute(s).`,
         undefined,
         { 'Retry-After': String(bloque.retryAfterSeconds) },
       );

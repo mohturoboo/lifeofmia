@@ -56,7 +56,7 @@ export const PATCH = route(
       where: { id: body.stepId, goalId: params.id, userId: user.id },
       select: { id: true },
     });
-    if (!step) throw new ApiError('NOT_FOUND', 'Etape introuvable.');
+    if (!step) throw new ApiError('NOT_FOUND', 'Étape introuvable.');
 
     if (body.remove) {
       await prisma.goalStep.delete({ where: { id: body.stepId } });

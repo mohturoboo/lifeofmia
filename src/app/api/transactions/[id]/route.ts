@@ -10,7 +10,7 @@ export const PATCH = route(
       where: { id: params.id, userId: user.id },
       select: { id: true },
     });
-    if (!existing) throw new ApiError('NOT_FOUND', 'Operation introuvable.');
+    if (!existing) throw new ApiError('NOT_FOUND', 'Opération introuvable.');
 
     return ok(await prisma.transaction.update({ where: { id: params.id }, data: body }));
   },
@@ -22,7 +22,7 @@ export const DELETE = route(async ({ user, params }) => {
     where: { id: params.id, userId: user.id },
     select: { id: true },
   });
-  if (!existing) throw new ApiError('NOT_FOUND', 'Operation introuvable.');
+  if (!existing) throw new ApiError('NOT_FOUND', 'Opération introuvable.');
 
   await prisma.transaction.delete({ where: { id: params.id } });
   return ok({ deleted: true });

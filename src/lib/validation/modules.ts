@@ -31,7 +31,7 @@ export const HABIT_CATEGORIES = [
 ] as const;
 
 export const habitCreateSchema = z.object({
-  name: z.string().trim().min(1, 'Nom requis.').max(80, 'Le nom ne peut pas depasser 80 caracteres.'),
+  name: z.string().trim().min(1, 'Nom requis.').max(80, 'Le nom ne peut pas dépasser 80 caractères.'),
   description: optionalText(500),
   icon: z.string().trim().max(40).default('check'),
   color: hexColorSchema.default('#e9b8d5'),
@@ -174,17 +174,17 @@ export const waterLogSchema = z
 export const weightSchema = z
   .object({
     date: dateKeySchema,
-    weightKg: z.number().min(20, 'Le poids doit etre compris entre 20 et 400 kg.').max(400, 'Le poids doit etre compris entre 20 et 400 kg.'),
+    weightKg: z.number().min(20, 'Le poids doit être compris entre 20 et 400 kg.').max(400, 'Le poids doit être compris entre 20 et 400 kg.'),
     bodyFat: z
       .number()
-      .min(0, 'Le taux de masse grasse doit etre compris entre 0 et 100 %.')
-      .max(100, 'Le taux de masse grasse doit etre compris entre 0 et 100 %.')
+      .min(0, 'Le taux de masse grasse doit être compris entre 0 et 100 %.')
+      .max(100, 'Le taux de masse grasse doit être compris entre 0 et 100 %.')
       .nullable()
       .optional(),
     muscleKg: z
       .number()
-      .min(1, 'La masse musculaire doit etre comprise entre 1 et 200 kg.')
-      .max(200, 'La masse musculaire doit etre comprise entre 1 et 200 kg.')
+      .min(1, 'La masse musculaire doit être comprise entre 1 et 200 kg.')
+      .max(200, 'La masse musculaire doit être comprise entre 1 et 200 kg.')
       .nullable()
       .optional(),
     photoUrl: z.string().max(500).nullable().optional(),
@@ -281,7 +281,7 @@ export const transactionSchema = z.object({
   date: dateKeySchema,
   type: z.enum(['income', 'expense']),
   category: z.string().trim().max(40).default('other'),
-  label: z.string().trim().min(1, 'Libelle requis.').max(120),
+  label: z.string().trim().min(1, 'Libellé requis.').max(120),
   amount: z.number().min(0).max(100_000_000),
   currency: z.string().trim().length(3).default('EUR'),
   recurring: z.boolean().default(false),

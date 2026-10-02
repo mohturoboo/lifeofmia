@@ -80,8 +80,8 @@ export const POST = route(
      */
     const today = dateKeyIn(user.timezone);
     if (body.date > today) {
-      throw new ApiError('VALIDATION', 'Une pesee ne peut pas etre datee dans le futur.', {
-        date: `La date ne peut pas depasser le ${today}.`,
+      throw new ApiError('VALIDATION', 'Une pesée ne peut pas être datée dans le futur.', {
+        date: `La date ne peut pas dépasser le ${today}.`,
       });
     }
 
@@ -115,7 +115,7 @@ export const POST = route(
      * la remplace, et rapportait jusqu'ici 5 XP a chaque nouvel envoi.
      * Elle est versee AVANT le recalcul, pour que l'XP du jour en tienne compte.
      */
-    if (!existante) await awardXp(user.id, 5, 'Pesee enregistree', 'weight');
+    if (!existante) await awardXp(user.id, 5, 'Pesée enregistrée', 'weight');
     await recomputeDay(user.id, body.date);
     await evaluateBadges(user.id);
 

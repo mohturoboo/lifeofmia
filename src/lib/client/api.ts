@@ -54,7 +54,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
       ...init,
     });
   } catch {
-    throw new ApiClientError('NETWORK', 'Connexion impossible. Verifiez votre reseau.');
+    throw new ApiClientError('NETWORK', 'Connexion impossible. Vérifiez votre réseau.');
   }
 
   if (response.status === 204) return undefined as T;

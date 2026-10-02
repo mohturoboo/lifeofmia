@@ -15,28 +15,28 @@ import bcrypt from 'bcryptjs';
 const prisma = new PrismaClient();
 
 const BADGES = [
-  { code: 'first_step', name: 'Premier pas', description: 'Valider sa toute premiere habitude', icon: 'sparkles', tier: 'bronze', xpReward: 25 },
-  { code: 'week_streak', name: 'Une semaine', description: "7 jours consecutifs d'activite", icon: 'flame', tier: 'bronze', xpReward: 50 },
-  { code: 'month_streak', name: 'Un mois de fer', description: "30 jours consecutifs d'activite", icon: 'flame', tier: 'silver', xpReward: 200 },
-  { code: 'century_streak', name: 'Centurion', description: "100 jours consecutifs d'activite", icon: 'crown', tier: 'gold', xpReward: 800 },
-  { code: 'year_streak', name: 'Immuable', description: "365 jours consecutifs d'activite", icon: 'crown', tier: 'platinum', xpReward: 3000 },
-  { code: 'task_master', name: 'Executant', description: 'Terminer 100 taches', icon: 'check', tier: 'silver', xpReward: 150 },
+  { code: 'first_step', name: 'Premier pas', description: 'Valider sa toute première habitude', icon: 'sparkles', tier: 'bronze', xpReward: 25 },
+  { code: 'week_streak', name: 'Une semaine', description: "7 jours consécutifs d'activité", icon: 'flame', tier: 'bronze', xpReward: 50 },
+  { code: 'month_streak', name: 'Un mois de fer', description: "30 jours consécutifs d'activité", icon: 'flame', tier: 'silver', xpReward: 200 },
+  { code: 'century_streak', name: 'Centurion', description: "100 jours consécutifs d'activité", icon: 'crown', tier: 'gold', xpReward: 800 },
+  { code: 'year_streak', name: 'Immuable', description: "365 jours consécutifs d'activité", icon: 'crown', tier: 'platinum', xpReward: 3000 },
+  { code: 'task_master', name: 'Exécutant', description: 'Terminer 100 tâches', icon: 'check', tier: 'silver', xpReward: 150 },
   { code: 'goal_achiever', name: 'Visionnaire', description: 'Atteindre 5 objectifs', icon: 'target', tier: 'gold', xpReward: 300 },
-  { code: 'iron_body', name: "Corps d'acier", description: 'Enregistrer 50 seances de sport', icon: 'dumbbell', tier: 'gold', xpReward: 300 },
-  { code: 'devoted', name: 'Assidu', description: '100 prieres enregistrees', icon: 'moon', tier: 'gold', xpReward: 300 },
-  { code: 'scribe', name: 'Le scribe', description: '30 entrees de journal', icon: 'book', tier: 'silver', xpReward: 150 },
+  { code: 'iron_body', name: "Corps d'acier", description: 'Enregistrer 50 séances de sport', icon: 'dumbbell', tier: 'gold', xpReward: 300 },
+  { code: 'devoted', name: 'Assidu', description: '100 prières enregistrées', icon: 'moon', tier: 'gold', xpReward: 300 },
+  { code: 'scribe', name: 'Le scribe', description: '30 entrées de journal', icon: 'book', tier: 'silver', xpReward: 150 },
   { code: 'level_10', name: 'Niveau 10', description: 'Atteindre le niveau 10', icon: 'award', tier: 'silver', xpReward: 100 },
   { code: 'level_25', name: 'Niveau 25', description: 'Atteindre le niveau 25', icon: 'award', tier: 'gold', xpReward: 400 },
   { code: 'transformation', name: 'Transformation', description: 'Perdre ou gagner 5 kg vers son objectif', icon: 'trending', tier: 'gold', xpReward: 400 },
 ];
 
 const HABITS = [
-  { name: 'Priere du Fajr', icon: 'moon', color: '#dcc7ea', category: 'spirituality', targetPerDay: 1, xpReward: 20, reliability: 0.82 },
+  { name: 'Prière du Fajr', icon: 'moon', color: '#dcc7ea', category: 'spirituality', targetPerDay: 1, xpReward: 20, reliability: 0.82 },
   { name: 'Lire 30 minutes', icon: 'book', color: '#d9c7f0', category: 'mind', targetPerDay: 1, xpReward: 15, reliability: 0.68 },
   { name: 'Boire 2 L d\'eau', icon: 'droplet', color: '#e6e6e6', category: 'health', targetPerDay: 8, unit: 'verres', xpReward: 10, reliability: 0.75 },
-  { name: 'Seance de sport', icon: 'dumbbell', color: '#ff9fbf', category: 'sport', targetPerDay: 1, xpReward: 25, reliability: 0.55 },
+  { name: 'Séance de sport', icon: 'dumbbell', color: '#ff9fbf', category: 'sport', targetPerDay: 1, xpReward: 25, reliability: 0.55 },
   { name: 'Dormir avant 23 h', icon: 'moon', color: '#e9b8d5', category: 'health', targetPerDay: 1, xpReward: 15, reliability: 0.6 },
-  { name: 'Pas de reseaux sociaux', icon: 'shield', color: '#ff9fbf', category: 'mind', targetPerDay: 1, xpReward: 20, reliability: 0.45, isNegative: true },
+  { name: 'Pas de réseaux sociaux', icon: 'shield', color: '#ff9fbf', category: 'mind', targetPerDay: 1, xpReward: 20, reliability: 0.45, isNegative: true },
   { name: 'Travail sur mon business', icon: 'zap', color: '#fbc7da', category: 'work', targetPerDay: 1, xpReward: 25, reliability: 0.72 },
 ];
 
@@ -67,7 +67,7 @@ async function main() {
   for (const badge of BADGES) {
     await prisma.badge.upsert({ where: { code: badge.code }, create: badge, update: badge });
   }
-  console.log(`  ${BADGES.length} badges installes`);
+  console.log(`  ${BADGES.length} badges installés`);
 
   // --- Compte de demonstration (recree a chaque execution) ---
   const email = 'demo@lifeofm.app';
@@ -89,7 +89,7 @@ async function main() {
       heightCm: 178,
       gender: 'male',
       birthDate: new Date('1998-04-12'),
-      mainGoal: 'Perdre 10 kg et construire une discipline inebranlable',
+      mainGoal: 'Perdre 10 kg et construire une discipline inébranlable',
       emailVerified: new Date(),
       consentAt: new Date(),
       currentStreak: 23,
@@ -98,7 +98,7 @@ async function main() {
       prayerSettings: { create: { method: 3, school: 0 } },
     },
   });
-  console.log(`  Compte cree : ${email} / Demo1234`);
+  console.log(`  Compte créé : ${email} / Demo1234`);
 
   // --- Habitudes ---
   const habits = [];
@@ -177,7 +177,7 @@ async function main() {
     const protein = Math.round(95 + random() * 60);
     meals.push(
       { userId: user.id, date, type: 'breakfast', name: 'Flocons d\'avoine et fruits', calories: Math.round(calories * 0.25), protein: Math.round(protein * 0.2), carbs: 55, fat: 12, fiber: 8, quantity: 1, unit: 'portion' },
-      { userId: user.id, date, type: 'lunch', name: 'Poulet, riz et legumes', calories: Math.round(calories * 0.4), protein: Math.round(protein * 0.45), carbs: 75, fat: 18, fiber: 9, quantity: 1, unit: 'portion' },
+      { userId: user.id, date, type: 'lunch', name: 'Poulet, riz et légumes', calories: Math.round(calories * 0.4), protein: Math.round(protein * 0.45), carbs: 75, fat: 18, fiber: 9, quantity: 1, unit: 'portion' },
       { userId: user.id, date, type: 'dinner', name: 'Saumon et patate douce', calories: Math.round(calories * 0.35), protein: Math.round(protein * 0.35), carbs: 45, fat: 22, fiber: 7, quantity: 1, unit: 'portion' },
     );
 
@@ -192,7 +192,7 @@ async function main() {
       workouts.push({
         userId: user.id,
         date,
-        name: ['Haut du corps', 'Bas du corps', 'Course en exterieur', 'Full body'][Math.floor(random() * 4)],
+        name: ['Haut du corps', 'Bas du corps', 'Course en extérieur', 'Full body'][Math.floor(random() * 4)],
         type: types[Math.floor(random() * types.length)],
         durationMin: workoutMinutes,
         calories: Math.round(workoutMinutes * (6 + random() * 4)),
@@ -216,10 +216,10 @@ async function main() {
         date,
         mood,
         energy: Math.max(1, Math.min(5, mood + (random() < 0.5 ? -1 : 1))),
-        title: 'Journee de travail',
+        title: 'Journée de travail',
         content:
-          'Journee dense. J\'ai tenu mes habitudes principales et avance sur le projet. Le sommeil reste le point faible : je dois couper les ecrans plus tot.',
-        gratitude: 'Ma sante, ma famille, le temps que j\'ai pu degager pour lire.',
+          'Journée dense. J\'ai tenu mes habitudes principales et avancé sur le projet. Le sommeil reste le point faible : je dois couper les écrans plus tôt.',
+        gratitude: 'Ma santé, ma famille, le temps que j\'ai pu dégager pour lire.',
         tags: JSON.stringify(['travail', 'discipline']),
         media: JSON.stringify([]),
       });
@@ -273,7 +273,7 @@ async function main() {
   await prisma.journalEntry.createMany({ data: journalEntries });
   await prisma.dailyStat.createMany({ data: dailyStats });
 
-  console.log(`  ${DAYS} jours d'historique generes`);
+  console.log(`  ${DAYS} jours d'historique générés`);
 
   // --- Objectifs ---
   const goals = [
@@ -288,10 +288,10 @@ async function main() {
       currentValue: weight,
       unit: 'kg',
       deadline: new Date(Date.now() + 120 * 86_400_000),
-      steps: ['Deficit calorique de 400 kcal', '4 seances de sport par semaine', '10 000 pas quotidiens', 'Peser 3 fois par semaine'],
+      steps: ['Déficit calorique de 400 kcal', '4 séances de sport par semaine', '10 000 pas quotidiens', 'Peser 3 fois par semaine'],
     },
     {
-      title: 'Lire 24 livres cette annee',
+      title: 'Lire 24 livres cette année',
       description: 'Deux livres par mois, principalement essais et biographies.',
       category: 'learning',
       horizon: 'long',
@@ -301,17 +301,17 @@ async function main() {
       currentValue: 9,
       unit: 'livres',
       deadline: new Date(new Date().getFullYear(), 11, 31),
-      steps: ['30 minutes de lecture chaque matin', 'Une fiche de lecture par livre', 'Supprimer les reseaux avant 20 h'],
+      steps: ['30 minutes de lecture chaque matin', 'Une fiche de lecture par livre', 'Supprimer les réseaux avant 20 h'],
     },
     {
-      title: 'Lancer mon activite',
-      description: 'Passer du projet a la premiere vente.',
+      title: 'Lancer mon activité',
+      description: 'Passer du projet à la première vente.',
       category: 'career',
       horizon: 'long',
       priority: 'urgent',
       color: '#fbc7da',
       deadline: new Date(Date.now() + 180 * 86_400_000),
-      steps: ['Valider le probleme aupres de 20 personnes', 'Construire la version minimale', 'Trouver les 10 premiers clients', 'Mettre en place la facturation'],
+      steps: ['Valider le problème auprès de 20 personnes', 'Construire la version minimale', 'Trouver les 10 premiers clients', 'Mettre en place la facturation'],
     },
   ];
 
@@ -336,12 +336,12 @@ async function main() {
 
   // --- Taches ---
   const tasks = [
-    { title: 'Preparer les repas de la semaine', priority: 'high', offset: 0 },
-    { title: 'Seance jambes a la salle', priority: 'medium', offset: 0 },
+    { title: 'Préparer les repas de la semaine', priority: 'high', offset: 0 },
+    { title: 'Séance jambes à la salle', priority: 'medium', offset: 0 },
     { title: 'Appeler le comptable', priority: 'urgent', offset: 1 },
     { title: 'Terminer le chapitre 7', priority: 'medium', offset: 1 },
     { title: 'Revoir le budget du mois', priority: 'high', offset: 3 },
-    { title: 'Ecrire la page de vente', priority: 'urgent', offset: 4 },
+    { title: 'Écrire la page de vente', priority: 'urgent', offset: 4 },
     { title: 'Prendre rendez-vous chez le dentiste', priority: 'low', offset: 7 },
   ];
 
@@ -366,10 +366,10 @@ async function main() {
     { type: 'expense', category: 'housing', label: 'Loyer', amount: 950, day: 3, recurring: true },
     { type: 'expense', category: 'food', label: 'Courses', amount: 320, day: 5 },
     { type: 'expense', category: 'transport', label: 'Abonnement transport', amount: 84, day: 5, recurring: true },
-    { type: 'expense', category: 'subscriptions', label: 'Abonnements numeriques', amount: 45, day: 8, recurring: true },
+    { type: 'expense', category: 'subscriptions', label: 'Abonnements numériques', amount: 45, day: 8, recurring: true },
     { type: 'expense', category: 'health', label: 'Salle de sport', amount: 39, day: 10, recurring: true },
     { type: 'expense', category: 'leisure', label: 'Restaurant', amount: 68, day: 14 },
-    { type: 'expense', category: 'savings', label: 'Epargne mensuelle', amount: 400, day: 15, recurring: true },
+    { type: 'expense', category: 'savings', label: 'Épargne mensuelle', amount: 400, day: 15, recurring: true },
   ];
 
   const month = new Date().toISOString().slice(0, 7);
@@ -395,15 +395,15 @@ async function main() {
         userId: user.id,
         title: 'Principes de discipline',
         content:
-          '1. Ne jamais manquer deux jours de suite.\n2. Rendre la bonne action facile et la mauvaise difficile.\n3. Mesurer ce qui compte.\n4. Le systeme bat la motivation.',
+          '1. Ne jamais manquer deux jours de suite.\n2. Rendre la bonne action facile et la mauvaise difficile.\n3. Mesurer ce qui compte.\n4. Le système bat la motivation.',
         pinned: true,
         color: '#fbc7da',
         tags: JSON.stringify(['discipline']),
       },
       {
         userId: user.id,
-        title: 'Idees de contenu',
-        content: '- Mon systeme de suivi d\'habitudes\n- Comment je planifie ma semaine\n- Retour sur 90 jours de discipline',
+        title: 'Idées de contenu',
+        content: '- Mon système de suivi d\'habitudes\n- Comment je planifie ma semaine\n- Retour sur 90 jours de discipline',
         color: '#d9c7f0',
         tags: JSON.stringify(['business']),
       },
@@ -424,13 +424,13 @@ async function main() {
     }
   }
 
-  console.log(`  ${totalXp} XP attribues, 5 badges debloques`);
-  console.log('\nSeed termine. Connectez-vous avec demo@lifeofm.app / Demo1234\n');
+  console.log(`  ${totalXp} XP attribués, 5 badges débloqués`);
+  console.log('\nSeed terminé. Connectez-vous avec demo@lifeofm.app / Demo1234\n');
 }
 
 main()
   .catch((error) => {
-    console.error('Echec du seed :', error);
+    console.error('Échec du seed :', error);
     process.exit(1);
   })
   .finally(() => prisma.$disconnect());

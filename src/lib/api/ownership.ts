@@ -25,7 +25,7 @@ const FINDERS: Record<Owned, (id: string, userId: string) => Promise<{ id: strin
 
 const LABELS: Record<Owned, string> = {
   goal: 'Objectif',
-  task: 'Tache',
+  task: 'Tâche',
   project: 'Projet',
 };
 
@@ -53,6 +53,6 @@ export async function requireOwned(
  */
 export function rejectSelfReference(id: string, parentId: string | null | undefined, label: string): void {
   if (parentId && parentId === id) {
-    throw new ApiError('BAD_REQUEST', `${label} ne peut pas etre son propre parent.`);
+    throw new ApiError('BAD_REQUEST', `${label} ne peut pas être son propre parent.`);
   }
 }

@@ -44,8 +44,8 @@ export const GET = route(async ({ user, searchParams }) => {
   if (!result) {
     throw new ApiError(
       'VALIDATION',
-      'Horaires indisponibles : renseignez votre ville dans les reglages.',
-      { city: 'Ville inconnue ou sans coordonnees.' },
+      'Horaires indisponibles : renseignez votre ville dans les réglages.',
+      { city: 'Ville inconnue ou sans coordonnées.' },
     );
   }
 
@@ -117,7 +117,7 @@ export const POST = route(
       await awardXp(
         user.id,
         ecart,
-        ecart > 0 ? `Priere : ${body.name}` : `Annulation : priere ${body.name}`,
+        ecart > 0 ? `Prière : ${body.name}` : `Annulation : prière ${body.name}`,
         'prayer',
       );
       if (ecart > 0) await evaluateBadges(user.id);

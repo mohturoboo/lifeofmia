@@ -275,7 +275,7 @@ const EXECUTORS: Record<string, Executor> = {
       },
     });
 
-    return { ok: true, summary: `Habitude creee : « ${habit.name} »`, data: { id: habit.id, name: habit.name } };
+    return { ok: true, summary: `Habitude créée : « ${habit.name} »`, data: { id: habit.id, name: habit.name } };
   },
 
   async delete_habit(user, input) {
@@ -286,7 +286,7 @@ const EXECUTORS: Record<string, Executor> = {
     if (!habit) return { ok: false, summary: 'Habitude introuvable.' };
 
     await prisma.habit.delete({ where: { id: habit.id } });
-    return { ok: true, summary: `Habitude supprimee : « ${habit.name} »` };
+    return { ok: true, summary: `Habitude supprimée : « ${habit.name} »` };
   },
 
   async create_task(user, input) {
@@ -328,7 +328,7 @@ const EXECUTORS: Record<string, Executor> = {
       },
     });
 
-    return { ok: true, summary: `Tache creee : « ${task.title} »`, data: { id: task.id } };
+    return { ok: true, summary: `Tâche créée : « ${task.title} »`, data: { id: task.id } };
   },
 
   async create_goal(user, input) {
@@ -378,7 +378,7 @@ const EXECUTORS: Record<string, Executor> = {
 
     return {
       ok: true,
-      summary: `Objectif cree : « ${goal.title} » (${goal.steps.length} etapes)`,
+      summary: `Objectif créé : « ${goal.title} » (${goal.steps.length} étapes)`,
       data: { id: goal.id },
     };
   },
@@ -401,7 +401,7 @@ const EXECUTORS: Record<string, Executor> = {
     }
 
     await prisma.goal.update({ where: { id: goal.id }, data });
-    return { ok: true, summary: `Objectif mis a jour : « ${goal.title} »` };
+    return { ok: true, summary: `Objectif mis à jour : « ${goal.title} »` };
   },
 
   async create_meal(user, input) {
@@ -433,7 +433,7 @@ const EXECUTORS: Record<string, Executor> = {
 
     return {
       ok: true,
-      summary: `Repas ${parsed.isTemplate ? 'propose' : 'enregistre'} : « ${meal.name} » (${Math.round(meal.calories)} kcal)`,
+      summary: `Repas ${parsed.isTemplate ? 'proposé' : 'enregistré'} : « ${meal.name} » (${Math.round(meal.calories)} kcal)`,
       data: { id: meal.id },
     };
   },
@@ -496,7 +496,7 @@ const EXECUTORS: Record<string, Executor> = {
     await recomputeDay(user.id, parsed.date);
     return {
       ok: true,
-      summary: `Seance creee : « ${workout.name} » (${workout.exercises.length} exercices, ${workout.durationMin} min)`,
+      summary: `Séance créée : « ${workout.name} » (${workout.exercises.length} exercices, ${workout.durationMin} min)`,
       data: { id: workout.id },
     };
   },
@@ -536,7 +536,7 @@ const EXECUTORS: Record<string, Executor> = {
 
     return {
       ok: true,
-      summary: `Journee du ${date} planifiee : ${created.length} blocs crees`,
+      summary: `Journée du ${date} planifiée : ${created.length} blocs créés`,
       data: { blocks: created },
     };
   },
@@ -551,7 +551,7 @@ const EXECUTORS: Record<string, Executor> = {
 
     return {
       ok: true,
-      summary: `Statistiques sur ${days} jours recuperees`,
+      summary: `Statistiques sur ${days} jours récupérées`,
       data: totals,
     };
   },
@@ -572,6 +572,6 @@ export async function executeTool(
     return await executor(user, input);
   } catch (error) {
     const message = error instanceof Error ? error.message : 'erreur inconnue';
-    return { ok: false, summary: `Echec de l'outil ${name} : ${message}` };
+    return { ok: false, summary: `Échec de l'outil ${name} : ${message}` };
   }
 }

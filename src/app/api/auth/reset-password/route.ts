@@ -20,8 +20,8 @@ export const POST = publicRoute(
   async ({ body }) => {
     const userId = await consumeToken(body.token, TOKEN_TYPES.PASSWORD_RESET);
     if (!userId) {
-      return fail('BAD_REQUEST', 'Ce lien est invalide ou a expire.', {
-        token: 'Lien invalide ou expire.',
+      return fail('BAD_REQUEST', 'Ce lien est invalide ou a expiré.', {
+        token: 'Lien invalide ou expiré.',
       });
     }
 

@@ -40,7 +40,7 @@ export const POST = publicRoute(
     if (!debit.allowed) {
       return fail(
         'RATE_LIMITED',
-        `Trop de creations de compte depuis cette adresse. Reessayez dans ${Math.ceil(debit.retryAfterSeconds / 60)} minute(s).`,
+        `Trop de créations de compte depuis cette adresse. Réessayez dans ${Math.ceil(debit.retryAfterSeconds / 60)} minute(s).`,
         undefined,
         { 'Retry-After': String(debit.retryAfterSeconds) },
       );
@@ -72,8 +72,8 @@ export const POST = publicRoute(
        * retablir la verification par email — c'est une decision produit, pas
        * un correctif.
        */
-      return fail('CONFLICT', 'Un compte existe deja avec cette adresse.', {
-        email: 'Cette adresse est deja utilisee.',
+      return fail('CONFLICT', 'Un compte existe déjà avec cette adresse.', {
+        email: 'Cette adresse est déjà utilisée.',
       });
     }
 
@@ -115,8 +115,8 @@ export const POST = publicRoute(
       throw error;
     });
     if (!user) {
-      return fail('CONFLICT', 'Un compte existe deja avec cette adresse.', {
-        email: 'Cette adresse est deja utilisee.',
+      return fail('CONFLICT', 'Un compte existe déjà avec cette adresse.', {
+        email: 'Cette adresse est déjà utilisée.',
       });
     }
 

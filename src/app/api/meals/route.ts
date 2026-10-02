@@ -113,7 +113,7 @@ export const POST = route(
     if (!body.isTemplate) {
       // Petite recompense : le suivi alimentaire est la donnee la plus souvent
       // abandonnee, il merite d'etre encourage. Versee avant le recalcul du jour.
-      await awardXp(user.id, 3, 'Repas enregistre', 'habit');
+      await awardXp(user.id, 3, 'Repas enregistré', 'habit');
       await recomputeDay(user.id, body.date);
     }
 

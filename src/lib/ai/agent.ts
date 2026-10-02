@@ -123,7 +123,7 @@ export async function runAgent(
     finalText =
       actions.length > 0
         ? `J'ai effectue ${actions.length} action(s) :\n${actions.map((action) => `- ${action.summary}`).join('\n')}`
-        : "Je n'ai pas pu produire de reponse. Reformulez votre demande.";
+        : "Je n'ai pas pu produire de réponse. Reformulez votre demande.";
   }
 
   return { text: finalText, actions, tokensIn, tokensOut };

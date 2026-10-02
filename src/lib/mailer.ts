@@ -89,7 +89,7 @@ ${
 }
 </td></tr>
 <tr><td style="padding:26px 36px 34px;font-size:12px;line-height:1.6;color:#7a7a7a;border-top:1px solid #1e1e1e">
-Vous recevez cet email car un compte LifeofM est associe a cette adresse. Si vous n'etes pas a l'origine de cette demande, ignorez ce message.
+Vous recevez cet e-mail car un compte LifeofM est associé à cette adresse. Si vous n'êtes pas à l'origine de cette demande, ignorez ce message.
 </td></tr></table></td></tr></table></body></html>`;
 }
 
@@ -97,14 +97,14 @@ export function passwordResetEmail(to: string, firstName: string, token: string)
   const url = `${env.appUrl}/reset-password?token=${encodeURIComponent(token)}`;
   return {
     to,
-    subject: 'Reinitialisation de votre mot de passe — LifeofM',
+    subject: 'Réinitialisation de votre mot de passe — LifeofM',
     html: layout(
       `Bonjour ${escapeHtml(firstName)}`,
-      'Vous avez demande la reinitialisation de votre mot de passe. Ce lien est valable une heure et ne peut servir qu\'une seule fois.',
+      'Vous avez demandé la réinitialisation de votre mot de passe. Ce lien est valable une heure et ne peut servir qu\'une seule fois.',
       'Choisir un nouveau mot de passe',
       url,
     ),
-    text: `Bonjour ${firstName},\n\nReinitialisez votre mot de passe : ${url}\n\nCe lien expire dans 1 heure.`,
+    text: `Bonjour ${firstName},\n\nRéinitialisez votre mot de passe : ${url}\n\nCe lien expire dans 1 heure.`,
   };
 }
 
@@ -126,11 +126,11 @@ export function securityAlertEmail(
   minutes: number,
 ): MailMessage {
   const corps =
-    `Nous avons bloque l'acces a votre compte apres ${tentatives} tentatives de connexion infructueuses. ` +
+    `Nous avons bloqué l'accès à votre compte après ${tentatives} tentatives de connexion infructueuses. ` +
     `Il le restera pendant ${minutes} minutes.<br><br>` +
-    "Si ces tentatives viennent de vous, il n'y a rien a faire : attendez la fin du delai. " +
-    'Dans le cas contraire, changez votre mot de passe des que possible, depuis le site, ' +
-    'en vous y rendant vous-meme.';
+    "Si ces tentatives viennent de vous, il n'y a rien à faire : attendez la fin du délai. " +
+    'Dans le cas contraire, changez votre mot de passe dès que possible, depuis le site, ' +
+    'en vous y rendant vous-même.';
 
   return {
     to,
@@ -138,8 +138,8 @@ export function securityAlertEmail(
     html: layout(`Bonjour ${escapeHtml(firstName)}`, corps),
     text:
       `Bonjour ${firstName},\n\n` +
-      `${tentatives} tentatives de connexion infructueuses ont ete detectees sur votre compte. ` +
-      `L'acces est bloque pendant ${minutes} minutes.\n\n` +
-      "Si ce n'est pas vous, changez votre mot de passe en vous rendant vous-meme sur le site.",
+      `${tentatives} tentatives de connexion infructueuses ont été détectées sur votre compte. ` +
+      `L'accès est bloqué pendant ${minutes} minutes.\n\n` +
+      "Si ce n'est pas vous, changez votre mot de passe en vous rendant vous-même sur le site.",
   };
 }

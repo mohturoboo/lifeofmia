@@ -65,9 +65,9 @@ export function assertPasDansLeFutur(
 ): void {
   const aujourdhui = dateKeyIn(timezone);
   if (date > aujourdhui) {
-    const message = `${quoi} ne peut pas etre datee dans le futur.`;
+    const message = `${quoi} ne peut pas être datée dans le futur.`;
     throw new ApiError('VALIDATION', message, {
-      [champ]: `La date ne peut pas depasser le ${aujourdhui}.`,
+      [champ]: `La date ne peut pas dépasser le ${aujourdhui}.`,
     });
   }
 }
@@ -85,13 +85,13 @@ export function assertPasDansLePasse(
   echeance: Date,
   timezone: string,
   champ = 'deadline',
-  quoi = 'Une echeance',
+  quoi = 'Une échéance',
 ): void {
   const aujourdhui = dateKeyIn(timezone);
   const jour = dateKeyIn(timezone, echeance);
   if (jour < aujourdhui) {
-    throw new ApiError('VALIDATION', `${quoi} ne peut pas etre deja passee.`, {
-      [champ]: `La date doit etre au plus tot le ${aujourdhui}.`,
+    throw new ApiError('VALIDATION', `${quoi} ne peut pas être déjà passée.`, {
+      [champ]: `La date doit être au plus tôt le ${aujourdhui}.`,
     });
   }
 }

@@ -26,22 +26,22 @@ describe('messages de validation', () => {
 
   it('rappelle la limite quand une valeur est trop grande', () => {
     expect(messages(habitCreateSchema.safeParse({ name: 'x'.repeat(81) }))).toContain(
-      'Le nom ne peut pas depasser 80 caracteres.',
+      'Le nom ne peut pas dépasser 80 caractères.',
     );
     expect(messages(taskCreateSchema.safeParse({ title: 'x'.repeat(200) }))).toContain(
-      'Ce champ ne peut pas depasser 160 caracteres.',
+      'Ce champ ne peut pas dépasser 160 caractères.',
     );
     expect(messages(habitCreateSchema.safeParse({ name: 'X', xpReward: 999 }))).toContain(
-      'La valeur ne peut pas depasser 100.',
+      'La valeur ne peut pas dépasser 100.',
     );
   });
 
   it('donne les bornes attendues pour les mesures', () => {
     expect(messages(weightSchema.safeParse({ date: '2026-08-11', weightKg: 5 }))).toContain(
-      'Le poids doit etre compris entre 20 et 400 kg.',
+      'Le poids doit être compris entre 20 et 400 kg.',
     );
     expect(messages(updateProfileSchema.safeParse({ heightCm: 500 }))).toContain(
-      'La taille doit etre comprise entre 50 et 250 cm.',
+      'La taille doit être comprise entre 50 et 250 cm.',
     );
   });
 

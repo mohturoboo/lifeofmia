@@ -132,7 +132,7 @@ export const POST = route(
         return fail('AI_DISABLED', "L'agent IA n'est pas active.");
       }
       console.error('[ai] echec de la generation', error);
-      return fail('SERVER_ERROR', "L'agent n'a pas pu repondre. Reessayez dans un instant.");
+      return fail('SERVER_ERROR', "L'agent n'a pas pu répondre. Réessayez dans un instant.");
     }
   },
   { schema: chatSchema, rateLimit: { key: 'ai', ...RATE_LIMITS.ai } },

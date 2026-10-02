@@ -58,7 +58,7 @@ export const GET = route(async ({ user, searchParams }) => {
 export const PUT = route(
   async ({ user, body }) => {
     // On ecrit son journal apres coup, jamais pour un jour a venir.
-    assertPasDansLeFutur(body.date, user.timezone, 'date', 'Une entree de journal');
+    assertPasDansLeFutur(body.date, user.timezone, 'date', 'Une entrée de journal');
 
     const payload = {
       mood: body.mood,
@@ -83,7 +83,7 @@ export const PUT = route(
 
     // L'XP n'est accordee qu'a la premiere ecriture du jour, avant le recalcul
     // pour que l'XP du jour en tienne compte.
-    if (!existing) await awardXp(user.id, 10, 'Entree de journal', 'journal');
+    if (!existing) await awardXp(user.id, 10, 'Entrée de journal', 'journal');
     await recomputeDay(user.id, body.date);
     if (!existing) await evaluateBadges(user.id);
 

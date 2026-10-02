@@ -3,14 +3,14 @@ import { emailSchema, localeSchema, themeSchema, timeFormatSchema, unitsSchema }
 
 export const passwordSchema = z
   .string()
-  .min(8, 'Le mot de passe doit contenir au moins 8 caracteres.')
+  .min(8, 'Le mot de passe doit contenir au moins 8 caractères.')
   .max(128, 'Le mot de passe est trop long.')
   .refine((value) => /[a-z]/.test(value), 'Ajoutez au moins une minuscule.')
   .refine((value) => /[A-Z]/.test(value), 'Ajoutez au moins une majuscule.')
   .refine((value) => /\d/.test(value), 'Ajoutez au moins un chiffre.');
 
 export const registerSchema = z.object({
-  firstName: z.string().trim().min(1, 'Prenom requis.').max(60),
+  firstName: z.string().trim().min(1, 'Prénom requis.').max(60),
   lastName: z.string().trim().min(1, 'Nom requis.').max(60),
   email: emailSchema(),
   password: passwordSchema,
@@ -59,8 +59,8 @@ export const updateProfileSchema = z.object({
   glassMl: z.number().int().min(50, 'Entre 50 et 1000 ml.').max(1000, 'Entre 50 et 1000 ml.').optional(),
   heightCm: z
     .number()
-    .min(50, 'La taille doit etre comprise entre 50 et 250 cm.')
-    .max(250, 'La taille doit etre comprise entre 50 et 250 cm.')
+    .min(50, 'La taille doit être comprise entre 50 et 250 cm.')
+    .max(250, 'La taille doit être comprise entre 50 et 250 cm.')
     .nullable()
     .optional(),
   mainGoal: z.string().trim().max(200).nullable().optional(),

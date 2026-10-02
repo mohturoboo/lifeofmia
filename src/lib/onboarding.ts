@@ -28,7 +28,7 @@ const STARTER_HABITS = [
   { name: 'Lire 20 minutes', icon: 'book', color: '#d9c7f0', category: 'mind', targetPerDay: 1, xpReward: 15 },
   { name: 'Bouger 30 minutes', icon: 'dumbbell', color: '#ff9fbf', category: 'sport', targetPerDay: 1, xpReward: 20 },
   { name: 'Dormir avant 23 h', icon: 'moon', color: '#e9b8d5', category: 'health', targetPerDay: 1, xpReward: 15 },
-  { name: 'Pas de reseaux sociaux', icon: 'shield', color: '#ff9fbf', category: 'mind', targetPerDay: 1, xpReward: 20, isNegative: true },
+  { name: 'Pas de réseaux sociaux', icon: 'shield', color: '#ff9fbf', category: 'mind', targetPerDay: 1, xpReward: 20, isNegative: true },
 ];
 
 export async function seedUserWorkspace(userId: string, city: string, mainGoal?: string | null): Promise<void> {
@@ -69,15 +69,15 @@ export async function seedUserWorkspace(userId: string, city: string, mainGoal?:
       data: {
         userId,
         title: mainGoal.trim().slice(0, 160),
-        description: 'Objectif principal defini lors de l\'inscription.',
+        description: 'Objectif principal défini lors de l\'inscription.',
         horizon: 'long',
         priority: 'high',
         category: 'personal',
         steps: {
           create: [
-            { userId, title: 'Definir les etapes concretes', position: 0 },
-            { userId, title: 'Choisir les habitudes qui y menent', position: 1 },
-            { userId, title: 'Fixer une premiere echeance', position: 2 },
+            { userId, title: 'Définir les étapes concrètes', position: 0 },
+            { userId, title: 'Choisir les habitudes qui y mènent', position: 1 },
+            { userId, title: 'Fixer une première échéance', position: 2 },
           ],
         },
       },

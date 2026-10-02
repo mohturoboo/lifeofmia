@@ -21,7 +21,7 @@ export function methodeRefusee(autorisees: MethodeHttp[]) {
   return async () =>
     fail(
       'METHOD_NOT_ALLOWED',
-      `Methode non autorisee sur cette ressource. Methodes acceptees : ${autorisees.join(', ')}.`,
+      `Méthode non autorisée sur cette ressource. Méthodes acceptées : ${autorisees.join(', ')}.`,
       undefined,
       { Allow: allow },
     );

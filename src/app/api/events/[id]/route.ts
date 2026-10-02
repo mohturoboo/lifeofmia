@@ -11,7 +11,7 @@ export const PATCH = route(
       where: { id: params.id, userId: user.id },
       select: { id: true, startAt: true, endAt: true },
     });
-    if (!existing) throw new ApiError('NOT_FOUND', 'Evenement introuvable.');
+    if (!existing) throw new ApiError('NOT_FOUND', 'Événement introuvable.');
 
     /*
      * La regle est verifiee sur le resultat de la fusion, pas sur le corps
@@ -44,7 +44,7 @@ export const DELETE = route(async ({ user, params }) => {
     where: { id: params.id, userId: user.id },
     select: { id: true },
   });
-  if (!existing) throw new ApiError('NOT_FOUND', 'Evenement introuvable.');
+  if (!existing) throw new ApiError('NOT_FOUND', 'Événement introuvable.');
 
   await prisma.calendarEvent.delete({ where: { id: params.id } });
   return ok({ deleted: true });

@@ -22,7 +22,7 @@ export const PATCH = route(
       where: { id: params.id, userId: user.id },
       select: { id: true, status: true, xpReward: true, title: true, dueDate: true },
     });
-    if (!existing) throw new ApiError('NOT_FOUND', 'Tache introuvable.');
+    if (!existing) throw new ApiError('NOT_FOUND', 'Tâche introuvable.');
 
     const data: Record<string, unknown> = {};
     for (const key of ['title', 'description', 'priority', 'status', 'estimateMin', 'xpReward'] as const) {
@@ -31,7 +31,7 @@ export const PATCH = route(
 
     // Reverification des cles etrangeres a chaque modification : une tache deja
     // creee ne doit pas pouvoir etre rattachee apres coup aux donnees d'autrui.
-    rejectSelfReference(params.id, body.parentId, 'Une tache');
+    rejectSelfReference(params.id, body.parentId, 'Une tâche');
     const [parentId, goalId, projectId] = await Promise.all([
       requireOwned('task', body.parentId, user.id),
       requireOwned('goal', body.goalId, user.id),
@@ -55,7 +55,7 @@ export const PATCH = route(
     let xpAwarded = 0;
     if (becameDone) {
       xpAwarded = existing.xpReward;
-      await awardXp(user.id, existing.xpReward, `Tache : ${existing.title}`, 'task');
+      await awardXp(user.id, existing.xpReward, `Tâche : ${existing.title}`, 'task');
       await refreshStreak(user.id, user.timezone);
       await evaluateBadges(user.id);
     } else if (becameUndone) {
@@ -79,7 +79,7 @@ export const DELETE = route(async ({ user, params }) => {
     where: { id: params.id, userId: user.id },
     select: { id: true },
   });
-  if (!task) throw new ApiError('NOT_FOUND', 'Tache introuvable.');
+  if (!task) throw new ApiError('NOT_FOUND', 'Tâche introuvable.');
 
   await prisma.task.delete({ where: { id: params.id } });
   return ok({ deleted: true });

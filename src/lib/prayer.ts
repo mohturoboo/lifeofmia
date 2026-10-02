@@ -29,12 +29,12 @@ export interface PrayerMethod {
 /** Sous-ensemble des methodes AlAdhan, avec les angles equivalents en local. */
 export const PRAYER_METHODS: PrayerMethod[] = [
   { id: 3, name: 'Muslim World League', fajr: 18, isha: 17 },
-  { id: 2, name: 'ISNA (Amerique du Nord)', fajr: 15, isha: 15 },
+  { id: 2, name: 'ISNA (Amérique du Nord)', fajr: 15, isha: 15 },
   { id: 5, name: 'Egyptian General Authority', fajr: 19.5, isha: 17.5 },
   { id: 4, name: 'Umm Al-Qura (La Mecque)', fajr: 18.5, isha: { minutes: 90 } },
   { id: 1, name: 'University of Karachi', fajr: 18, isha: 18 },
-  { id: 12, name: 'UOIF (France, 12 degres)', fajr: 12, isha: 12 },
-  { id: 99, name: 'Union des Organisations Islamiques de France (15 deg)', fajr: 15, isha: 15 },
+  { id: 12, name: 'UOIF (France, 12°)', fajr: 12, isha: 12 },
+  { id: 99, name: 'Union des organisations islamiques de France (15°)', fajr: 15, isha: 15 },
 ];
 
 export function methodById(id: number): PrayerMethod {

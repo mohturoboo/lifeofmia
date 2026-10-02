@@ -20,14 +20,14 @@ export interface LocaleMeta {
 }
 
 export const LOCALE_META: Record<Locale, LocaleMeta> = {
-  fr: { code: 'fr', label: 'Francais', flag: '🇫🇷', dir: 'ltr', intl: 'fr-FR' },
+  fr: { code: 'fr', label: 'Français', flag: '🇫🇷', dir: 'ltr', intl: 'fr-FR' },
   en: { code: 'en', label: 'English', flag: '🇬🇧', dir: 'ltr', intl: 'en-US' },
   ar: { code: 'ar', label: 'العربية', flag: '🇸🇦', dir: 'rtl', intl: 'ar-SA' },
-  es: { code: 'es', label: 'Espanol', flag: '🇪🇸', dir: 'ltr', intl: 'es-ES' },
+  es: { code: 'es', label: 'Español', flag: '🇪🇸', dir: 'ltr', intl: 'es-ES' },
   de: { code: 'de', label: 'Deutsch', flag: '🇩🇪', dir: 'ltr', intl: 'de-DE' },
   it: { code: 'it', label: 'Italiano', flag: '🇮🇹', dir: 'ltr', intl: 'it-IT' },
-  pt: { code: 'pt', label: 'Portugues', flag: '🇵🇹', dir: 'ltr', intl: 'pt-PT' },
-  tr: { code: 'tr', label: 'Turkce', flag: '🇹🇷', dir: 'ltr', intl: 'tr-TR' },
+  pt: { code: 'pt', label: 'Português', flag: '🇵🇹', dir: 'ltr', intl: 'pt-PT' },
+  tr: { code: 'tr', label: 'Türkçe', flag: '🇹🇷', dir: 'ltr', intl: 'tr-TR' },
 };
 
 export function isLocale(value: unknown): value is Locale {

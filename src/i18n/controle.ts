@@ -19,9 +19,12 @@ import type { Dictionary } from '@/i18n/locales/fr';
 
 const CATEGORIES = ['zero', 'one', 'two', 'few', 'many', 'other'];
 
-/** Mots francais courants ecrits sans leurs accents. Aucun n'existe tel quel. */
+/**
+ * Mots francais courants ecrits sans leurs accents. Aucun n'existe tel quel,
+ * ni comme identifiant de code (« theme », « role » en sont donc exclus).
+ */
 const FRANCAIS_DESACCENTUE = [
-  'acces', 'age', 'annee', 'annees', 'apres', 'bientot', 'ca', 'caractere', 'caracteres', 'categorie',
+  'acces', 'annee', 'annees', 'apres', 'bientot', 'caractere', 'caracteres', 'categorie',
   'categories', 'connecte', 'controle', 'cree', 'creee', 'creer', 'debut', 'deconnecte', 'deconnexion',
   'definir', 'defini', 'definie', 'deja', 'depasser', 'derniere', 'dernieres', 'detail', 'details',
   'deuxieme', 'donnee', 'donnees', 'duree', 'echeance', 'ecran', 'ecrire', 'egale', 'energie', 'entree',
@@ -29,10 +32,10 @@ const FRANCAIS_DESACCENTUE = [
   'eviter', 'facon', 'francais', 'frequence', 'generer', 'idee', 'inferieure', 'interieur', 'journee',
   'maniere', 'meme', 'memes', 'methode', 'metrique', 'necessaire', 'numero', 'parametres', 'pensee',
   'pensees', 'periode', 'periodes', 'plutot', 'precedent', 'precedente', 'premiere', 'premieres',
-  'priere', 'prieres', 'progres', 'reessayez', 'region', 'reglage', 'reglages', 'reinitialisation',
+  'priere', 'prieres', 'progres', 'reessayez', 'reglage', 'reglages', 'reinitialisation',
   'reinitialiser', 'repetee', 'reponse', 'requete', 'reseau', 'reunis', 'reussi', 'reussie', 'reussite',
-  'role', 'sante', 'seance', 'seances', 'securite', 'selectionnez', 'succes', 'superieure', 'systeme',
-  'tache', 'taches', 'telecharger', 'telephone', 'theme', 'themes', 'tres', 'unite', 'unites',
+  'sante', 'seance', 'seances', 'securite', 'selectionnez', 'succes', 'superieure', 'systeme',
+  'tache', 'taches', 'telecharger', 'telephone', 'tres', 'unite', 'unites',
   'verifiez', 'verifier', 'verification',
 ];
 
@@ -127,4 +130,37 @@ export function controlerDictionnaires(dictionnaires: Record<Locale, Dictionary>
 export function motsDesaccentues(texte: string): string[] {
   const motif = new RegExp(motifMots(FRANCAIS_DESACCENTUE).source, 'giu');
   return Array.from(texte.matchAll(motif), (m) => m[1]);
+}
+
+/**
+ * Sources dont les chaines francaises sont lues par l'utilisateur sans passer
+ * par le dictionnaire : messages d'API et de validation, badges, habitudes de
+ * depart, e-mails, donnees de demonstration.
+ *
+ * Exclus volontairement : les descriptions d'outils et le contexte envoyes au
+ * modele (`lib/ai/tools.ts`, `lib/ai/context.ts`), qui ne s'affichent pas.
+ */
+export const SOURCES_FRANCAISES = [
+  'src/app/api',
+  'src/lib/api',
+  'src/lib/validation',
+  'src/lib/client/api.ts',
+  'src/lib/gamification.ts',
+  'src/lib/onboarding.ts',
+  'src/lib/mailer.ts',
+  'prisma/seed.ts',
+];
+
+/** Mots desaccentues trouves dans les chaines (hors commentaires) d'un fichier source. */
+export function controlerSource(contenu: string): Array<{ ligne: number; mots: string[] }> {
+  // Les commentaires restent en ASCII par convention : on les neutralise.
+  const sansCommentaires = contenu
+    .replace(/\/\*[\s\S]*?\*\//g, (bloc) => bloc.replace(/[^\n]/g, ' '))
+    .replace(/(^|[^:'"`])\/\/.*$/gm, '$1');
+  const resultats: Array<{ ligne: number; mots: string[] }> = [];
+  sansCommentaires.split('\n').forEach((texte, index) => {
+    const mots = Array.from(texte.matchAll(/(['"`])((?:\\.|(?!\1).)*)\1/g)).flatMap((m) => motsDesaccentues(m[2]));
+    if (mots.length > 0) resultats.push({ ligne: index + 1, mots });
+  });
+  return resultats;
 }

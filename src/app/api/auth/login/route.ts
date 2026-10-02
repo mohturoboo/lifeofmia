@@ -153,7 +153,7 @@ export const POST = publicRoute(
        */
       if (doitVerrouiller) {
         void sendMail(securityAlertEmail(user.email, user.firstName, failedLoginCount, minutes)).catch(
-          (error) => console.error('[login] alerte de securite non envoyee', error),
+          (error) => console.error('[login] alerte de sécurité non envoyée', error),
         );
         await audit({ action: 'ACCOUNT_LOCKED', userId: user.id, headers: headerList, meta: { minutes } });
       }
@@ -189,7 +189,7 @@ export const POST = publicRoute(
 function tropDeTentatives(secondes: number) {
   return fail(
     'RATE_LIMITED',
-    `Trop de tentatives de connexion. Reessayez dans ${formaterAttente(secondes)}.`,
+    `Trop de tentatives de connexion. Réessayez dans ${formaterAttente(secondes)}.`,
     undefined,
     { 'Retry-After': String(secondes) },
   );

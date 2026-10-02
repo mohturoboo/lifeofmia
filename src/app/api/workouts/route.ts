@@ -58,7 +58,7 @@ export const GET = route(async ({ user, searchParams }) => {
 export const POST = route(
   async ({ user, body }) => {
     // Une seance decrit ce qui a ete fait : elle ne se date pas dans le futur.
-    assertPasDansLeFutur(body.date, user.timezone, 'date', 'Une seance');
+    assertPasDansLeFutur(body.date, user.timezone, 'date', 'Une séance');
 
     const workout = await prisma.workout.create({
       data: {
@@ -89,7 +89,7 @@ export const POST = route(
 
     // L'XP suit la duree, plafonnee : une seance de trois heures ne vaut pas
     // six fois une seance de trente minutes. Versee avant le recalcul du jour.
-    await awardXp(user.id, Math.min(60, 15 + Math.floor(body.durationMin / 5)), `Seance : ${body.name}`, 'workout');
+    await awardXp(user.id, Math.min(60, 15 + Math.floor(body.durationMin / 5)), `Séance : ${body.name}`, 'workout');
     await recomputeDay(user.id, body.date);
     await refreshStreak(user.id, user.timezone);
     await evaluateBadges(user.id);
