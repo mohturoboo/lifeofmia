@@ -59,7 +59,7 @@ export default async function LandingPage() {
           <div className="lm-aura" aria-hidden="true" />
 
           <div className="relative grid items-center gap-14 lg:grid-cols-[1.05fr_1fr]">
-            <div className="animate-[fade-up_0.6s_cubic-bezier(0.22,1,0.36,1)_both]">
+            <div className="animate-[lm-entree_0.6s_cubic-bezier(0.22,1,0.36,1)_both]">
               <span className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface)] px-3.5 py-1.5 text-xs text-[var(--text-muted)]">
                 <span className="size-1.5 rounded-full bg-brand-500" />
                 {t('app.tagline')}
@@ -105,7 +105,7 @@ export default async function LandingPage() {
 
             {/* Apercu de l'interface — construit en HTML, pas une capture d'ecran :
                 il reste net sur tous les ecrans et suit le theme actif. */}
-            <div className="relative animate-[fade-up_0.8s_cubic-bezier(0.22,1,0.36,1)_both]">
+            <div className="relative animate-[lm-entree_0.8s_cubic-bezier(0.22,1,0.36,1)_both]">
               <div className="lm-card overflow-hidden p-5">
                 <div className="flex items-center justify-between">
                   <div>

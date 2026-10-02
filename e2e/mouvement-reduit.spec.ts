@@ -129,3 +129,28 @@ test('aucune animation d\'entree ne part d\'une opacite nulle', async ({ page })
 
   expect(fautives, 'une animation d\'entree part d\'une opacite nulle').toEqual([]);
 });
+
+test.describe('accueil public', () => {
+  test.use({ storageState: { cookies: [], origins: [] } });
+
+  test('le heros reste visible quand les animations sont figees', async ({ page }) => {
+    /*
+     * Toutes les animations sont mises en pause des leur premiere image : c'est
+     * l'etat d'un onglet en arriere-plan. Le heros partait d'`opacity: 0` et
+     * laissait la page vide sous l'en-tete.
+     */
+    await page.addInitScript(() => {
+      document.addEventListener('DOMContentLoaded', () => {
+        const style = document.createElement('style');
+        style.textContent = '*, *::before, *::after { animation-play-state: paused !important; }';
+        document.head.append(style);
+      });
+    });
+
+    await page.goto('/');
+    await page.waitForLoadState('networkidle');
+
+    expect(await elementsInvisibles(page)).toEqual([]);
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+  });
+});
