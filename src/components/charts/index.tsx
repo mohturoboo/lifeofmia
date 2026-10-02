@@ -378,12 +378,12 @@ export function BarChart({
                 caractere, illisibles. Elle deborde desormais sur les cotes,
                 ce qui est le comportement attendu d'une infobulle.
               */}
-              <span className="pointer-events-none absolute inset-x-0 -top-5 whitespace-nowrap text-center text-[10px] font-medium text-[var(--text)] opacity-0 transition-opacity group-hover:opacity-100">
+              <span className="pointer-events-none absolute inset-x-0 -top-5 whitespace-nowrap text-center text-[11px] font-medium text-[var(--text)] opacity-0 transition-opacity group-hover:opacity-100">
                 {Math.round(point.value)}
                 {unit}
               </span>
             </div>
-            <span className="max-w-full truncate text-[10px] text-[var(--text-faint)]">{point.label}</span>
+            <span className="max-w-full truncate text-[11px] text-[var(--text-faint)]">{point.label}</span>
           </div>
         );
       })}

@@ -3,6 +3,7 @@ import { getCurrentUser } from '@/lib/auth/session';
 import { redirect } from 'next/navigation';
 import { createTranslator, resolveLocale } from '@/i18n';
 import { Icon, type IconName } from '@/components/ui/icons';
+import { RevealOnScroll } from '@/components/ui/reveal-on-scroll';
 import { ALL_NAV_ITEMS } from '@/components/app-shell/navigation';
 import { LOCALES } from '@/i18n/config';
 
@@ -48,7 +49,7 @@ export default async function LandingPage() {
           </Link>
           <Link
             href="/register"
-            className="rounded-full lm-gradient-bg px-5 py-2.5 text-sm font-medium shadow-[0_6px_18px_-10px_rgba(0,0,0,0.6)] transition-all hover:brightness-110"
+            className="rounded-full lm-gradient-bg px-5 py-2.5 text-sm font-medium shadow-[0_6px_18px_-10px_rgba(0,0,0,0.6)] lm-transition-ui hover:brightness-110 active:scale-[0.985]"
           >
             {t('landing.cta')}
           </Link>
@@ -78,14 +79,14 @@ export default async function LandingPage() {
               <div className="mt-9 flex flex-wrap items-center gap-3">
                 <Link
                   href="/register"
-                  className="inline-flex h-13 items-center gap-2 rounded-full lm-gradient-bg px-7 text-[15px] font-medium shadow-[0_10px_28px_-12px_rgba(0,0,0,0.55)] transition-all hover:brightness-110"
+                  className="inline-flex h-13 items-center gap-2 rounded-full lm-gradient-bg px-7 text-[15px] font-medium shadow-[0_10px_28px_-12px_rgba(0,0,0,0.55)] lm-transition-ui hover:brightness-110 active:scale-[0.985]"
                 >
                   {t('landing.cta')}
                   <Icon name="chevronRight" size={17} className="rtl:rotate-180" />
                 </Link>
                 <Link
                   href="/login"
-                  className="inline-flex h-13 items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface)] px-6 text-[15px] font-medium text-[var(--text)] transition-colors hover:bg-[var(--surface-2)]"
+                  className="inline-flex h-13 items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface)] px-6 text-[15px] font-medium text-[var(--text)] lm-transition-ui hover:border-brand-300/40 hover:bg-[var(--surface-2)] active:scale-[0.985]"
                 >
                   {t('landing.ctaSecondary')}
                 </Link>
@@ -125,7 +126,7 @@ export default async function LandingPage() {
                     { label: t('dash.tasksDone'), color: '#f6d9e4' },
                   ].map((tile) => (
                     <div key={tile.label} className="rounded-xl bg-[var(--surface-2)] p-3">
-                      <p className="text-[10px] text-[var(--text-faint)]">{tile.label}</p>
+                      <p className="text-[11px] text-[var(--text-faint)]">{tile.label}</p>
                       {/* Valeur neutre : une jauge sans chiffre. */}
                       <span aria-hidden="true" className="mt-2.5 block h-1.5 rounded-full" style={{ background: tile.color }} />
                     </div>
@@ -182,14 +183,15 @@ export default async function LandingPage() {
 
         {/* --- Fonctionnalites --- */}
         <section className="mx-auto max-w-6xl px-5 pb-24 sm:px-8">
-          <h2 className="text-balance text-center text-3xl font-semibold tracking-tight text-[var(--text)] sm:text-4xl">
+          <h2 className="font-display text-balance text-center text-3xl font-semibold tracking-tight text-[var(--text)] sm:text-4xl">
             {t('landing.featuresTitle')}
           </h2>
 
           <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {features.map((feature) => (
+            {features.map((feature, index) => (
               <article
                 key={feature.title}
+                data-reveal={index % 3}
                 className="lm-card lm-card-hover group p-6"
               >
                 <span
@@ -207,13 +209,13 @@ export default async function LandingPage() {
 
         {/* --- Confidentialite --- */}
         <section className="mx-auto max-w-6xl px-5 pb-24 sm:px-8">
-          <div className="lm-card relative overflow-hidden p-8 text-center sm:p-14">
+          <div data-reveal className="lm-card relative overflow-hidden p-8 text-center sm:p-14">
             <div className="lm-aura opacity-70" aria-hidden="true" />
             <div className="relative">
               <span className="mx-auto grid size-12 place-items-center rounded-2xl bg-[#f6d9e4]/12 text-[#f6d9e4]">
                 <Icon name="shield" size={23} />
               </span>
-              <h2 className="mt-5 text-2xl font-semibold text-[var(--text)] sm:text-3xl">
+              <h2 className="font-display mt-5 text-2xl font-semibold text-[var(--text)] sm:text-3xl">
                 {t('landing.privacyTitle')}
               </h2>
               <p className="mx-auto mt-3 max-w-2xl text-pretty text-sm leading-relaxed text-[var(--text-muted)]">
@@ -221,7 +223,7 @@ export default async function LandingPage() {
               </p>
               <Link
                 href="/register"
-                className="mt-8 inline-flex h-12 items-center gap-2 rounded-full lm-gradient-bg px-7 text-sm font-medium transition-all hover:brightness-110"
+                className="mt-8 inline-flex h-12 items-center gap-2 rounded-full lm-gradient-bg px-7 text-sm font-medium lm-transition-ui hover:brightness-110 active:scale-[0.985]"
               >
                 {t('landing.cta')}
                 <Icon name="chevronRight" size={16} className="rtl:rotate-180" />
@@ -231,6 +233,7 @@ export default async function LandingPage() {
         </section>
       </main>
 
+      <RevealOnScroll />
       <footer className="border-t border-[var(--border)]">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-5 py-8 text-xs text-[var(--text-faint)] sm:flex-row sm:px-8">
           <p>

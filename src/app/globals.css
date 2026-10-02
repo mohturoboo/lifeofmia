@@ -232,9 +232,24 @@
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 
-  h1,
+  /*
+   * Cormorant est reservee aux grands titres (h1, titres de section de
+   * l'accueil via `font-display`). Les titres de carte, de ligne et de modale
+   * sont de petite taille : en Jost ils restent lisibles, y compris barres.
+   */
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+  }
+
   h2,
   h3 {
+    font-family: var(--font-sans);
+    letter-spacing: -0.005em;
+  }
+
+  .font-display {
     font-family: var(--font-display);
     font-weight: 500;
     letter-spacing: -0.02em;
@@ -430,9 +445,9 @@
 
   .lm-eyebrow {
     font-family: var(--font-sans);
-    font-size: 0.625rem;
+    font-size: 0.6875rem;
     font-weight: 500;
-    letter-spacing: 0.22em;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--text-faint);
   }
@@ -482,6 +497,23 @@
 
   .lm-sweep:hover::after {
     animation: var(--animate-sweep);
+  }
+
+  /*
+   * Apparition au scroll. Amelioration progressive : sans JavaScript ou sans
+   * IntersectionObserver, le contenu est simplement la, a sa place. La classe
+   * `lm-reveal-pending` n'est posee QUE par `RevealOnScroll`, uniquement sur
+   * des elements encore hors ecran, et ne touche jamais l'opacite : si
+   * l'observateur ne se declenche pas, l'element reste visible, decale de
+   * quelques pixels au pire.
+   */
+  [data-reveal] {
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: var(--lm-reveal-delay, 0ms);
+  }
+
+  [data-reveal].lm-reveal-pending {
+    transform: translateY(14px);
   }
 
   .lm-rule {

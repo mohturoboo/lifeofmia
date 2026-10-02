@@ -369,7 +369,7 @@ export default function DashboardPage() {
                     onClick={() => toggleHabit(habit.id, habit.done)}
                     aria-pressed={habit.done}
                     className={cx(
-                      'flex w-full items-center gap-3 rounded-xl border p-3 text-start transition-all',
+                      'flex w-full items-center gap-3 rounded-xl border p-3 text-start lm-transition-ui',
                       habit.done
                         ? 'border-transparent bg-[var(--surface-2)]'
                         : 'border-[var(--border)] hover:border-[var(--border-strong)]',

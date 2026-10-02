@@ -306,7 +306,7 @@ export default function GoalsPage() {
                                 >
                                   <span
                                     className={cx(
-                                      'grid size-4 place-items-center rounded border-2 transition-all',
+                                      'grid size-4 place-items-center rounded border-2 lm-transition-ui',
                                       step.done ? 'border-transparent text-[var(--on-pink)]' : 'border-[var(--border-strong)]',
                                     )}
                                     style={step.done ? { background: goal.color } : undefined}

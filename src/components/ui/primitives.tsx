@@ -3,6 +3,7 @@
 import {
   Children,
   forwardRef,
+  type CSSProperties,
   type ButtonHTMLAttributes,
   type InputHTMLAttributes,
   type ReactNode,
@@ -41,7 +42,8 @@ const BUTTON_VARIANTS: Record<ButtonVariant, string> = {
   ghost: 'text-[var(--text-muted)] hover:bg-[var(--surface-2)] hover:text-[var(--text)]',
   subtle:
     'bg-[var(--surface)] text-[var(--text)] border border-[var(--border)] hover:border-brand-300/40',
-  danger: 'bg-[#ff9fbf]/10 text-[#ff9fbf] border border-[#ff9fbf]/25 hover:bg-[#ff9fbf]/20',
+  danger:
+    'bg-[#ff9fbf]/10 text-red-700 border border-[#ff9fbf]/40 hover:bg-[#ff9fbf]/20 dark:text-[#ff9fbf] dark:border-[#ff9fbf]/25',
 };
 
 /* Pastilles franchement arrondies, interlettrage ouvert. */
@@ -366,8 +368,13 @@ export function Badge({
 }) {
   return (
     <span
-      className={cx('inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-medium', className)}
-      style={{ background: `color-mix(in srgb, ${color} 14%, transparent)`, color }}
+      className={cx(
+        'inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-medium',
+        // Clair : le pastel est fonce vers l'encre pour rester lisible ; sombre : pastel tel quel.
+        'text-[color-mix(in_srgb,var(--badge)_45%,var(--text))] dark:text-[var(--badge)]',
+        className,
+      )}
+      style={{ background: `color-mix(in srgb, ${color} 14%, transparent)`, '--badge': color } as CSSProperties}
     >
       {children}
     </span>
@@ -421,7 +428,7 @@ export function EmptyState({
 }) {
   return (
     <div className="flex flex-col items-center justify-center gap-3 px-6 py-14 text-center">
-      <span className="grid size-16 place-items-center rounded-3xl bg-brand-300/10 text-brand-300 ring-1 ring-brand-300/20">
+      <span className="grid size-16 place-items-center rounded-3xl bg-brand-300/10 text-[var(--brand-text)] ring-1 ring-brand-300/20">
         <Icon name={icon} size={26} />
       </span>
       <p className="text-sm font-medium text-[var(--text)]">{title}</p>

@@ -238,14 +238,14 @@ export default function CalendarPage() {
                     {items.slice(0, 3).map((item) => (
                       <div
                         key={`${item.type}-${item.id}`}
-                        className="truncate rounded px-1 py-0.5 text-[10px] leading-tight"
+                        className="truncate rounded px-1 py-0.5 text-[11px] leading-tight"
                         style={{ background: `${item.color}22`, color: item.color }}
                       >
                         {item.title}
                       </div>
                     ))}
                     {items.length > 3 && (
-                      <div className="px-1 text-[10px] text-[var(--text-faint)]">+{items.length - 3}</div>
+                      <div className="px-1 text-[11px] text-[var(--text-faint)]">+{items.length - 3}</div>
                     )}
                   </div>
                 </button>
@@ -276,7 +276,7 @@ export default function CalendarPage() {
                 >
                   <span className="size-2 shrink-0 rounded-full" style={{ background: item.color }} />
                   <span className="min-w-0 flex-1 truncate text-sm text-[var(--text)]">{item.title}</span>
-                  <span className="shrink-0 text-[10px] uppercase text-[var(--text-faint)]">
+                  <span className="shrink-0 text-[11px] uppercase text-[var(--text-faint)]">
                     {item.type === 'task' ? t('nav.tasks') : t('calendar.title')}
                   </span>
                   {item.type === 'event' && (

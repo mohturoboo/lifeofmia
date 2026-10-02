@@ -214,7 +214,7 @@ export default function HabitsPage() {
                       onClick={() => (multi && !done ? increment(habit) : toggle(habit))}
                       aria-pressed={done}
                       aria-label={done ? t('habits.markUndone') : t('habits.markDone')}
-                      className="grid size-11 shrink-0 place-items-center rounded-xl transition-all hover:scale-105"
+                      className="grid size-11 shrink-0 place-items-center rounded-xl lm-transition-ui hover:scale-105"
                       style={{
                         background: done ? habit.color : `${habit.color}1a`,
                         // Encre sombre de la marque : le blanc tombait a 1,25:1 sur les pastels.
@@ -335,7 +335,7 @@ export default function HabitsPage() {
                   aria-label={t(`icons.${icon}` as 'icons.target')}
                   aria-pressed={form.icon === icon}
                   className={cx(
-                    'grid size-9 place-items-center rounded-lg border transition-all',
+                    'grid size-9 place-items-center rounded-lg border lm-transition-ui',
                     form.icon === icon
                       ? 'border-transparent text-[var(--on-pink)]'
                       : 'border-[var(--border)] text-[var(--text-muted)] hover:border-[var(--border-strong)]',

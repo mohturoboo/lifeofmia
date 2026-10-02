@@ -258,7 +258,7 @@ export default function StatsPage() {
                   </span>
                   <div>
                     <p className="text-[13px] text-[var(--text)]">{badge.name}</p>
-                    <p className="text-[10px] text-[var(--text-faint)]">
+                    <p className="text-[11px] text-[var(--text-faint)]">
                       {new Date(badge.unlockedAt).toLocaleDateString(locale, { day: 'numeric', month: 'short' })}
                     </p>
                   </div>

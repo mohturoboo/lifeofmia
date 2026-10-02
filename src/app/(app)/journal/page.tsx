@@ -123,7 +123,7 @@ export default function JournalPage() {
                   aria-pressed={form.mood === index + 1}
                   aria-label={moodLabels[index]}
                   className={cx(
-                    'flex flex-1 flex-col items-center gap-1.5 rounded-xl border py-3 transition-all',
+                    'flex flex-1 flex-col items-center gap-1.5 rounded-xl border py-3 lm-transition-ui',
                     form.mood === index + 1
                       ? 'border-[#efc4e2]/40 bg-[#efc4e2]/10'
                       : 'border-[var(--border)] hover:border-[var(--border-strong)]',
@@ -132,7 +132,7 @@ export default function JournalPage() {
                   <span className="text-2xl" aria-hidden="true">
                     {emoji}
                   </span>
-                  <span className="hidden text-[10px] text-[var(--text-faint)] sm:block">{moodLabels[index]}</span>
+                  <span className="hidden text-[11px] text-[var(--text-faint)] sm:block">{moodLabels[index]}</span>
                 </button>
               ))}
             </div>

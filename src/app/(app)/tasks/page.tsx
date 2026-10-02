@@ -192,7 +192,7 @@ export default function TasksPage() {
             aria-pressed={done}
             aria-label={done ? t('habits.markUndone') : t('habits.markDone')}
             className={cx(
-              'mt-0.5 grid size-5 shrink-0 place-items-center rounded-md border-2 transition-all',
+              'mt-0.5 grid size-5 shrink-0 place-items-center rounded-md border-2 lm-transition-ui',
               done ? 'border-transparent bg-[#f6d9e4] text-[var(--on-pink)]' : 'border-[var(--border-strong)] hover:border-[#f6d9e4]',
             )}
           >

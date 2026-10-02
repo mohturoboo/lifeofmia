@@ -217,7 +217,7 @@ export default function AiPage() {
 
                       {message.actions && message.actions.length > 0 && (
                         <div className="mt-2 space-y-1">
-                          <p className="text-[10px] uppercase tracking-wide text-[var(--text-faint)]">
+                          <p className="text-[11px] uppercase tracking-wide text-[var(--text-faint)]">
                             {t('ai.actionsPerformed')}
                           </p>
                           {message.actions.map((action, index) => (

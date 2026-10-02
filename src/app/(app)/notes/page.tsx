@@ -163,7 +163,7 @@ export default function NotesPage() {
                 </p>
               </button>
 
-              <p className="mt-2 shrink-0 text-[10px] text-[var(--text-faint)]">
+              <p className="mt-2 shrink-0 text-[11px] text-[var(--text-faint)]">
                 {new Date(note.updatedAt).toLocaleDateString(locale, { day: 'numeric', month: 'short' })}
               </p>
             </article>

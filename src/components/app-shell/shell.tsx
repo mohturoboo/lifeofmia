@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { Icon } from '@/components/ui/icons';
 import { cx } from '@/components/ui/primitives';
 import { ALL_NAV_ITEMS, MOBILE_NAV, NAV_SECTIONS } from '@/components/app-shell/navigation';
@@ -115,7 +115,7 @@ export function AppShell({ user, children }: { user: ShellUser; children: ReactN
                       href={item.href}
                       aria-current={active ? 'page' : undefined}
                       className={cx(
-                        'group relative flex items-center gap-3 rounded-full px-3.5 py-2.5 text-[13.5px] transition-all duration-200',
+                        'group relative flex items-center gap-3 rounded-full px-3.5 py-2.5 text-[13.5px] lm-transition-ui duration-200',
                         active
                           ? 'font-medium text-[var(--on-pink)]'
                           : 'text-[var(--text-muted)] hover:bg-[var(--surface-2)] hover:text-[var(--text)]',
@@ -243,7 +243,7 @@ export function AppShell({ user, children }: { user: ShellUser; children: ReactN
             <div className="flex-1" />
 
             {user.currentStreak > 0 && (
-              <span className="hidden items-center gap-1.5 rounded-full border border-brand-300/25 bg-brand-300/10 px-3 py-1.5 text-xs font-medium text-brand-300 sm:inline-flex">
+              <span className="hidden items-center gap-1.5 rounded-full border border-brand-300/25 bg-brand-300/10 px-3 py-1.5 text-xs font-medium text-[var(--brand-text)] sm:inline-flex">
                 <Icon name="flame" size={14} />
                 {t('common.dayCount', { count: user.currentStreak })}
               </span>
@@ -329,7 +329,7 @@ export function AppShell({ user, children }: { user: ShellUser; children: ReactN
                       <button
                         type="button"
                         onClick={logout}
-                        className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-[#ff9fbf] transition-colors hover:bg-[#ff9fbf]/10"
+                        className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-red-700 transition-colors hover:bg-[#ff9fbf]/10 dark:text-[#ff9fbf]"
                       >
                         <Icon name="logout" size={16} />
                         {t('nav.logout')}
@@ -360,8 +360,12 @@ export function AppShell({ user, children }: { user: ShellUser; children: ReactN
               key={item.href}
               href={item.href}
               aria-current={active ? 'page' : undefined}
-              className="flex flex-1 flex-col items-center gap-1 py-2.5 text-[10px] transition-colors"
-              style={{ color: active ? item.color : 'var(--text-faint)' }}
+              className={cx(
+                'flex flex-1 flex-col items-center gap-1 py-2.5 text-[11px] transition-colors',
+                // Clair : encre du theme (les pastels n'y atteignent pas 3:1) ; sombre : couleur du module.
+                active ? 'text-[var(--text)] dark:text-[var(--item-color)]' : 'text-[var(--text-faint)]',
+              )}
+              style={{ '--item-color': item.color } as CSSProperties}
             >
               <Icon name={item.icon} size={20} />
               {t(item.labelKey)}
