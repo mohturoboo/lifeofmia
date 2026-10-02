@@ -29,7 +29,7 @@ test.beforeEach(async ({ page }) => {
 test('une tache creee survit au rechargement', async ({ page }) => {
   await page.goto('/tasks');
 
-  await page.getByRole('button', { name: 'Nouvelle tâche' }).click();
+  await page.getByRole('button', { name: 'Nouvelle tâche' }).first().click();
   const fenetre = page.getByRole('dialog');
   await expect(fenetre).toBeVisible();
 
