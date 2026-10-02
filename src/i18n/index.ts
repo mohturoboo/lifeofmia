@@ -1,5 +1,5 @@
 import { DEFAULT_LOCALE, LOCALE_META, resolveLocale, type Locale } from '@/i18n/config';
-import { fr, type Dictionary, type DictionaryKey } from '@/i18n/locales/fr';
+import { fr, type Dictionary, type DictionaryKey, type RacinePluriel } from '@/i18n/locales/fr';
 import { en } from '@/i18n/locales/en';
 import { ar } from '@/i18n/locales/ar';
 import { es } from '@/i18n/locales/es';
@@ -17,12 +17,19 @@ import { tr } from '@/i18n/locales/tr';
  */
 export const DICTIONARIES: Record<Locale, Dictionary> = { fr, en, ar, es, de, it, pt, tr };
 
-export type Translator = (key: DictionaryKey, values?: Record<string, string | number>) => string;
+/**
+ * Une cle simple, ou la racine d'une cle a pluriel accompagnee de son `count` :
+ *   t('goals.daysLeftCount', { count: 12 })
+ */
+export type Translator = {
+  (key: DictionaryKey, values?: Record<string, string | number>): string;
+  (key: RacinePluriel, values: { count: number } & Record<string, string | number>): string;
+};
 
 /**
  * Construit la fonction de traduction d'une langue.
  * L'interpolation utilise la syntaxe `{nom}` :
- *   t('goals.daysLeft', { count: 12 })
+ *   t('goals.daysLeftCount', { count: 12 })
  */
 export function createTranslator(locale: Locale): Translator {
   const dictionary = DICTIONARIES[locale] ?? DICTIONARIES[DEFAULT_LOCALE];
@@ -45,7 +52,7 @@ export function createTranslator(locale: Locale): Translator {
     }
   })();
 
-  return (key, values) => {
+  return (key: string, values?: Record<string, string | number>) => {
     let cle: string = key;
 
     /*

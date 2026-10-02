@@ -434,7 +434,7 @@ export default function SettingsPage() {
           </Card>
 
           <Card>
-            <CardHeader title={t('dash.badges')} subtitle={`${data.badges.length} debloques`} icon="award" accent="#ff9fbf" />
+            <CardHeader title={t('dash.badges')} subtitle={t('stats.badgeUnlocked', { count: data.badges.length })} icon="award" accent="#ff9fbf" />
             <div className="flex flex-wrap gap-2">
               {data.badges.length === 0 ? (
                 <p className="text-xs text-[var(--text-faint)]">{t('common.empty')}</p>

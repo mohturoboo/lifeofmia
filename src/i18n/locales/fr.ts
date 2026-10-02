@@ -556,7 +556,7 @@ export type DictionaryKey = keyof typeof fr;
 type FormePlurielle = 'zero' | 'one' | 'two' | 'few' | 'many' | 'other';
 
 /** Racines des cles a pluriel, deduites de celles qui portent `_one`. */
-type RacinePluriel = Extract<DictionaryKey, `${string}_one`> extends `${infer Racine}_one`
+export type RacinePluriel = Extract<DictionaryKey, `${string}_one`> extends `${infer Racine}_one`
   ? Racine
   : never;
 

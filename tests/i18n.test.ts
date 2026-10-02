@@ -78,6 +78,19 @@ describe('internationalisation', () => {
     expect(t('{count} jours' as never, { count: 12 })).toBe('12 jours');
   });
 
+  it('accorde les compteurs selon la langue', () => {
+    const fr = createTranslator('fr');
+    expect(fr('habits.streakCount', { count: 1 })).toBe('1 jour d\'affilée');
+    expect(fr('habits.streakCount', { count: 5 })).toBe('5 jours d\'affilée');
+    // 0 est singulier en francais, pluriel en anglais.
+    expect(fr('common.dayCount', { count: 0 })).toBe('0 jour');
+    const en = createTranslator('en');
+    expect(en('common.dayCount', { count: 0 })).toBe('0 days');
+    expect(en('dash.badgeCount', { count: 1 })).toBe('1 badge');
+    // L'arabe a des formes que le francais ignore.
+    expect(createTranslator('ar')('common.dayCount', { count: 2 })).toBe('يومان');
+  });
+
   it('renvoie la cle brute quand elle n\'existe pas', () => {
     const t = createTranslator('en');
     expect(t('cle.inexistante' as never)).toBe('cle.inexistante');

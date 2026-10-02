@@ -473,11 +473,11 @@ export default function DashboardPage() {
             <div className="mt-3 flex items-center justify-between text-xs text-[var(--text-faint)]">
               <span className="flex items-center gap-1.5">
                 <Icon name="flame" size={13} className="text-[#ff9fbf]" />
-                {data.user.currentStreak} {t('common.days')}
+                {t('common.dayCount', { count: data.user.currentStreak })}
               </span>
               <span className="flex items-center gap-1.5">
                 <Icon name="award" size={13} className="text-[#ff9fbf]" />
-                {data.badgeCount} {t('dash.badges')}
+                {t('dash.badgeCount', { count: data.badgeCount })}
               </span>
             </div>
           </Card>

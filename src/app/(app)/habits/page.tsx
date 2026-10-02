@@ -264,7 +264,7 @@ export default function HabitsPage() {
                       <div className="mt-2.5 flex items-center justify-between text-[11px] text-[var(--text-faint)]">
                         <span className="flex items-center gap-1">
                           <Icon name="flame" size={12} className="text-[#ff9fbf]" />
-                          {habit.streak} {t('habits.streakDays')}
+                          {t('habits.streakCount', { count: habit.streak })}
                         </span>
                         <span>
                           {habit.completionRate}% · +{habit.xpReward} XP

@@ -218,18 +218,18 @@ export default function StatsPage() {
               </div>
               <div className="flex justify-between gap-6">
                 <dt className="text-[var(--text-muted)]">{t('dash.streak')}</dt>
-                <dd className="font-medium text-[var(--text)]">{data.streak.current} j</dd>
+                <dd className="font-medium text-[var(--text)]">{t('common.dayCount', { count: data.streak.current })}</dd>
               </div>
               <div className="flex justify-between gap-6">
                 <dt className="text-[var(--text-muted)]">{t('stats.bestStreak')}</dt>
-                <dd className="font-medium text-[var(--text)]">{data.streak.longest} j</dd>
+                <dd className="font-medium text-[var(--text)]">{t('common.dayCount', { count: data.streak.longest })}</dd>
               </div>
             </dl>
           </div>
         </Card>
 
         <Card className="lg:col-span-2">
-          <CardHeader title={t('dash.badges')} subtitle={`${data.badges.length} debloques`} icon="crown" accent="#ff9fbf" />
+          <CardHeader title={t('dash.badges')} subtitle={t('stats.badgeUnlocked', { count: data.badges.length })} icon="crown" accent="#ff9fbf" />
           {data.badges.length === 0 ? (
             <p className="py-8 text-center text-xs text-[var(--text-faint)]">
               Validez vos premieres habitudes pour debloquer des badges.

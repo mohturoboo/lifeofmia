@@ -257,7 +257,7 @@ export default function GoalsPage() {
                                     )}
                                   >
                                     <Icon name="calendar" size={11} />
-                                    {daysLeft < 0 ? t('goals.overdue') : `${daysLeft} ${t('goals.daysLeft')}`}
+                                    {daysLeft < 0 ? t('goals.overdue') : t('goals.daysLeftCount', { count: daysLeft })}
                                   </span>
                                 )}
                               </div>

@@ -228,7 +228,7 @@ export function AppShell({ user, children }: { user: ShellUser; children: ReactN
             {user.currentStreak > 0 && (
               <span className="hidden items-center gap-1.5 rounded-full border border-brand-300/25 bg-brand-300/10 px-3 py-1.5 text-xs font-medium text-brand-300 sm:inline-flex">
                 <Icon name="flame" size={14} />
-                {user.currentStreak} {t('common.days')}
+                {t('common.dayCount', { count: user.currentStreak })}
               </span>
             )}
 
