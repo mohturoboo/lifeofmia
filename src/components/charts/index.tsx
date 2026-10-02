@@ -601,7 +601,11 @@ export function Heatmap({
    * a defiler horizontalement au lieu de la seule frise.
    */
   return (
-    <div className="min-w-0 overflow-x-auto pb-1">
+    /*
+     * Zone defilante atteignable au clavier : sans `tabIndex`, la fin de
+     * l'annee etait inaccessible sans souris sur un ecran etroit.
+     */
+    <div className="min-w-0 overflow-x-auto pb-1" tabIndex={0} role="region" aria-label={t('stats.heatmap')}>
       <div className="flex gap-[3px]" role="img" aria-label={t('charts.heatmapLabel', { count: data.length })}>
         <div className="mr-1 flex flex-col gap-[3px]">
           {weekdayLabels.map((label, index) => (
