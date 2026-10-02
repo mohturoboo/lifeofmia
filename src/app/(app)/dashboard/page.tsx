@@ -375,7 +375,7 @@ export default function DashboardPage() {
                       className="grid size-8 shrink-0 place-items-center rounded-lg transition-colors"
                       style={{
                         background: habit.done ? habit.color : `${habit.color}1a`,
-                        color: habit.done ? '#fff' : habit.color,
+                        color: habit.done ? 'var(--on-pink)' : habit.color,
                       }}
                     >
                       <Icon name={habit.done ? 'check' : (habit.icon as IconName)} size={16} />
@@ -385,7 +385,7 @@ export default function DashboardPage() {
                       <span
                         className={cx(
                           'block truncate text-sm',
-                          habit.done ? 'text-[var(--text-faint)] line-through' : 'text-[var(--text)]',
+                          habit.done ? 'text-[var(--text-muted)] line-through' : 'text-[var(--text)]',
                         )}
                       >
                         {habit.name}
@@ -398,7 +398,10 @@ export default function DashboardPage() {
                     </span>
 
                     {habit.isNegative && <Badge color="#ff9fbf">{t('habits.toAvoid')}</Badge>}
-                    <span className="text-[11px] font-medium text-[var(--text-faint)]">+{habit.xpReward} XP</span>
+                    {/* Le gain n'est annonce que tant qu'il reste a obtenir. */}
+                    {!habit.done && (
+                      <span className="text-[11px] font-medium text-[var(--text-faint)]">+{habit.xpReward} XP</span>
+                    )}
                   </button>
                 </li>
               ))}

@@ -215,7 +215,8 @@ export default function HabitsPage() {
                       className="grid size-11 shrink-0 place-items-center rounded-xl transition-all hover:scale-105"
                       style={{
                         background: done ? habit.color : `${habit.color}1a`,
-                        color: done ? '#fff' : habit.color,
+                        // Encre sombre de la marque : le blanc tombait a 1,25:1 sur les pastels.
+                        color: done ? 'var(--on-pink)' : habit.color,
                       }}
                     >
                       <Icon name={done ? 'check' : (habit.icon as IconName)} size={20} />
@@ -223,7 +224,7 @@ export default function HabitsPage() {
 
                     <div className="min-w-0 flex-1">
                       <div className="flex items-start justify-between gap-2">
-                        <h2 className={cx('truncate text-[15px] font-medium', done ? 'text-[var(--text-faint)] line-through' : 'text-[var(--text)]')}>
+                        <h2 className={cx('truncate font-sans text-[15px] font-medium', done ? 'text-[var(--text-muted)] line-through' : 'text-[var(--text)]')}>
                           {habit.name}
                         </h2>
                         <div className="flex shrink-0 gap-0.5">
@@ -267,7 +268,7 @@ export default function HabitsPage() {
                           {t('habits.streakCount', { count: habit.streak })}
                         </span>
                         <span>
-                          {habit.completionRate}% · +{habit.xpReward} XP
+                          {habit.completionRate}%{!done && ` · +${habit.xpReward} XP`}
                         </span>
                       </div>
                     </div>
