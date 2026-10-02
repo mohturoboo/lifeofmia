@@ -509,6 +509,15 @@ export const es: Dictionary = {
   'landing.privacyText':
     'Cada cuenta esta totalmente aislada. Contrasenas cifradas, sesiones revocables, exportacion y eliminacion a peticion.',
   'landing.footerRights': 'Todos los derechos reservados.',
+  'landing.previewLabel': 'Vista previa',
+  'landing.previewTitle': 'Tu día',
+  'landing.previewHabitPrayer': 'Oración del Fajr',
+  'landing.previewHabitReading': 'Leer 20 minutos',
+  'landing.previewHabitSport': 'Sesión de deporte',
+  'landing.statModules_one': 'módulo',
+  'landing.statModules_other': 'módulos',
+  'landing.statLanguages_one': 'idioma',
+  'landing.statLanguages_other': 'idiomas',
 
   // --- Cles ajoutees par la reprise de l'internationalisation ---
   'common.dayCount_one': '{count} día',

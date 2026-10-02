@@ -3,6 +3,8 @@ import { getCurrentUser } from '@/lib/auth/session';
 import { redirect } from 'next/navigation';
 import { createTranslator, resolveLocale } from '@/i18n';
 import { Icon, type IconName } from '@/components/ui/icons';
+import { ALL_NAV_ITEMS } from '@/components/app-shell/navigation';
+import { LOCALES } from '@/i18n/config';
 
 /**
  * Page d'accueil publique.
@@ -90,10 +92,10 @@ export default async function LandingPage() {
               </div>
 
               <dl className="mt-12 flex flex-wrap gap-x-10 gap-y-4">
+                {/* Chiffres derives du code, jamais saisis a la main. */}
                 {[
-                  { value: '16', label: 'modules' },
-                  { value: '8', label: 'langues' },
-                  { value: '100%', label: 'vos donnees' },
+                  { value: ALL_NAV_ITEMS.length, label: t('landing.statModules', { count: ALL_NAV_ITEMS.length }) },
+                  { value: LOCALES.length, label: t('landing.statLanguages', { count: LOCALES.length }) },
                 ].map((stat) => (
                   <div key={stat.label}>
                     <dt className="text-2xl font-semibold text-[var(--text)]">{stat.value}</dt>
@@ -104,39 +106,37 @@ export default async function LandingPage() {
             </div>
 
             {/* Apercu de l'interface — construit en HTML, pas une capture d'ecran :
-                il reste net sur tous les ecrans et suit le theme actif. */}
+                il reste net sur tous les ecrans et suit le theme actif. Il
+                n'affiche ni nom, ni chiffre, ni reponse d'IA : rien qui puisse
+                passer pour une donnee reelle. */}
             <div className="relative animate-[lm-entree_0.8s_cubic-bezier(0.22,1,0.36,1)_both]">
               <div className="lm-card overflow-hidden p-5">
                 <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-[var(--text-faint)]">Bonjour Mohamed</p>
-                    <p className="text-lg font-semibold text-[var(--text)]">Votre journee</p>
-                  </div>
+                  <p className="text-lg font-semibold text-[var(--text)]">{t('landing.previewTitle')}</p>
                   <span className="rounded-full bg-brand-500/12 px-2.5 py-1 text-[11px] font-medium text-[var(--brand-text)]">
-                    Serie 42 j
+                    {t('landing.previewLabel')}
                   </span>
                 </div>
 
                 <div className="mt-5 grid grid-cols-3 gap-2.5">
                   {[
-                    { label: 'Discipline', value: '87%', color: '#fbc7da' },
-                    { label: 'Habitudes', value: '6/7', color: '#e9b8d5' },
-                    { label: 'Focus', value: '2 h', color: '#f6d9e4' },
+                    { label: t('dash.disciplineScore'), color: '#fbc7da' },
+                    { label: t('dash.habitsDone'), color: '#e9b8d5' },
+                    { label: t('dash.tasksDone'), color: '#f6d9e4' },
                   ].map((tile) => (
                     <div key={tile.label} className="rounded-xl bg-[var(--surface-2)] p-3">
                       <p className="text-[10px] text-[var(--text-faint)]">{tile.label}</p>
-                      <p className="mt-1 text-lg font-semibold" style={{ color: tile.color }}>
-                        {tile.value}
-                      </p>
+                      {/* Valeur neutre : une jauge sans chiffre. */}
+                      <span aria-hidden="true" className="mt-2.5 block h-1.5 rounded-full" style={{ background: tile.color }} />
                     </div>
                   ))}
                 </div>
 
                 <div className="mt-4 space-y-2">
                   {[
-                    { name: 'Priere du Fajr', done: true, color: '#dcc7ea' },
-                    { name: 'Lecture 30 min', done: true, color: '#d9c7f0' },
-                    { name: 'Seance de sport', done: false, color: '#ff9fbf' },
+                    { name: t('landing.previewHabitPrayer'), done: true, color: '#dcc7ea' },
+                    { name: t('landing.previewHabitReading'), done: true, color: '#d9c7f0' },
+                    { name: t('landing.previewHabitSport'), done: false, color: '#ff9fbf' },
                   ].map((habit) => (
                     <div
                       key={habit.name}
@@ -162,17 +162,18 @@ export default async function LandingPage() {
                     <span className="grid size-6 place-items-center rounded-lg lm-gradient-bg text-[var(--on-pink)]">
                       <Icon name="sparkles" size={13} />
                     </span>
-                    <span className="text-[11px] font-medium text-[var(--text-muted)]">Life AI</span>
+                    <span className="text-[11px] font-medium text-[var(--text-muted)]">{t('nav.ai')}</span>
                   </div>
-                  <p className="mt-2 text-[13px] leading-relaxed text-[var(--text-muted)]">
-                    « J&apos;ai deplace votre seance a 18 h : vous etes plus regulier le soir. »
-                  </p>
+                  <p className="mt-2 text-[13px] leading-relaxed text-[var(--text-muted)]">{t('ai.subtitle')}</p>
                 </div>
               </div>
 
               <div
                 className="absolute -inset-6 -z-10 rounded-[2.5rem] opacity-60 blur-3xl"
-                style={{ background: 'radial-gradient(circle at 60% 40%, rgba(198,166,100,0.18), transparent 70%)' }}
+                style={{
+                  background:
+                    'radial-gradient(circle at 60% 40%, color-mix(in srgb, var(--color-brand-300) 18%, transparent), transparent 70%)',
+                }}
                 aria-hidden="true"
               />
             </div>

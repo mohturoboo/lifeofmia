@@ -509,6 +509,15 @@ export const en: Dictionary = {
   'landing.privacyText':
     'Every account is fully isolated. Hashed passwords, revocable sessions, export and deletion on demand.',
   'landing.footerRights': 'All rights reserved.',
+  'landing.previewLabel': 'Preview',
+  'landing.previewTitle': 'Your day',
+  'landing.previewHabitPrayer': 'Fajr prayer',
+  'landing.previewHabitReading': 'Read for 20 minutes',
+  'landing.previewHabitSport': 'Workout',
+  'landing.statModules_one': 'module',
+  'landing.statModules_other': 'modules',
+  'landing.statLanguages_one': 'language',
+  'landing.statLanguages_other': 'languages',
 
   // --- Cles ajoutees par la reprise de l'internationalisation ---
   'common.dayCount_one': '{count} day',

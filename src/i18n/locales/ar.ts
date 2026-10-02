@@ -518,6 +518,23 @@ export const ar: Dictionary = {
   'landing.privacyText':
     'كل حساب معزول تماماً. كلمات مرور مشفرة، جلسات قابلة للإلغاء، وتصدير وحذف عند الطلب.',
   'landing.footerRights': 'جميع الحقوق محفوظة.',
+  'landing.previewLabel': 'معاينة',
+  'landing.previewTitle': 'يومك',
+  'landing.previewHabitPrayer': 'صلاة الفجر',
+  'landing.previewHabitReading': 'القراءة 20 دقيقة',
+  'landing.previewHabitSport': 'حصة رياضية',
+  'landing.statModules_zero': 'وحدة',
+  'landing.statModules_one': 'وحدة',
+  'landing.statModules_two': 'وحدتان',
+  'landing.statModules_few': 'وحدات',
+  'landing.statModules_many': 'وحدة',
+  'landing.statModules_other': 'وحدة',
+  'landing.statLanguages_zero': 'لغة',
+  'landing.statLanguages_one': 'لغة',
+  'landing.statLanguages_two': 'لغتان',
+  'landing.statLanguages_few': 'لغات',
+  'landing.statLanguages_many': 'لغة',
+  'landing.statLanguages_other': 'لغة',
 
   // --- Cles ajoutees par la reprise de l'internationalisation ---
   'common.dayCount_zero': 'لا يوم',

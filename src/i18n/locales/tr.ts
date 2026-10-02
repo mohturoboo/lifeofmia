@@ -509,6 +509,15 @@ export const tr: Dictionary = {
   'landing.privacyText':
     'Her hesap tamamen izole edilmistir. Sifrelenmis parolalar, iptal edilebilir oturumlar, talep uzerine disa aktarma ve silme.',
   'landing.footerRights': 'Tum haklari saklidir.',
+  'landing.previewLabel': 'Önizleme',
+  'landing.previewTitle': 'Gününüz',
+  'landing.previewHabitPrayer': 'Sabah namazı',
+  'landing.previewHabitReading': '20 dakika okuma',
+  'landing.previewHabitSport': 'Spor antrenmanı',
+  'landing.statModules_one': 'modül',
+  'landing.statModules_other': 'modül',
+  'landing.statLanguages_one': 'dil',
+  'landing.statLanguages_other': 'dil',
 
   // --- Cles ajoutees par la reprise de l'internationalisation ---
   'common.dayCount_one': '{count} gün',

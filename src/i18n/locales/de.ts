@@ -509,6 +509,15 @@ export const de: Dictionary = {
   'landing.privacyText':
     'Jedes Konto ist vollstandig isoliert. Gehashte Passworter, widerrufbare Sitzungen, Export und Loschung auf Anfrage.',
   'landing.footerRights': 'Alle Rechte vorbehalten.',
+  'landing.previewLabel': 'Vorschau',
+  'landing.previewTitle': 'Dein Tag',
+  'landing.previewHabitPrayer': 'Fadschr-Gebet',
+  'landing.previewHabitReading': '20 Minuten lesen',
+  'landing.previewHabitSport': 'Trainingseinheit',
+  'landing.statModules_one': 'Modul',
+  'landing.statModules_other': 'Module',
+  'landing.statLanguages_one': 'Sprache',
+  'landing.statLanguages_other': 'Sprachen',
 
   // --- Cles ajoutees par la reprise de l'internationalisation ---
   'common.dayCount_one': '{count} Tag',

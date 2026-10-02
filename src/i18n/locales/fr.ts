@@ -583,6 +583,15 @@ export const fr = {
   'landing.privacyText':
     'Chaque compte est totalement isolé. Mots de passe hachés, sessions révocables, export et suppression à la demande.',
   'landing.footerRights': 'Tous droits réservés.',
+  'landing.previewLabel': 'Aperçu',
+  'landing.previewTitle': 'Votre journée',
+  'landing.previewHabitPrayer': 'Prière du Fajr',
+  'landing.previewHabitReading': 'Lire 20 minutes',
+  'landing.previewHabitSport': 'Séance de sport',
+  'landing.statModules_one': 'module',
+  'landing.statModules_other': 'modules',
+  'landing.statLanguages_one': 'langue',
+  'landing.statLanguages_other': 'langues',
 } as const;
 
 export type DictionaryKey = keyof typeof fr;
