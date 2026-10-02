@@ -89,7 +89,17 @@ export default function StatsPage() {
       icon: 'dumbbell',
       color: '#ff9fbf',
     },
-    { label: t('dash.focusTime'), value: `${Math.round(totals.focusMinutes / 60)} h`, icon: 'clock', color: '#d9c7f0' },
+    // Masquee tant qu'aucune session de concentration n'existe : l'interface n'en propose pas la saisie.
+    ...(totals.focusMinutes > 0
+      ? [
+          {
+            label: t('dash.focusTime'),
+            value: `${Math.round(totals.focusMinutes / 60)} h`,
+            icon: 'clock' as const,
+            color: '#d9c7f0',
+          },
+        ]
+      : []),
     { label: t('prayers.title'), value: n(totals.prayersDone), icon: 'moon', color: '#dcc7ea' },
     { label: t('dash.xp'), value: n(totals.xpEarned), icon: 'award', color: '#ff9fbf' },
   ];

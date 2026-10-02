@@ -154,6 +154,7 @@ export default function DashboardPage() {
 
   const { stats, week } = data;
   const habitsDone = data.habits.filter((habit) => habit.done).length;
+  const hasFocusData = stats.focusMinutes > 0 || week.some((day) => day.focusMinutes > 0);
 
   const tiles: Array<{ label: string; value: string; icon: IconName; color: string; href: string; trend?: number[] }> =
     [
@@ -196,14 +197,20 @@ export default function DashboardPage() {
         color: '#f6d9e4',
         href: '/weight',
       },
-      {
-        label: t('dash.focusTime'),
-        value: `${Math.floor(stats.focusMinutes / 60)} h ${stats.focusMinutes % 60}`,
-        icon: 'clock',
-        color: '#d9c7f0',
-        href: '/stats',
-        trend: week.map((day) => day.focusMinutes),
-      },
+      // Aucune saisie de concentration n'existe dans l'interface : la tuile
+      // n'apparait que si des sessions ont ete enregistrees (API, import).
+      ...(hasFocusData
+        ? [
+            {
+              label: t('dash.focusTime'),
+              value: `${Math.floor(stats.focusMinutes / 60)} h ${stats.focusMinutes % 60}`,
+              icon: 'clock' as const,
+              color: '#d9c7f0',
+              href: '/stats',
+              trend: week.map((day) => day.focusMinutes),
+            },
+          ]
+        : []),
     ];
 
   return (
@@ -294,7 +301,9 @@ export default function DashboardPage() {
         Grille de quatre colonnes plutot que six : chaque tuile gagne en surface,
         le chiffre devient l'element dominant et la courbe passe en fond.
       */}
-      <section className="grid grid-cols-2 gap-3 lg:grid-cols-3 xl:grid-cols-6">
+      <section
+        className={`grid grid-cols-2 gap-3 lg:grid-cols-3 ${tiles.length > 5 ? 'xl:grid-cols-6' : 'xl:grid-cols-5'}`}
+      >
         {tiles.map((tile) => (
           <div key={tile.label}>
             <Link href={tile.href} className="lm-card lm-card-hover group relative block overflow-hidden p-4">
