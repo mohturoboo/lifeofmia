@@ -128,13 +128,13 @@ test('les champs obligatoires le declarent vraiment', async ({ page }) => {
   await page.getByRole('dialog').getByRole('button', { name: 'Annuler' }).click();
 
   await page.goto('/goals');
-  await page.getByRole('button', { name: 'Nouvel objectif' }).click();
+  await page.getByRole('button', { name: 'Nouvel objectif' }).first().click();
   await expect(page.locator('#goal-title')).toHaveAttribute('aria-required', 'true');
 });
 
 test('aucun champ de saisie ne reste anonyme', async ({ page }) => {
   await page.goto('/goals');
-  await page.getByRole('button', { name: 'Nouvel objectif' }).click();
+  await page.getByRole('button', { name: 'Nouvel objectif' }).first().click();
 
   // Un champ sans `id` ni `name` n'est associable ni a un libelle, ni a un
   // message d'erreur, ni au remplissage automatique du navigateur.
