@@ -58,7 +58,7 @@
     "@vitejs/plugin-react": "^5.0.4",
     "eslint": "^9.39.5",
     "eslint-config-next": "^15.5.23",
-    "jsdom": "^30.0.1",
+    "jsdom": "^26.1.0",
     "prisma": "^6.19.0",
     "tailwindcss": "^4.1.14",
     "tsx": "^4.20.6",
