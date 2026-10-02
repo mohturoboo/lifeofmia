@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useMemo } from 'react';
 import { api, useResource } from '@/lib/client/api';
 import { useMutate } from '@/lib/client/mutate';
-import { Badge, Button, Card, CardHeader, EmptyState, Progress, Skeleton, cx } from '@/components/ui/primitives';
+import { Badge, Card, CardHeader, EmptyState, Progress, Skeleton, classesBouton, cx } from '@/components/ui/primitives';
 import { Icon, type IconName } from '@/components/ui/icons';
 import { BarChart, RingProgress, Sparkline } from '@/components/charts';
 import { useI18n } from '@/i18n/provider';
@@ -354,10 +354,9 @@ export default function DashboardPage() {
               icon="flame"
               title={t('habits.empty')}
               action={
-                <Link href="/habits">
-                  <Button size="sm" icon="plus">
-                    {t('habits.new')}
-                  </Button>
+                <Link href="/habits" className={classesBouton('primary', 'sm')}>
+                  <Icon name="plus" size={15} />
+                  {t('habits.new')}
                 </Link>
               }
             />

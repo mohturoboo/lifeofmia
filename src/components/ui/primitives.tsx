@@ -140,6 +140,20 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
   );
 });
 
+/**
+ * Apparence d'un `Button` pour un lien (`<Link>`). Un bouton place DANS un
+ * lien imbrique deux elements interactifs : HTML invalide, double arret au
+ * clavier.
+ */
+export function classesBouton(variant: ButtonVariant = 'primary', size: ButtonSize = 'md'): string {
+  return cx(
+    'inline-flex items-center justify-center font-medium select-none whitespace-nowrap',
+    'lm-transition-ui duration-150',
+    BUTTON_VARIANTS[variant],
+    BUTTON_SIZES[size],
+  );
+}
+
 // --- Champs de formulaire ----------------------------------------------------
 
 export interface FieldProps {
