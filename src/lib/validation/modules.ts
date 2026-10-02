@@ -20,15 +20,7 @@ import {
 
 // --- Habitudes ---------------------------------------------------------------
 
-export const HABIT_CATEGORIES = [
-  'health',
-  'spirituality',
-  'mind',
-  'work',
-  'sport',
-  'social',
-  'other',
-] as const;
+export const HABIT_CATEGORIES = ['health', 'spirituality', 'mind', 'work', 'sport', 'social', 'other'] as const;
 
 export const habitCreateSchema = z.object({
   name: z.string().trim().min(1, 'Nom requis.').max(80, 'Le nom ne peut pas dépasser 80 caractères.'),
@@ -85,14 +77,7 @@ export const taskUpdateSchema = updatableFrom(taskCreateSchema);
 
 // --- Objectifs ---------------------------------------------------------------
 
-export const GOAL_CATEGORIES = [
-  'health',
-  'career',
-  'finance',
-  'spiritual',
-  'learning',
-  'personal',
-] as const;
+export const GOAL_CATEGORIES = ['health', 'career', 'finance', 'spiritual', 'learning', 'personal'] as const;
 
 export const goalCreateSchema = z.object({
   title: z.string().trim().min(1, 'Titre requis.').max(160),
@@ -174,7 +159,10 @@ export const waterLogSchema = z
 export const weightSchema = z
   .object({
     date: dateKeySchema,
-    weightKg: z.number().min(20, 'Le poids doit être compris entre 20 et 400 kg.').max(400, 'Le poids doit être compris entre 20 et 400 kg.'),
+    weightKg: z
+      .number()
+      .min(20, 'Le poids doit être compris entre 20 et 400 kg.')
+      .max(400, 'Le poids doit être compris entre 20 et 400 kg.'),
     bodyFat: z
       .number()
       .min(0, 'Le taux de masse grasse doit être compris entre 0 et 100 %.')
@@ -194,15 +182,7 @@ export const weightSchema = z
 
 // --- Sport -------------------------------------------------------------------
 
-export const WORKOUT_TYPES = [
-  'strength',
-  'cardio',
-  'walk',
-  'run',
-  'swim',
-  'yoga',
-  'other',
-] as const;
+export const WORKOUT_TYPES = ['strength', 'cardio', 'walk', 'run', 'swim', 'yoga', 'other'] as const;
 
 export const exerciseSchema = z.object({
   name: z.string().trim().min(1).max(80),

@@ -15,7 +15,7 @@ describe('calcul local des horaires', () => {
     }
   });
 
-  it('respecte l\'ordre chronologique de la journee', () => {
+  it("respecte l'ordre chronologique de la journee", () => {
     const times = computePrayerTimes({ date: '2026-08-07', ...paris });
     const minutes = (value: string) => {
       const [h, m] = value.split(':').map(Number);
@@ -92,7 +92,7 @@ describe('priere courante et suivante', () => {
     expect(result.minutesToNext).toBe(330);
   });
 
-  it('annonce le Fajr avant l\'aube', () => {
+  it("annonce le Fajr avant l'aube", () => {
     const result = currentAndNext(times, '03:00');
     expect(result.current).toBeNull();
     expect(result.next).toBe('Fajr');

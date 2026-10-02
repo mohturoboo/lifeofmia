@@ -440,7 +440,9 @@
   .lm-card-hover:hover {
     transform: translateY(-3px);
     border-color: rgb(251 199 218 / 0.35);
-    box-shadow: var(--shadow-card), 0 12px 40px -18px rgb(251 199 218 / 0.4);
+    box-shadow:
+      var(--shadow-card),
+      0 12px 40px -18px rgb(251 199 218 / 0.4);
   }
 
   .lm-eyebrow {
@@ -522,12 +524,7 @@
   }
 
   .lm-skeleton {
-    background: linear-gradient(
-      90deg,
-      var(--surface-2) 25%,
-      var(--surface-hover) 50%,
-      var(--surface-2) 75%
-    );
+    background: linear-gradient(90deg, var(--surface-2) 25%, var(--surface-hover) 50%, var(--surface-2) 75%);
     background-size: 200% 100%;
     animation: var(--animate-shimmer);
     border-radius: 10px;

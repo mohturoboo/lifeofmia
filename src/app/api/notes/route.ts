@@ -29,9 +29,7 @@ export const GET = route(async ({ user, searchParams }) => {
    */
   const filtered = query
     ? notes.filter(
-        (note) =>
-          note.title.toLocaleLowerCase().includes(query) ||
-          note.content.toLocaleLowerCase().includes(query),
+        (note) => note.title.toLocaleLowerCase().includes(query) || note.content.toLocaleLowerCase().includes(query),
       )
     : notes;
 

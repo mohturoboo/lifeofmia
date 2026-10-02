@@ -57,12 +57,7 @@ export function assertIntervalle(
  * calculee dans le fuseau du profil : celui du navigateur peut avancer d'un
  * jour sur celui de l'utilisateur.
  */
-export function assertPasDansLeFutur(
-  date: DateKey,
-  timezone: string,
-  champ = 'date',
-  quoi = 'Cette saisie',
-): void {
+export function assertPasDansLeFutur(date: DateKey, timezone: string, champ = 'date', quoi = 'Cette saisie'): void {
   const aujourdhui = dateKeyIn(timezone);
   if (date > aujourdhui) {
     const message = `${quoi} ne peut pas être datée dans le futur.`;

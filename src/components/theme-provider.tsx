@@ -66,7 +66,7 @@ export function ThemeProvider({ initialTheme = 'dark', children }: { initialThem
 
 export function useTheme(): ThemeValue {
   const context = useContext(ThemeContext);
-  if (!context) throw new Error('useTheme doit etre utilise a l\'interieur de <ThemeProvider>.');
+  if (!context) throw new Error("useTheme doit etre utilise a l'interieur de <ThemeProvider>.");
   return context;
 }
 

@@ -74,9 +74,7 @@ export function DateNav({
       >
         <Icon name="chevronLeft" size={16} className="rtl:rotate-180" />
       </button>
-      <span className="min-w-28 px-2 text-center text-[13px] font-medium capitalize text-[var(--text)]">
-        {label}
-      </span>
+      <span className="min-w-28 px-2 text-center text-[13px] font-medium capitalize text-[var(--text)]">{label}</span>
       <button
         type="button"
         onClick={() => shift(1)}

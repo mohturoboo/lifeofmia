@@ -42,11 +42,9 @@ export const GET = route(async ({ user, searchParams }) => {
    * seraient pires qu'une absence d'horaires.
    */
   if (!result) {
-    throw new ApiError(
-      'VALIDATION',
-      'Horaires indisponibles : renseignez votre ville dans les réglages.',
-      { city: 'Ville inconnue ou sans coordonnées.' },
-    );
+    throw new ApiError('VALIDATION', 'Horaires indisponibles : renseignez votre ville dans les réglages.', {
+      city: 'Ville inconnue ou sans coordonnées.',
+    });
   }
 
   const nowHHmm = formatTimeIn(user.timezone, '24h');
@@ -114,12 +112,7 @@ export const POST = route(
      */
     const ecart = xpPriere(body.status) - xpPriere(existing?.status);
     if (ecart !== 0) {
-      await awardXp(
-        user.id,
-        ecart,
-        ecart > 0 ? `Prière : ${body.name}` : `Annulation : prière ${body.name}`,
-        'prayer',
-      );
+      await awardXp(user.id, ecart, ecart > 0 ? `Prière : ${body.name}` : `Annulation : prière ${body.name}`, 'prayer');
       if (ecart > 0) await evaluateBadges(user.id);
     }
 

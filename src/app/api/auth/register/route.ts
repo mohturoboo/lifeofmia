@@ -90,30 +90,32 @@ export const POST = publicRoute(
      */
     const ville = FALLBACK_CITIES[body.city];
 
-    const user = await prisma.user.create({
-      data: {
-        email: body.email,
-        password: await hashPassword(body.password),
-        firstName: body.firstName,
-        lastName: body.lastName,
-        country: body.country,
-        city: body.city,
-        timezone: ville?.timezone ?? body.timezone,
-        latitude: ville?.latitude ?? null,
-        longitude: ville?.longitude ?? null,
-        locale: body.locale,
-        gender: body.gender ?? null,
-        birthDate: birthDate && !Number.isNaN(birthDate.getTime()) ? birthDate : null,
-        mainGoal: body.mainGoal?.trim() || null,
-        emailVerified: new Date(),
-        consentAt: new Date(),
-      },
-    }).catch((error: unknown) => {
-      // Deux inscriptions simultanees passent toutes deux la verification
-      // ci-dessus : la contrainte d'unicite tranche, et la seconde recevait 500.
-      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') return null;
-      throw error;
-    });
+    const user = await prisma.user
+      .create({
+        data: {
+          email: body.email,
+          password: await hashPassword(body.password),
+          firstName: body.firstName,
+          lastName: body.lastName,
+          country: body.country,
+          city: body.city,
+          timezone: ville?.timezone ?? body.timezone,
+          latitude: ville?.latitude ?? null,
+          longitude: ville?.longitude ?? null,
+          locale: body.locale,
+          gender: body.gender ?? null,
+          birthDate: birthDate && !Number.isNaN(birthDate.getTime()) ? birthDate : null,
+          mainGoal: body.mainGoal?.trim() || null,
+          emailVerified: new Date(),
+          consentAt: new Date(),
+        },
+      })
+      .catch((error: unknown) => {
+        // Deux inscriptions simultanees passent toutes deux la verification
+        // ci-dessus : la contrainte d'unicite tranche, et la seconde recevait 500.
+        if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') return null;
+        throw error;
+      });
     if (!user) {
       return fail('CONFLICT', 'Un compte existe déjà avec cette adresse.', {
         email: 'Cette adresse est déjà utilisée.',

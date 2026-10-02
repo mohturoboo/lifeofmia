@@ -48,7 +48,7 @@ describe('jetons de session', () => {
     expect(await verifyAccessToken(`${token}x`)).toBeNull();
   });
 
-  it('rejette une chaine qui n\'est pas un jeton', async () => {
+  it("rejette une chaine qui n'est pas un jeton", async () => {
     expect(await verifyAccessToken('pas-un-jwt')).toBeNull();
     expect(await verifyAccessToken('')).toBeNull();
   });
@@ -64,7 +64,7 @@ describe('jetons de session', () => {
 describe('limitation de debit', () => {
   beforeEach(() => reset('test-key'));
 
-  it('autorise jusqu\'a la limite puis bloque', () => {
+  it("autorise jusqu'a la limite puis bloque", () => {
     for (let attempt = 0; attempt < 3; attempt += 1) {
       expect(consume('test-key', 3, 60_000).allowed).toBe(true);
     }
@@ -131,7 +131,7 @@ describe('serialisation JSON tolerante', () => {
 });
 
 describe('validation des entrees', () => {
-  it('refuse un email invalide a l\'inscription', () => {
+  it("refuse un email invalide a l'inscription", () => {
     const result = registerSchema.safeParse({
       firstName: 'Test',
       lastName: 'User',
@@ -153,7 +153,7 @@ describe('validation des entrees', () => {
     expect(result.success).toBe(false);
   });
 
-  it('exige l\'acceptation des conditions', () => {
+  it("exige l'acceptation des conditions", () => {
     const result = registerSchema.safeParse({
       firstName: 'Test',
       lastName: 'User',
@@ -164,7 +164,7 @@ describe('validation des entrees', () => {
     expect(result.success).toBe(false);
   });
 
-  it('normalise l\'email en minuscules', () => {
+  it("normalise l'email en minuscules", () => {
     const result = loginSchema.safeParse({ email: '  TEST@LifeofM.App  ', password: 'x' });
     expect(result.success).toBe(true);
     if (result.success) expect(result.data.email).toBe('test@lifeofm.app');
@@ -176,7 +176,7 @@ describe('validation des entrees', () => {
     expect(weightSchema.safeParse({ date: '2026-08-07', weightKg: 78.4 }).success).toBe(true);
   });
 
-  it('applique les valeurs par defaut d\'une habitude', () => {
+  it("applique les valeurs par defaut d'une habitude", () => {
     const result = habitCreateSchema.safeParse({ name: 'Lire' });
     expect(result.success).toBe(true);
     if (result.success) {
@@ -186,7 +186,7 @@ describe('validation des entrees', () => {
     }
   });
 
-  it('refuse une couleur qui n\'est pas hexadecimale', () => {
+  it("refuse une couleur qui n'est pas hexadecimale", () => {
     expect(habitCreateSchema.safeParse({ name: 'Lire', color: 'rouge' }).success).toBe(false);
   });
 

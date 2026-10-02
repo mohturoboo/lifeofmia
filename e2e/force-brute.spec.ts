@@ -240,28 +240,28 @@ test('les echecs repetes sont journalises', async ({ page }) => {
 test.describe('interface de connexion', () => {
   test.use({ storageState: { cookies: [], origins: [] } });
 
-  test('affiche l\'attente et desactive le bouton', async ({ page }) => {
-  const email = `ui-${Date.now()}@lifeofm.test`;
+  test("affiche l'attente et desactive le bouton", async ({ page }) => {
+    const email = `ui-${Date.now()}@lifeofm.test`;
 
-  // On epuise le compteur du compte par l'API, plus rapide que par le clavier.
-  for (let essai = 0; essai < 5; essai += 1) {
-    await page.request.post('/api/auth/login', { data: { email, password: 'Faux12345' } });
-  }
+    // On epuise le compteur du compte par l'API, plus rapide que par le clavier.
+    for (let essai = 0; essai < 5; essai += 1) {
+      await page.request.post('/api/auth/login', { data: { email, password: 'Faux12345' } });
+    }
 
-  await page.goto('/login');
-  await page.locator('#email').fill(email);
-  await page.locator('#password').fill('Faux12345');
-  await page.getByRole('button', { name: /connexion|se connecter/i }).click();
+    await page.goto('/login');
+    await page.locator('#email').fill(email);
+    await page.locator('#password').fill('Faux12345');
+    await page.getByRole('button', { name: /connexion|se connecter/i }).click();
 
-  /*
-   * `.first()` : Next.js pose lui aussi un `role="alert"` sur son annonceur de
-   * navigation, invisible et vide. Le premier de la page est bien celui du
-   * formulaire.
-   */
-  await expect(page.getByRole('alert').first()).toContainText(/trop de tentatives/i);
-  await expect(page.getByText(/nouvelle tentative possible dans/i)).toBeVisible();
+    /*
+     * `.first()` : Next.js pose lui aussi un `role="alert"` sur son annonceur de
+     * navigation, invisible et vide. Le premier de la page est bien celui du
+     * formulaire.
+     */
+    await expect(page.getByRole('alert').first()).toContainText(/trop de tentatives/i);
+    await expect(page.getByText(/nouvelle tentative possible dans/i)).toBeVisible();
 
-  const bouton = page.getByRole('button', { name: /connexion|se connecter/i });
-  await expect(bouton).toBeDisabled();
+    const bouton = page.getByRole('button', { name: /connexion|se connecter/i });
+    await expect(bouton).toBeDisabled();
   });
 });

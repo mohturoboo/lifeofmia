@@ -47,7 +47,10 @@ test('une operation financiere creee survit au rechargement', async ({ page }) =
   await page.goto('/finance');
 
   // La page propose ce bouton deux fois : dans l'en-tete et dans l'etat vide.
-  await page.getByRole('button', { name: /Nouvelle op/ }).first().click();
+  await page
+    .getByRole('button', { name: /Nouvelle op/ })
+    .first()
+    .click();
   const fenetre = page.getByRole('dialog');
   await expect(fenetre).toBeVisible();
 
@@ -109,15 +112,18 @@ async function remettreAZero(page: Page) {
    * du code teste.
    */
   await expect
-    .poll(async () => {
-      const controle = await page.request.get(`/api/meals?date=${jour}`);
-      const { data: apres } = (await controle.json()) as { data?: { waterMl?: number } };
-      return apres?.waterMl ?? 0;
-    }, { timeout: 10_000 })
+    .poll(
+      async () => {
+        const controle = await page.request.get(`/api/meals?date=${jour}`);
+        const { data: apres } = (await controle.json()) as { data?: { waterMl?: number } };
+        return apres?.waterMl ?? 0;
+      },
+      { timeout: 10_000 },
+    )
     .toBe(0);
 }
 
-test('un verre d\'eau ajoute survit au rechargement', async ({ page }) => {
+test("un verre d'eau ajoute survit au rechargement", async ({ page }) => {
   await page.goto('/nutrition');
 
   await remettreAZero(page);

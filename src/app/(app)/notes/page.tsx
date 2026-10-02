@@ -75,10 +75,9 @@ export default function NotesPage() {
 
   // Epinglage : geste rapide et repete, on ne confirme pas la reussite.
   async function togglePin(note: Note) {
-    const saved = await mutate(
-      () => api.patch(`/api/notes/${note.id}`, { pinned: !note.pinned }),
-      { notifySuccess: false },
-    );
+    const saved = await mutate(() => api.patch(`/api/notes/${note.id}`, { pinned: !note.pinned }), {
+      notifySuccess: false,
+    });
     if (saved) void refresh();
   }
 
@@ -149,7 +148,14 @@ export default function NotesPage() {
                 <h2 className="min-w-0 flex-1 truncate text-sm font-medium text-[var(--text)]">{note.title}</h2>
                 <div className="flex shrink-0 gap-0.5">
                   <IconButton icon="award" label={t('notes.pin')} size={13} onClick={() => togglePin(note)} />
-                  <IconButton icon="trash" label={t('common.delete')} size={13} tone="danger" onClick={() => remove(note)} discret />
+                  <IconButton
+                    icon="trash"
+                    label={t('common.delete')}
+                    size={13}
+                    tone="danger"
+                    onClick={() => remove(note)}
+                    discret
+                  />
                 </div>
               </div>
 
@@ -190,7 +196,12 @@ export default function NotesPage() {
       >
         <div className="space-y-4">
           <Field label={t('common.title')} htmlFor="note-title" error={erreurs.title} required>
-            <Input id="note-title" value={form.title} onChange={(event) => set('title', event.target.value)} autoFocus />
+            <Input
+              id="note-title"
+              value={form.title}
+              onChange={(event) => set('title', event.target.value)}
+              autoFocus
+            />
           </Field>
 
           <Field label={t('common.notes')} htmlFor="note-content" error={erreurs.content}>

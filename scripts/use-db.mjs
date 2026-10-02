@@ -28,10 +28,7 @@ if (!SUPPORTED.includes(target)) {
 }
 
 const source = readFileSync(SCHEMA, 'utf8');
-const updated = source.replace(
-  /(datasource\s+db\s*\{[^}]*?provider\s*=\s*)"[^"]+"/,
-  `$1"${target}"`,
-);
+const updated = source.replace(/(datasource\s+db\s*\{[^}]*?provider\s*=\s*)"[^"]+"/, `$1"${target}"`);
 
 if (source === updated) {
   console.log(`Provider deja configure sur "${target}".`);

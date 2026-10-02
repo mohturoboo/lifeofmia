@@ -100,7 +100,7 @@ export function passwordResetEmail(to: string, firstName: string, token: string)
     subject: 'Réinitialisation de votre mot de passe — LifeofM',
     html: layout(
       `Bonjour ${escapeHtml(firstName)}`,
-      'Vous avez demandé la réinitialisation de votre mot de passe. Ce lien est valable une heure et ne peut servir qu\'une seule fois.',
+      "Vous avez demandé la réinitialisation de votre mot de passe. Ce lien est valable une heure et ne peut servir qu'une seule fois.",
       'Choisir un nouveau mot de passe',
       url,
     ),
@@ -119,12 +119,7 @@ export function passwordResetEmail(to: string, firstName: string, token: string)
  * poussant a cliquer dans l'urgence est exactement la forme que prend un
  * hameconnage : on invite a se rendre sur le site par ses propres moyens.
  */
-export function securityAlertEmail(
-  to: string,
-  firstName: string,
-  tentatives: number,
-  minutes: number,
-): MailMessage {
+export function securityAlertEmail(to: string, firstName: string, tentatives: number, minutes: number): MailMessage {
   const corps =
     `Nous avons bloqué l'accès à votre compte après ${tentatives} tentatives de connexion infructueuses. ` +
     `Il le restera pendant ${minutes} minutes.<br><br>` +

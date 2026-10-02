@@ -40,11 +40,14 @@ async function remettreAZero(page: Page) {
    * du code teste.
    */
   await expect
-    .poll(async () => {
-      const controle = await page.request.get(`/api/meals?date=${jour}`);
-      const { data: apres } = (await controle.json()) as { data?: { waterMl?: number } };
-      return apres?.waterMl ?? 0;
-    }, { timeout: 10_000 })
+    .poll(
+      async () => {
+        const controle = await page.request.get(`/api/meals?date=${jour}`);
+        const { data: apres } = (await controle.json()) as { data?: { waterMl?: number } };
+        return apres?.waterMl ?? 0;
+      },
+      { timeout: 10_000 },
+    )
     .toBe(0);
 }
 
@@ -119,7 +122,7 @@ test('la contenance du verre est reglable', async ({ page }) => {
   await expect(total, 'le verre regle a 330 ml doit ajouter 330 ml').toHaveText('330 ml');
 });
 
-test('un champ inconnu est refuse au lieu d\'etre ignore', async ({ page }) => {
+test("un champ inconnu est refuse au lieu d'etre ignore", async ({ page }) => {
   /*
    * Le rapport d'origine envoyait `{ amount: 250 }`. Le serveur repondait 200
    * en appliquant la valeur par defaut de `amountMl` : l'appel semblait

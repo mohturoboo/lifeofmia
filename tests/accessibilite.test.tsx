@@ -69,7 +69,7 @@ describe('semantique des pictogrammes', () => {
 
     expect(source).toMatch(/^\s{2}archive:/m);
 
-    const chemin = (nom: string) => new RegExp(`^\\s{2}${nom}: '([^']+)'`, 'm').exec(source)?.[1];
+    const chemin = (nom: string) => new RegExp(`^\\s{2}${nom}:\\s*'([^']+)'`, 'm').exec(source)?.[1];
     expect(chemin('archive')).toBeTruthy();
     // « Archiver » empruntait le pictogramme de telechargement : le sens
     // annonce etait l'inverse de l'action.

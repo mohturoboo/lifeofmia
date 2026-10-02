@@ -12,16 +12,7 @@ import { levelFromXp } from '@/lib/levels';
  *   XP total requis pour atteindre le niveau L :  50 * (L-1)^2 + 50 * (L-1)
  */
 
-export type XpSource =
-  | 'habit'
-  | 'task'
-  | 'goal'
-  | 'workout'
-  | 'prayer'
-  | 'journal'
-  | 'weight'
-  | 'streak'
-  | 'badge';
+export type XpSource = 'habit' | 'task' | 'goal' | 'workout' | 'prayer' | 'journal' | 'weight' | 'streak' | 'badge';
 
 /**
  * Attribue de l'XP, met a jour le niveau et journalise l'evenement.
@@ -106,19 +97,110 @@ export function effectiveStreak(
 
 /** Definition des badges installes par le seed et evalues apres chaque action. */
 export const BADGE_DEFINITIONS = [
-  { code: 'first_step', name: 'Premier pas', description: 'Valider sa toute première habitude', icon: 'sparkles', tier: 'bronze', xpReward: 25 },
-  { code: 'week_streak', name: 'Une semaine', description: '7 jours consécutifs d\'activité', icon: 'flame', tier: 'bronze', xpReward: 50 },
-  { code: 'month_streak', name: 'Un mois de fer', description: '30 jours consécutifs d\'activité', icon: 'flame', tier: 'silver', xpReward: 200 },
-  { code: 'century_streak', name: 'Centurion', description: '100 jours consécutifs d\'activité', icon: 'crown', tier: 'gold', xpReward: 800 },
-  { code: 'year_streak', name: 'Immuable', description: '365 jours consécutifs d\'activité', icon: 'crown', tier: 'platinum', xpReward: 3000 },
-  { code: 'task_master', name: 'Exécutant', description: 'Terminer 100 tâches', icon: 'check', tier: 'silver', xpReward: 150 },
-  { code: 'goal_achiever', name: 'Visionnaire', description: 'Atteindre 5 objectifs', icon: 'target', tier: 'gold', xpReward: 300 },
-  { code: 'iron_body', name: 'Corps d\'acier', description: 'Enregistrer 50 séances de sport', icon: 'dumbbell', tier: 'gold', xpReward: 300 },
-  { code: 'devoted', name: 'Assidu', description: '100 prières enregistrées', icon: 'moon', tier: 'gold', xpReward: 300 },
-  { code: 'scribe', name: 'Le scribe', description: '30 entrées de journal', icon: 'book', tier: 'silver', xpReward: 150 },
-  { code: 'level_10', name: 'Niveau 10', description: 'Atteindre le niveau 10', icon: 'award', tier: 'silver', xpReward: 100 },
-  { code: 'level_25', name: 'Niveau 25', description: 'Atteindre le niveau 25', icon: 'award', tier: 'gold', xpReward: 400 },
-  { code: 'transformation', name: 'Transformation', description: 'Perdre ou gagner 5 kg vers son objectif', icon: 'trending', tier: 'gold', xpReward: 400 },
+  {
+    code: 'first_step',
+    name: 'Premier pas',
+    description: 'Valider sa toute première habitude',
+    icon: 'sparkles',
+    tier: 'bronze',
+    xpReward: 25,
+  },
+  {
+    code: 'week_streak',
+    name: 'Une semaine',
+    description: "7 jours consécutifs d'activité",
+    icon: 'flame',
+    tier: 'bronze',
+    xpReward: 50,
+  },
+  {
+    code: 'month_streak',
+    name: 'Un mois de fer',
+    description: "30 jours consécutifs d'activité",
+    icon: 'flame',
+    tier: 'silver',
+    xpReward: 200,
+  },
+  {
+    code: 'century_streak',
+    name: 'Centurion',
+    description: "100 jours consécutifs d'activité",
+    icon: 'crown',
+    tier: 'gold',
+    xpReward: 800,
+  },
+  {
+    code: 'year_streak',
+    name: 'Immuable',
+    description: "365 jours consécutifs d'activité",
+    icon: 'crown',
+    tier: 'platinum',
+    xpReward: 3000,
+  },
+  {
+    code: 'task_master',
+    name: 'Exécutant',
+    description: 'Terminer 100 tâches',
+    icon: 'check',
+    tier: 'silver',
+    xpReward: 150,
+  },
+  {
+    code: 'goal_achiever',
+    name: 'Visionnaire',
+    description: 'Atteindre 5 objectifs',
+    icon: 'target',
+    tier: 'gold',
+    xpReward: 300,
+  },
+  {
+    code: 'iron_body',
+    name: "Corps d'acier",
+    description: 'Enregistrer 50 séances de sport',
+    icon: 'dumbbell',
+    tier: 'gold',
+    xpReward: 300,
+  },
+  {
+    code: 'devoted',
+    name: 'Assidu',
+    description: '100 prières enregistrées',
+    icon: 'moon',
+    tier: 'gold',
+    xpReward: 300,
+  },
+  {
+    code: 'scribe',
+    name: 'Le scribe',
+    description: '30 entrées de journal',
+    icon: 'book',
+    tier: 'silver',
+    xpReward: 150,
+  },
+  {
+    code: 'level_10',
+    name: 'Niveau 10',
+    description: 'Atteindre le niveau 10',
+    icon: 'award',
+    tier: 'silver',
+    xpReward: 100,
+  },
+  {
+    code: 'level_25',
+    name: 'Niveau 25',
+    description: 'Atteindre le niveau 25',
+    icon: 'award',
+    tier: 'gold',
+    xpReward: 400,
+  },
+  {
+    code: 'transformation',
+    name: 'Transformation',
+    description: 'Perdre ou gagner 5 kg vers son objectif',
+    icon: 'trending',
+    tier: 'gold',
+    xpReward: 400,
+  },
 ] as const;
 
 /**

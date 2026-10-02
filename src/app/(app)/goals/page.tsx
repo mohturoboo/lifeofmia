@@ -4,7 +4,20 @@ import { useState } from 'react';
 import { api, useResource } from '@/lib/client/api';
 import { useHydrated } from '@/lib/client/hydrated';
 import { useMutate } from '@/lib/client/mutate';
-import { Badge, Button, Card, cx, EmptyState, Field, IconButton, Input, Progress, Select, Skeleton, Textarea } from '@/components/ui/primitives';
+import {
+  Badge,
+  Button,
+  Card,
+  cx,
+  EmptyState,
+  Field,
+  IconButton,
+  Input,
+  Progress,
+  Select,
+  Skeleton,
+  Textarea,
+} from '@/components/ui/primitives';
 import { Icon } from '@/components/ui/icons';
 import { Modal } from '@/components/ui/modal';
 import { useToast } from '@/components/ui/toast';
@@ -129,10 +142,14 @@ export default function GoalsPage() {
 
     // Le detail par champ renvoye par le serveur s'affiche sous le champ
     // fautif ; la fenetre reste ouverte pour que la saisie soit corrigible.
-    const saved = await mutate(() => (editing ? api.patch(`/api/goals/${editing.id}`, payload) : api.post('/api/goals', {
-          ...payload,
-          steps: form.steps.map((step) => step.trim()).filter(Boolean),
-        })));
+    const saved = await mutate(() =>
+      editing
+        ? api.patch(`/api/goals/${editing.id}`, payload)
+        : api.post('/api/goals', {
+            ...payload,
+            steps: form.steps.map((step) => step.trim()).filter(Boolean),
+          }),
+    );
     setSaving(false);
     if (!saved) return;
 
@@ -142,10 +159,9 @@ export default function GoalsPage() {
 
   // Bascule frequente : pas de confirmation, mais un echec reste visible.
   async function toggleStep(goalId: string, step: GoalStep) {
-    const saved = await mutate(
-      () => api.patch(`/api/goals/${goalId}/steps`, { stepId: step.id, done: !step.done }),
-      { notifySuccess: false },
-    );
+    const saved = await mutate(() => api.patch(`/api/goals/${goalId}/steps`, { stepId: step.id, done: !step.done }), {
+      notifySuccess: false,
+    });
     if (saved) void refresh();
   }
 
@@ -233,9 +249,7 @@ export default function GoalsPage() {
                       : null;
 
                     return (
-                      <div
-                        key={goal.id}
-                      >
+                      <div key={goal.id}>
                         <Card className={cx(goal.status === 'done' && 'opacity-70')}>
                           <div className="flex items-start justify-between gap-3">
                             <div className="min-w-0 flex-1">
@@ -244,7 +258,9 @@ export default function GoalsPage() {
                                 <h3
                                   className={cx(
                                     'truncate text-[15px] font-medium',
-                                    goal.status === 'done' ? 'text-[var(--text-faint)] line-through' : 'text-[var(--text)]',
+                                    goal.status === 'done'
+                                      ? 'text-[var(--text-faint)] line-through'
+                                      : 'text-[var(--text)]',
                                   )}
                                 >
                                   {goal.title}
@@ -252,7 +268,9 @@ export default function GoalsPage() {
                               </div>
 
                               {goal.description && (
-                                <p className="mt-1 text-xs leading-relaxed text-[var(--text-muted)]">{goal.description}</p>
+                                <p className="mt-1 text-xs leading-relaxed text-[var(--text-muted)]">
+                                  {goal.description}
+                                </p>
                               )}
 
                               <div className="mt-2 flex flex-wrap items-center gap-1.5">
@@ -281,9 +299,18 @@ export default function GoalsPage() {
                                 {goal.progress}%
                               </span>
                               <div className="flex gap-0.5">
-                                <IconButton icon="checkCircle" label={t('goals.statusDone')} onClick={() => complete(goal)} />
+                                <IconButton
+                                  icon="checkCircle"
+                                  label={t('goals.statusDone')}
+                                  onClick={() => complete(goal)}
+                                />
                                 <IconButton icon="edit" label={t('common.edit')} onClick={() => openEdit(goal)} />
-                                <IconButton icon="trash" label={t('common.delete')} tone="danger" onClick={() => remove(goal)} />
+                                <IconButton
+                                  icon="trash"
+                                  label={t('common.delete')}
+                                  tone="danger"
+                                  onClick={() => remove(goal)}
+                                />
                               </div>
                             </div>
                           </div>
@@ -307,7 +334,9 @@ export default function GoalsPage() {
                                   <span
                                     className={cx(
                                       'grid size-4 place-items-center rounded border-2 lm-transition-ui',
-                                      step.done ? 'border-transparent text-[var(--on-pink)]' : 'border-[var(--border-strong)]',
+                                      step.done
+                                        ? 'border-transparent text-[var(--on-pink)]'
+                                        : 'border-[var(--border-strong)]',
                                     )}
                                     style={step.done ? { background: goal.color } : undefined}
                                   >
@@ -337,7 +366,9 @@ export default function GoalsPage() {
                               <Icon name="plus" size={13} className="shrink-0 text-[var(--text-faint)]" />
                               <input
                                 value={newStep[goal.id] ?? ''}
-                                onChange={(event) => setNewStep((current) => ({ ...current, [goal.id]: event.target.value }))}
+                                onChange={(event) =>
+                                  setNewStep((current) => ({ ...current, [goal.id]: event.target.value }))
+                                }
                                 onKeyDown={(event) => event.key === 'Enter' && addStep(goal.id)}
                                 onBlur={() => addStep(goal.id)}
                                 placeholder={t('goals.addStep')}
@@ -389,12 +420,21 @@ export default function GoalsPage() {
           </Field>
 
           <Field label={t('common.notes')} htmlFor="goal-description" error={erreurs.description}>
-            <Textarea id="goal-description" rows={2} value={form.description} onChange={(event) => set('description', event.target.value)} />
+            <Textarea
+              id="goal-description"
+              rows={2}
+              value={form.description}
+              onChange={(event) => set('description', event.target.value)}
+            />
           </Field>
 
           <div className="grid grid-cols-2 gap-3">
             <Field label={t('common.category')} htmlFor="goal-category">
-              <Select id="goal-category" value={form.category} onChange={(event) => set('category', event.target.value)}>
+              <Select
+                id="goal-category"
+                value={form.category}
+                onChange={(event) => set('category', event.target.value)}
+              >
                 {GOAL_CATEGORIES.map((category) => (
                   <option key={category} value={category}>
                     {categoryLabel(category)}
@@ -403,7 +443,11 @@ export default function GoalsPage() {
               </Select>
             </Field>
             <Field label={t('goals.horizon')} htmlFor="goal-horizon">
-              <Select id="goal-horizon" value={form.horizon} onChange={(event) => set('horizon', event.target.value as Goal['horizon'])}>
+              <Select
+                id="goal-horizon"
+                value={form.horizon}
+                onChange={(event) => set('horizon', event.target.value as Goal['horizon'])}
+              >
                 <option value="short">{t('goals.shortTerm')}</option>
                 <option value="mid">{t('goals.midTerm')}</option>
                 <option value="long">{t('goals.longTerm')}</option>
@@ -413,18 +457,38 @@ export default function GoalsPage() {
 
           <div className="grid grid-cols-3 gap-3">
             <Field label={t('goals.currentValue')} htmlFor="goal-current" error={erreurs.currentValue}>
-              <Input id="goal-current" type="number" value={form.currentValue} onChange={(event) => set('currentValue', event.target.value)} />
+              <Input
+                id="goal-current"
+                type="number"
+                value={form.currentValue}
+                onChange={(event) => set('currentValue', event.target.value)}
+              />
             </Field>
             <Field label={t('goals.targetValue')} htmlFor="goal-target" error={erreurs.targetValue}>
-              <Input id="goal-target" type="number" value={form.targetValue} onChange={(event) => set('targetValue', event.target.value)} />
+              <Input
+                id="goal-target"
+                type="number"
+                value={form.targetValue}
+                onChange={(event) => set('targetValue', event.target.value)}
+              />
             </Field>
             <Field label={t('common.unit')} htmlFor="goal-unit" error={erreurs.unit}>
-              <Input id="goal-unit" value={form.unit} onChange={(event) => set('unit', event.target.value)} placeholder="kg" />
+              <Input
+                id="goal-unit"
+                value={form.unit}
+                onChange={(event) => set('unit', event.target.value)}
+                placeholder="kg"
+              />
             </Field>
           </div>
 
           <Field label={t('goals.deadline')} htmlFor="goal-deadline" error={erreurs.deadline}>
-            <Input id="goal-deadline" type="date" value={form.deadline} onChange={(event) => set('deadline', event.target.value)} />
+            <Input
+              id="goal-deadline"
+              type="date"
+              value={form.deadline}
+              onChange={(event) => set('deadline', event.target.value)}
+            />
           </Field>
 
           <Field label={t('habits.color')}>
@@ -465,7 +529,12 @@ export default function GoalsPage() {
                         variant="ghost"
                         size="sm"
                         icon="close"
-                        onClick={() => set('steps', form.steps.filter((_, position) => position !== index))}
+                        onClick={() =>
+                          set(
+                            'steps',
+                            form.steps.filter((_, position) => position !== index),
+                          )
+                        }
                         aria-label={t('common.delete')}
                       />
                     )}

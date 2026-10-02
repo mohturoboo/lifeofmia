@@ -90,9 +90,7 @@ export async function runAgent(
       .map((block) => block.text);
     if (textParts.length > 0) finalText = textParts.join('\n\n');
 
-    const toolUses = response.content.filter(
-      (block): block is Anthropic.ToolUseBlock => block.type === 'tool_use',
-    );
+    const toolUses = response.content.filter((block): block is Anthropic.ToolUseBlock => block.type === 'tool_use');
 
     // Pas d'outil demande : le modele a termine.
     if (toolUses.length === 0) break;

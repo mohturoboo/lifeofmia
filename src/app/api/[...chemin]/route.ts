@@ -21,10 +21,7 @@ import { fail } from '@/lib/api/response';
  */
 export const dynamic = 'force-dynamic';
 
-const introuvable = async (
-  _request: Request,
-  contexte: { params: Promise<{ chemin?: string[] }> },
-) => {
+const introuvable = async (_request: Request, contexte: { params: Promise<{ chemin?: string[] }> }) => {
   const { chemin } = await contexte.params;
   const route = `/api/${(chemin ?? []).join('/')}`;
 

@@ -63,13 +63,7 @@ function julianDate(year: number, month: number, day: number): number {
   }
   const a = Math.floor(year / 100);
   const b = 2 - a + Math.floor(a / 4);
-  return (
-    Math.floor(365.25 * (year + 4716)) +
-    Math.floor(30.6001 * (month + 1)) +
-    day +
-    b -
-    1524.5
-  );
+  return Math.floor(365.25 * (year + 4716)) + Math.floor(30.6001 * (month + 1)) + day + b - 1524.5;
 }
 
 function sunPosition(jd: number): { declination: number; equationOfTime: number } {
@@ -140,10 +134,7 @@ export function computePrayerTimes(options: {
   const sunset = polar ? noon + 6 : rawSunset;
 
   let fajr = angleTime(method.fajr, 'before');
-  let isha =
-    typeof method.isha === 'number'
-      ? angleTime(method.isha, 'after')
-      : sunset + method.isha.minutes / 60;
+  let isha = typeof method.isha === 'number' ? angleTime(method.isha, 'after') : sunset + method.isha.minutes / 60;
 
   // Ajustement « septieme de nuit » pour les hautes latitudes.
   if (Number.isNaN(fajr) || Number.isNaN(isha)) {

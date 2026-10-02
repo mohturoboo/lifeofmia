@@ -15,7 +15,7 @@ import { motif } from './texte';
  *    creation du compte, et en tirait un ecart chiffre.
  */
 
-test('l\'anneau du tableau de bord annonce ce qu\'il mesure', async ({ page }) => {
+test("l'anneau du tableau de bord annonce ce qu'il mesure", async ({ page }) => {
   await page.goto('/dashboard');
 
   const anneau = page.getByRole('img', { name: /progression|progress|ilerleme|تقدم/i }).first();
@@ -31,14 +31,26 @@ test('l\'anneau du tableau de bord annonce ce qu\'il mesure', async ({ page }) =
   expect(etiquette).toMatch(/\d+\s*%/);
 
   // Et le rapport brut est affiché sous l'anneau : le pourcentage est verifiable.
-  const legende = page.locator('section').first().getByText(/\d+\/\d+/).first();
+  const legende = page
+    .locator('section')
+    .first()
+    .getByText(/\d+\/\d+/)
+    .first();
   await expect(legende).toBeVisible();
 });
 
-test('le pourcentage de l\'anneau correspond au rapport affiche', async ({ page }) => {
+test("le pourcentage de l'anneau correspond au rapport affiche", async ({ page }) => {
   const reponse = await page.request.get('/api/dashboard');
   const { data } = (await reponse.json()) as {
-    data?: { stats?: { habitsDone: number; habitsTotal: number; tasksDone: number; tasksTotal: number; completionRate: number } };
+    data?: {
+      stats?: {
+        habitsDone: number;
+        habitsTotal: number;
+        tasksDone: number;
+        tasksTotal: number;
+        completionRate: number;
+      };
+    };
   };
   const stats = data?.stats;
   expect(stats).toBeTruthy();
@@ -47,7 +59,7 @@ test('le pourcentage de l\'anneau correspond au rapport affiche', async ({ page 
   const fait = stats!.habitsDone + stats!.tasksDone;
   const attendu = total > 0 ? Math.round((fait / total) * 100) : 0;
 
-  expect(stats!.completionRate, 'l\'anneau doit valoir exactement le rapport annonce').toBe(attendu);
+  expect(stats!.completionRate, "l'anneau doit valoir exactement le rapport annonce").toBe(attendu);
 });
 
 test('une semaine sans aucune donnee affiche un etat vide, pas un graphique muet', async ({ page }) => {
@@ -62,7 +74,7 @@ test('une semaine sans aucune donnee affiche un etat vide, pas un graphique muet
   }
 });
 
-test('l\'histogramme de la semaine dessine des barres reellement hautes', async ({ page }) => {
+test("l'histogramme de la semaine dessine des barres reellement hautes", async ({ page }) => {
   // Le compte de test naît vide : on lui donne de quoi produire un score non
   // nul, sans quoi c'est l'etat vide qui s'affiche — a juste titre.
   const avant = await page.request.get('/api/dashboard');
@@ -97,7 +109,7 @@ test('l\'histogramme de la semaine dessine des barres reellement hautes', async 
   expect(Math.min(...hauteurs), 'aucune barre ne doit avoir une hauteur nulle').toBeGreaterThan(0);
 });
 
-test('l\'axe du score de discipline reste dans [0, 100]', async ({ page }) => {
+test("l'axe du score de discipline reste dans [0, 100]", async ({ page }) => {
   await page.goto('/stats');
 
   const courbe = page.locator('svg[role="img"]').filter({ hasText: /%|\d/ }).first();
@@ -115,7 +127,7 @@ test('l\'axe du score de discipline reste dans [0, 100]', async ({ page }) => {
   expect(Math.min(...graduations), 'aucune graduation negative').toBeGreaterThanOrEqual(0);
 });
 
-test('la comparaison n\'invente pas de periode anterieure au compte', async ({ page }) => {
+test("la comparaison n'invente pas de periode anterieure au compte", async ({ page }) => {
   const reponse = await page.request.get('/api/compare?period=30d');
   const { data } = (await reponse.json()) as {
     data?: {
@@ -142,7 +154,7 @@ test('la comparaison n\'invente pas de periode anterieure au compte', async ({ p
   }
 });
 
-test('la page Comparaison explique l\'absence de reference au lieu d\'afficher un ecart', async ({ page }) => {
+test("la page Comparaison explique l'absence de reference au lieu d'afficher un ecart", async ({ page }) => {
   await page.goto('/compare');
 
   const reponse = await page.request.get('/api/compare?period=30d');
@@ -157,6 +169,6 @@ test('la page Comparaison explique l\'absence de reference au lieu d\'afficher u
   await expect(page.getByText(motif('periode')).first()).toBeVisible();
 
   const corps = await page.locator('main').innerText();
-  expect(corps.length, 'lire avant le rendu rendrait l\'assertion vide').toBeGreaterThan(0);
+  expect(corps.length, "lire avant le rendu rendrait l'assertion vide").toBeGreaterThan(0);
   expect(corps).not.toMatch(/\b\d{1,2} [a-zéû.]+ \d{2}\b(?!\d)/i);
 });

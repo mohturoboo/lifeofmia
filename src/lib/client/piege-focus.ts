@@ -24,8 +24,7 @@ import { useEffect, useRef, type RefObject } from 'react';
  *  - le defilement de la page est bloque pendant l'affichage.
  */
 
-const SELECTEUR_FOCUSABLE =
-  'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+const SELECTEUR_FOCUSABLE = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
 
 /**
  * Dernier element focalise EN DEHORS de toute surface modale.

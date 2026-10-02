@@ -53,7 +53,8 @@ async function boutonsGrises(page: Page) {
       if (!classes.includes('disabled:opacity-50')) continue;
 
       fautifs.push({
-        libelle: (bouton.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 40) ||
+        libelle:
+          (bouton.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 40) ||
           bouton.getAttribute('aria-label') ||
           '(sans libelle)',
         opacite: style.opacity,
@@ -78,7 +79,7 @@ for (const chemin of PAGES) {
   });
 }
 
-test('le bouton principal redevient net des qu\'il est actionnable', async ({ page }) => {
+test("le bouton principal redevient net des qu'il est actionnable", async ({ page }) => {
   await page.goto('/habits', { waitUntil: 'commit' });
 
   /*
@@ -109,7 +110,7 @@ test('le bouton principal redevient net des qu\'il est actionnable', async ({ pa
   expect(dernier?.opacite, 'un bouton actionnable doit etre pleinement opaque').toBe('1');
 });
 
-test('aucune transition ne porte sur l\'opacite d\'un element a etat desactive', async ({ page }) => {
+test("aucune transition ne porte sur l'opacite d'un element a etat desactive", async ({ page }) => {
   await page.goto('/habits');
 
   /*
@@ -130,5 +131,5 @@ test('aucune transition ne porte sur l\'opacite d\'un element a etat desactive',
     return [...new Set(problemes)];
   });
 
-  expect(fautifs, 'l\'opacite ne doit jamais etre animee sur un controle desactivable').toEqual([]);
+  expect(fautifs, "l'opacite ne doit jamais etre animee sur un controle desactivable").toEqual([]);
 });

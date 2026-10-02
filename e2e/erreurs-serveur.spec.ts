@@ -15,7 +15,7 @@ import { motifExact } from './texte';
  * savoir quoi corriger.
  */
 
-test('un nom d\'habitude trop long est explique sous le champ', async ({ page }) => {
+test("un nom d'habitude trop long est explique sous le champ", async ({ page }) => {
   await page.goto('/habits');
   await page.getByRole('button', { name: 'Nouvelle habitude' }).click();
 
@@ -52,11 +52,13 @@ test('une taille hors bornes est expliquee sous le champ', async ({ page }) => {
 
   await page.getByRole('button', { name: 'Enregistrer' }).first().click();
 
-  await expect(page.locator('#height-error')).toHaveText(motifExact('La taille doit etre comprise entre 50 et 250 cm.'));
+  await expect(page.locator('#height-error')).toHaveText(
+    motifExact('La taille doit etre comprise entre 50 et 250 cm.'),
+  );
   await expect(champ).toHaveAttribute('aria-invalid', 'true');
 });
 
-test('le formulaire previent l\'erreur au lieu de la subir', async ({ page }) => {
+test("le formulaire previent l'erreur au lieu de la subir", async ({ page }) => {
   await page.goto('/habits');
   await page.getByRole('button', { name: 'Nouvelle habitude' }).click();
 
@@ -136,11 +138,13 @@ test('aucun champ de saisie ne reste anonyme', async ({ page }) => {
 
   // Un champ sans `id` ni `name` n'est associable ni a un libelle, ni a un
   // message d'erreur, ni au remplissage automatique du navigateur.
-  const anonymes = await page.getByRole('dialog').evaluate((fenetre) =>
-    [...fenetre.querySelectorAll('input, textarea, select')]
-      .filter((champ) => !champ.id && !champ.getAttribute('name'))
-      .map((champ) => champ.outerHTML.slice(0, 80)),
-  );
+  const anonymes = await page
+    .getByRole('dialog')
+    .evaluate((fenetre) =>
+      [...fenetre.querySelectorAll('input, textarea, select')]
+        .filter((champ) => !champ.id && !champ.getAttribute('name'))
+        .map((champ) => champ.outerHTML.slice(0, 80)),
+    );
 
   expect(anonymes).toEqual([]);
 });

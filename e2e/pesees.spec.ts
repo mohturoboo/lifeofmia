@@ -67,7 +67,7 @@ test('un taux de masse grasse hors bornes est refuse', async ({ page }) => {
   expect(data?.latest?.bodyFat).toBe(18.5);
 });
 
-test('le champ date du formulaire est borne a aujourd\'hui', async ({ page }) => {
+test("le champ date du formulaire est borne a aujourd'hui", async ({ page }) => {
   await page.goto('/weight');
   const jour = await aujourdhui(page);
 
@@ -95,18 +95,18 @@ test('une seule mesure invite a en ajouter une seconde au lieu de nier son exist
      */
     await expect(page.getByText(motif('deuxieme mesure')).first()).toBeVisible();
     /*
-         * Motif tolerant aux accents ici AUSSI, et pas seulement par confort :
-         * l'assertion porte sur une ABSENCE. Ecrite sans accents, elle ne
-         * trouvait plus rien apres la reaccentuation et passait donc pour une
-         * bonne raison apparente — alors que la phrase interdite pouvait tres
-         * bien s'afficher. Une assertion qui ne peut plus echouer ne mesure
-         * plus rien.
-         */
-        await expect(page.getByText(motif('aucune mesure enregistree'))).toHaveCount(0);
+     * Motif tolerant aux accents ici AUSSI, et pas seulement par confort :
+     * l'assertion porte sur une ABSENCE. Ecrite sans accents, elle ne
+     * trouvait plus rien apres la reaccentuation et passait donc pour une
+     * bonne raison apparente — alors que la phrase interdite pouvait tres
+     * bien s'afficher. Une assertion qui ne peut plus echouer ne mesure
+     * plus rien.
+     */
+    await expect(page.getByText(motif('aucune mesure enregistree'))).toHaveCount(0);
   }
 });
 
-test('l\'historique affiche l\'annee des qu\'elle sort de l\'annee en cours', async ({ page }) => {
+test("l'historique affiche l'annee des qu'elle sort de l'annee en cours", async ({ page }) => {
   const jour = await aujourdhui(page);
   const anneeCourante = jour.slice(0, 4);
   const anneePassee = `${Number(anneeCourante) - 1}-12-31`;
@@ -120,11 +120,11 @@ test('l\'historique affiche l\'annee des qu\'elle sort de l\'annee en cours', as
 
   const textes = await historique.allInnerTexts();
   const ligneAncienne = textes.find((texte) => texte.includes('80'));
-  expect(ligneAncienne, 'la mesure de l\'an dernier doit etre listee').toBeTruthy();
+  expect(ligneAncienne, "la mesure de l'an dernier doit etre listee").toBeTruthy();
   expect(ligneAncienne).toContain(String(Number(anneeCourante) - 1));
 });
 
-test('poids et unite sont ecrits pareil dans les cartes et dans l\'historique', async ({ page }) => {
+test("poids et unite sont ecrits pareil dans les cartes et dans l'historique", async ({ page }) => {
   const jour = await aujourdhui(page);
   await page.request.post('/api/weight', { data: { date: jour, weightKg: 75 } });
 

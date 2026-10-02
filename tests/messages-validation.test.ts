@@ -20,7 +20,7 @@ function messages(resultat: { success: boolean; error?: { issues: Array<{ messag
 }
 
 describe('messages de validation', () => {
-  it('dit qu\'un champ est obligatoire, sans parler de type interne', () => {
+  it("dit qu'un champ est obligatoire, sans parler de type interne", () => {
     expect(messages(habitCreateSchema.safeParse({}))).toContain('Ce champ est obligatoire.');
   });
 
@@ -45,7 +45,7 @@ describe('messages de validation', () => {
     );
   });
 
-  it('n\'expose jamais les identifiants techniques d\'une liste de choix', () => {
+  it("n'expose jamais les identifiants techniques d'une liste de choix", () => {
     const sortie = messages(mealCreateSchema.safeParse({ date: '2026-08-11', type: 'brunch', name: 'X' }));
     expect(sortie).toContain('Choix invalide.');
     for (const message of sortie) {

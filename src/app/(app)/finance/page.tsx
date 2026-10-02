@@ -3,7 +3,19 @@
 import { useState } from 'react';
 import { api, useResource } from '@/lib/client/api';
 import { useMutate } from '@/lib/client/mutate';
-import { Badge, Button, Card, CardHeader, cx, EmptyState, Field, IconButton, Input, Select, Skeleton } from '@/components/ui/primitives';
+import {
+  Badge,
+  Button,
+  Card,
+  CardHeader,
+  cx,
+  EmptyState,
+  Field,
+  IconButton,
+  Input,
+  Select,
+  Skeleton,
+} from '@/components/ui/primitives';
 import { Icon } from '@/components/ui/icons';
 import { Modal } from '@/components/ui/modal';
 import { DonutChart } from '@/components/charts';
@@ -31,8 +43,16 @@ interface FinanceData {
 }
 
 const CATEGORIES = [
-  'housing', 'food', 'transport', 'health', 'leisure',
-  'education', 'shopping', 'subscriptions', 'savings', 'other',
+  'housing',
+  'food',
+  'transport',
+  'health',
+  'leisure',
+  'education',
+  'shopping',
+  'subscriptions',
+  'savings',
+  'other',
 ] as const;
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -109,8 +129,7 @@ export default function FinancePage() {
     if (deleted !== null) void refresh();
   }
 
-  const money = (value: number) =>
-    n(value, { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+  const money = (value: number) => n(value, { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
 
   if (loading || !data) {
     return (
@@ -167,7 +186,12 @@ export default function FinancePage() {
         {[
           { label: t('finance.income'), value: data.summary.income, color: '#fbe3ec', icon: 'arrowUp' as const },
           { label: t('finance.expense'), value: data.summary.expense, color: '#ff9fbf', icon: 'arrowDown' as const },
-          { label: t('finance.balance'), value: data.summary.balance, color: data.summary.balance >= 0 ? '#e6e6e6' : '#ff9fbf', icon: 'wallet' as const },
+          {
+            label: t('finance.balance'),
+            value: data.summary.balance,
+            color: data.summary.balance >= 0 ? '#e6e6e6' : '#ff9fbf',
+            icon: 'wallet' as const,
+          },
         ].map((tile) => (
           <Card key={tile.label}>
             <span
@@ -186,7 +210,12 @@ export default function FinancePage() {
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         <Card className="lg:col-span-2">
-          <CardHeader title={t('finance.title')} subtitle={`${data.transactions.length} operations`} icon="wallet" accent="#fbe3ec" />
+          <CardHeader
+            title={t('finance.title')}
+            subtitle={`${data.transactions.length} operations`}
+            icon="wallet"
+            accent="#fbe3ec"
+          />
 
           {data.transactions.length === 0 ? (
             <EmptyState
@@ -216,7 +245,10 @@ export default function FinancePage() {
                     <div className="mt-0.5 flex items-center gap-1.5">
                       <Badge color="#b4b4b4">{CATEGORY_LABELS[transaction.category] ?? transaction.category}</Badge>
                       <span className="text-[11px] text-[var(--text-faint)]">
-                        {new Date(`${transaction.date}T12:00:00Z`).toLocaleDateString(locale, { day: 'numeric', month: 'short' })}
+                        {new Date(`${transaction.date}T12:00:00Z`).toLocaleDateString(locale, {
+                          day: 'numeric',
+                          month: 'short',
+                        })}
                       </span>
                       {transaction.recurring && <Icon name="clock" size={11} className="text-[var(--text-faint)]" />}
                     </div>
@@ -232,7 +264,14 @@ export default function FinancePage() {
                     {money(transaction.amount)}
                   </span>
 
-                  <IconButton icon="trash" label={t('common.delete')} size={13} tone="danger" onClick={() => remove(transaction)} discret />
+                  <IconButton
+                    icon="trash"
+                    label={t('common.delete')}
+                    size={13}
+                    tone="danger"
+                    onClick={() => remove(transaction)}
+                    discret
+                  />
                 </li>
               ))}
             </ul>
@@ -295,7 +334,12 @@ export default function FinancePage() {
           </div>
 
           <Field label={t('finance.label')} htmlFor="transaction-label" error={erreurs.label} required>
-            <Input id="transaction-label" value={form.label} onChange={(event) => set('label', event.target.value)} autoFocus />
+            <Input
+              id="transaction-label"
+              value={form.label}
+              onChange={(event) => set('label', event.target.value)}
+              autoFocus
+            />
           </Field>
 
           <div className="grid grid-cols-2 gap-3">
@@ -310,12 +354,21 @@ export default function FinancePage() {
               />
             </Field>
             <Field label={t('common.date')} htmlFor="transaction-date" error={erreurs.date}>
-              <Input id="transaction-date" type="date" value={form.date} onChange={(event) => set('date', event.target.value)} />
+              <Input
+                id="transaction-date"
+                type="date"
+                value={form.date}
+                onChange={(event) => set('date', event.target.value)}
+              />
             </Field>
           </div>
 
           <Field label={t('common.category')} htmlFor="transaction-category">
-            <Select id="transaction-category" value={form.category} onChange={(event) => set('category', event.target.value)}>
+            <Select
+              id="transaction-category"
+              value={form.category}
+              onChange={(event) => set('category', event.target.value)}
+            >
               {CATEGORIES.map((category) => (
                 <option key={category} value={category}>
                   {CATEGORY_LABELS[category]}

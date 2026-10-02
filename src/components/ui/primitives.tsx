@@ -40,8 +40,7 @@ const BUTTON_VARIANTS: Record<ButtonVariant, string> = {
   secondary:
     'bg-[var(--surface-2)] text-[var(--text)] border border-[var(--border)] hover:border-brand-300/40 hover:bg-[var(--surface-hover)]',
   ghost: 'text-[var(--text-muted)] hover:bg-[var(--surface-2)] hover:text-[var(--text)]',
-  subtle:
-    'bg-[var(--surface)] text-[var(--text)] border border-[var(--border)] hover:border-brand-300/40',
+  subtle: 'bg-[var(--surface)] text-[var(--text)] border border-[var(--border)] hover:border-brand-300/40',
   danger:
     'bg-[#ff9fbf]/10 text-red-700 border border-[#ff9fbf]/40 hover:bg-[#ff9fbf]/20 dark:text-[#ff9fbf] dark:border-[#ff9fbf]/25',
 };
@@ -74,7 +73,18 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
-  { variant = 'primary', size = 'md', icon, loading, fullWidth, className, children, disabled, type = 'button', ...props },
+  {
+    variant = 'primary',
+    size = 'md',
+    icon,
+    loading,
+    fullWidth,
+    className,
+    children,
+    disabled,
+    type = 'button',
+    ...props
+  },
   ref,
 ) {
   /*
@@ -220,21 +230,23 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   );
 });
 
-export const Textarea = forwardRef<HTMLTextAreaElement, TextareaHTMLAttributes<HTMLTextAreaElement>>(
-  function Textarea({ className, ...props }, ref) {
-    return <textarea ref={ref} className={cx(CONTROL_BASE, 'py-2.5 min-h-24 resize-y', className)} {...props} />;
-  },
-);
+export const Textarea = forwardRef<HTMLTextAreaElement, TextareaHTMLAttributes<HTMLTextAreaElement>>(function Textarea(
+  { className, ...props },
+  ref,
+) {
+  return <textarea ref={ref} className={cx(CONTROL_BASE, 'py-2.5 min-h-24 resize-y', className)} {...props} />;
+});
 
-export const Select = forwardRef<HTMLSelectElement, SelectHTMLAttributes<HTMLSelectElement>>(
-  function Select({ className, children, ...props }, ref) {
-    return (
-      <select ref={ref} className={cx(CONTROL_BASE, 'h-11 pe-9 appearance-none cursor-pointer', className)} {...props}>
-        {children}
-      </select>
-    );
-  },
-);
+export const Select = forwardRef<HTMLSelectElement, SelectHTMLAttributes<HTMLSelectElement>>(function Select(
+  { className, children, ...props },
+  ref,
+) {
+  return (
+    <select ref={ref} className={cx(CONTROL_BASE, 'h-11 pe-9 appearance-none cursor-pointer', className)} {...props}>
+      {children}
+    </select>
+  );
+});
 
 export interface CheckboxProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> {
   label: ReactNode;

@@ -49,7 +49,9 @@ export const GET = route(async ({ user, searchParams }) => {
     byType,
     monthly: window.map((date) => ({
       date,
-      minutes: monthly.filter((workout) => workout.date === date).reduce((sum, workout) => sum + workout.durationMin, 0),
+      minutes: monthly
+        .filter((workout) => workout.date === date)
+        .reduce((sum, workout) => sum + workout.durationMin, 0),
     })),
   });
 });

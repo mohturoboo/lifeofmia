@@ -51,7 +51,13 @@ export default function RegisterPage() {
   };
 
   const strength = useMemo(() => evaluatePassword(form.password), [form.password]);
-  const strengthLabel = [t('auth.passwordWeak'), t('auth.passwordWeak'), t('auth.passwordMedium'), t('auth.passwordStrong'), t('auth.passwordStrong')][strength.score];
+  const strengthLabel = [
+    t('auth.passwordWeak'),
+    t('auth.passwordWeak'),
+    t('auth.passwordMedium'),
+    t('auth.passwordStrong'),
+    t('auth.passwordStrong'),
+  ][strength.score];
   const strengthColor = ['#ff9fbf', '#ff9fbf', '#ff9fbf', '#fbe3ec', '#fbe3ec'][strength.score];
 
   /**
@@ -125,7 +131,10 @@ export default function RegisterPage() {
         {[1, 2].map((index) => (
           <span
             key={index}
-            className={cx('h-1 flex-1 rounded-full transition-colors', index <= step ? 'lm-gradient-bg' : 'bg-[var(--border)]')}
+            className={cx(
+              'h-1 flex-1 rounded-full transition-colors',
+              index <= step ? 'lm-gradient-bg' : 'bg-[var(--border)]',
+            )}
           />
         ))}
         <span className="ms-1 text-xs text-[var(--text-faint)]">
@@ -138,7 +147,10 @@ export default function RegisterPage() {
 
       <form onSubmit={onSubmit} className="mt-7 space-y-4" noValidate>
         {error && (
-          <div role="alert" className="rounded-xl border border-red-500/25 bg-red-500/10 px-4 py-3 text-sm text-red-500">
+          <div
+            role="alert"
+            className="rounded-xl border border-red-500/25 bg-red-500/10 px-4 py-3 text-sm text-red-500"
+          >
             {error}
           </div>
         )}
@@ -235,7 +247,11 @@ export default function RegisterPage() {
 
             <div className="grid grid-cols-2 gap-3">
               <Field label={t('auth.language')} htmlFor="locale">
-                <Select id="locale" value={form.locale} onChange={(event) => set('locale', event.target.value as Locale)}>
+                <Select
+                  id="locale"
+                  value={form.locale}
+                  onChange={(event) => set('locale', event.target.value as Locale)}
+                >
                   {LOCALES.map((locale) => (
                     <option key={locale} value={locale}>
                       {LOCALE_META[locale].flag} {LOCALE_META[locale].label}
@@ -255,7 +271,11 @@ export default function RegisterPage() {
             </div>
 
             <Field label={t('auth.gender')} htmlFor="gender" hint={t('common.optional')}>
-              <Select id="gender" value={form.gender} onChange={(event) => set('gender', event.target.value as typeof form.gender)}>
+              <Select
+                id="gender"
+                value={form.gender}
+                onChange={(event) => set('gender', event.target.value as typeof form.gender)}
+              >
                 <option value="">—</option>
                 <option value="male">{t('auth.genderMale')}</option>
                 <option value="female">{t('auth.genderFemale')}</option>

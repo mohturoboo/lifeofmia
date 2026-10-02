@@ -24,12 +24,12 @@ const { ApiError } = await import('@/lib/api/response');
 describe('requireOwned', () => {
   beforeEach(() => findFirst.mockReset());
 
-  it('laisse passer une reference appartenant a l\'utilisateur', async () => {
+  it("laisse passer une reference appartenant a l'utilisateur", async () => {
     findFirst.mockResolvedValue({ id: 'goal_1' });
     await expect(requireOwned('goal', 'goal_1', 'user_a')).resolves.toBe('goal_1');
   });
 
-  it('filtre bien sur userId, pas seulement sur l\'identifiant', async () => {
+  it("filtre bien sur userId, pas seulement sur l'identifiant", async () => {
     findFirst.mockResolvedValue({ id: 'goal_1' });
     await requireOwned('goal', 'goal_1', 'user_a');
 
@@ -37,12 +37,12 @@ describe('requireOwned', () => {
     expect(args.where).toEqual({ id: 'goal_1', userId: 'user_a' });
   });
 
-  it('rejette la reference d\'un autre utilisateur', async () => {
+  it("rejette la reference d'un autre utilisateur", async () => {
     findFirst.mockResolvedValue(null); // le filtre userId ne renvoie rien
     await expect(requireOwned('goal', 'goal_de_A', 'user_b')).rejects.toThrow(ApiError);
   });
 
-  it('renvoie NOT_FOUND et non FORBIDDEN, pour ne pas confirmer l\'existence', async () => {
+  it("renvoie NOT_FOUND et non FORBIDDEN, pour ne pas confirmer l'existence", async () => {
     findFirst.mockResolvedValue(null);
     await expect(requireOwned('task', 'task_de_A', 'user_b')).rejects.toMatchObject({
       code: 'NOT_FOUND',
@@ -68,7 +68,7 @@ describe('requireOwned', () => {
 });
 
 describe('rejectSelfReference', () => {
-  it('refuse qu\'une ressource soit son propre parent', () => {
+  it("refuse qu'une ressource soit son propre parent", () => {
     expect(() => rejectSelfReference('id_1', 'id_1', 'Une tache')).toThrow(ApiError);
   });
 

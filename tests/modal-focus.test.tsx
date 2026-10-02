@@ -31,8 +31,7 @@ beforeAll(() => {
 
   window.requestAnimationFrame ??= ((callback: FrameRequestCallback) =>
     setTimeout(() => callback(performance.now()), 0) as unknown as number) as typeof window.requestAnimationFrame;
-  window.cancelAnimationFrame ??= ((handle: number) =>
-    clearTimeout(handle)) as typeof window.cancelAnimationFrame;
+  window.cancelAnimationFrame ??= ((handle: number) => clearTimeout(handle)) as typeof window.cancelAnimationFrame;
 });
 
 afterEach(cleanup);
@@ -55,11 +54,7 @@ function Formulaire({ onCloseCalled }: { onCloseCalled?: () => void } = {}) {
       title="Formulaire"
     >
       <input aria-label="nom" value={nom} onChange={(event) => setNom(event.target.value)} />
-      <textarea
-        aria-label="description"
-        value={description}
-        onChange={(event) => setDescription(event.target.value)}
-      />
+      <textarea aria-label="description" value={description} onChange={(event) => setDescription(event.target.value)} />
     </Modal>
   );
 }
@@ -95,7 +90,7 @@ describe('Modal — conservation du focus pendant la saisie', () => {
     expect(document.activeElement).toBe(description);
   });
 
-  it('permet d\'ecrire une phrase entiere sans recliquer', async () => {
+  it("permet d'ecrire une phrase entiere sans recliquer", async () => {
     render(<Formulaire />);
     await frame();
 
@@ -113,7 +108,7 @@ describe('Modal — conservation du focus pendant la saisie', () => {
     expect(description.value).toBe(phrase);
   });
 
-  it('n\'interfere pas avec la saisie dans le premier champ', async () => {
+  it("n'interfere pas avec la saisie dans le premier champ", async () => {
     render(<Formulaire />);
     await frame();
 
@@ -128,7 +123,7 @@ describe('Modal — conservation du focus pendant la saisie', () => {
     expect(nom.value).toBe('Sport');
   });
 
-  it('place le focus sur le premier champ a l\'ouverture', async () => {
+  it("place le focus sur le premier champ a l'ouverture", async () => {
     render(<Formulaire />);
     await frame();
 

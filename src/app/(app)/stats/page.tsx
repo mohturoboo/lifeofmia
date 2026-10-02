@@ -83,7 +83,12 @@ export default function StatsPage() {
     { label: t('habits.completion'), value: `${totals.habitCompletion}%`, icon: 'flame', color: '#e9b8d5' },
     { label: t('stats.activeDays'), value: `${totals.activeDays}/${totals.days}`, icon: 'calendar', color: '#e6e6e6' },
     { label: t('dash.tasksDone'), value: n(totals.tasksDone), icon: 'checkCircle', color: '#fbe3ec' },
-    { label: t('sport.totalTime'), value: `${Math.round(totals.workoutMinutes / 60)} h`, icon: 'dumbbell', color: '#ff9fbf' },
+    {
+      label: t('sport.totalTime'),
+      value: `${Math.round(totals.workoutMinutes / 60)} h`,
+      icon: 'dumbbell',
+      color: '#ff9fbf',
+    },
     { label: t('dash.focusTime'), value: `${Math.round(totals.focusMinutes / 60)} h`, icon: 'clock', color: '#d9c7f0' },
     { label: t('prayers.title'), value: n(totals.prayersDone), icon: 'moon', color: '#dcc7ea' },
     { label: t('dash.xp'), value: n(totals.xpEarned), icon: 'award', color: '#ff9fbf' },
@@ -140,7 +145,12 @@ export default function StatsPage() {
 
       <div className="mb-4 grid grid-cols-1 gap-4 lg:grid-cols-3">
         <Card className="lg:col-span-2">
-          <CardHeader title={t('dash.disciplineScore')} subtitle={periodLabels[period]} icon="trending" accent="#fbc7da" />
+          <CardHeader
+            title={t('dash.disciplineScore')}
+            subtitle={periodLabels[period]}
+            icon="trending"
+            accent="#fbc7da"
+          />
           <LineChart
             data={data.series.map((day) => ({ label: chartLabel(day.date), value: day.disciplineScore }))}
             color="#fbc7da"
@@ -175,7 +185,9 @@ export default function StatsPage() {
           ) : (
             <DonutChart
               data={Object.entries(data.byCategory).map(([category, value]) => ({
-                label: t(`habits.category${category.charAt(0).toUpperCase()}${category.slice(1)}` as 'habits.categoryOther'),
+                label: t(
+                  `habits.category${category.charAt(0).toUpperCase()}${category.slice(1)}` as 'habits.categoryOther',
+                ),
                 value,
               }))}
               size={160}
@@ -218,7 +230,12 @@ export default function StatsPage() {
         <Card>
           <CardHeader title={t('dash.level')} icon="award" accent="#d9c7f0" />
           <div className="flex items-center gap-5">
-            <RingProgress value={data.progress.percent} size={100} color="#d9c7f0" sublabel={`Niv. ${data.progress.level}`} />
+            <RingProgress
+              value={data.progress.percent}
+              size={100}
+              color="#d9c7f0"
+              sublabel={`Niv. ${data.progress.level}`}
+            />
             <dl className="space-y-1.5 text-sm">
               <div className="flex justify-between gap-6">
                 <dt className="text-[var(--text-muted)]">{t('dash.xp')}</dt>
@@ -226,22 +243,29 @@ export default function StatsPage() {
               </div>
               <div className="flex justify-between gap-6">
                 <dt className="text-[var(--text-muted)]">{t('dash.streak')}</dt>
-                <dd className="font-medium text-[var(--text)]">{t('common.dayCount', { count: data.streak.current })}</dd>
+                <dd className="font-medium text-[var(--text)]">
+                  {t('common.dayCount', { count: data.streak.current })}
+                </dd>
               </div>
               <div className="flex justify-between gap-6">
                 <dt className="text-[var(--text-muted)]">{t('stats.bestStreak')}</dt>
-                <dd className="font-medium text-[var(--text)]">{t('common.dayCount', { count: data.streak.longest })}</dd>
+                <dd className="font-medium text-[var(--text)]">
+                  {t('common.dayCount', { count: data.streak.longest })}
+                </dd>
               </div>
             </dl>
           </div>
         </Card>
 
         <Card className="lg:col-span-2">
-          <CardHeader title={t('dash.badges')} subtitle={t('stats.badgeUnlocked', { count: data.badges.length })} icon="crown" accent="#ff9fbf" />
+          <CardHeader
+            title={t('dash.badges')}
+            subtitle={t('stats.badgeUnlocked', { count: data.badges.length })}
+            icon="crown"
+            accent="#ff9fbf"
+          />
           {data.badges.length === 0 ? (
-            <p className="py-8 text-center text-xs text-[var(--text-faint)]">
-              {t('stats.badgesHint')}
-            </p>
+            <p className="py-8 text-center text-xs text-[var(--text-faint)]">{t('stats.badgesHint')}</p>
           ) : (
             <div className="flex flex-wrap gap-2">
               {data.badges.map((badge) => (

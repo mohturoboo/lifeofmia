@@ -32,7 +32,9 @@ describe('controle des dictionnaires', () => {
       statSync(chemin).isFile() ? [chemin] : readdirSync(chemin).flatMap((nom) => fichiers(join(chemin, nom)));
     const fautes = SOURCES_FRANCAISES.flatMap(fichiers)
       .filter((fichier) => /\.tsx?$/.test(fichier))
-      .flatMap((fichier) => controlerSource(readFileSync(fichier, 'utf8')).map(({ ligne, mots }) => `${fichier}:${ligne} ${mots}`));
+      .flatMap((fichier) =>
+        controlerSource(readFileSync(fichier, 'utf8')).map(({ ligne, mots }) => `${fichier}:${ligne} ${mots}`),
+      );
     expect(fautes).toEqual([]);
   });
 });

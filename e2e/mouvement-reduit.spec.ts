@@ -83,7 +83,7 @@ test.describe('mouvement reduit', () => {
   }
 });
 
-test('le contenu s\'affiche meme sans aucune image d\'animation', async ({ page }) => {
+test("le contenu s'affiche meme sans aucune image d'animation", async ({ page }) => {
   /*
    * Reproduit un onglet en arriere-plan : `requestAnimationFrame` ne rappelle
    * jamais, et les animations CSS restent figees sur leur image de depart.
@@ -99,7 +99,7 @@ test('le contenu s\'affiche meme sans aucune image d\'animation', async ({ page 
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
 });
 
-test('aucune animation d\'entree ne part d\'une opacite nulle', async ({ page }) => {
+test("aucune animation d'entree ne part d'une opacite nulle", async ({ page }) => {
   await page.goto('/habits');
 
   /*
@@ -127,7 +127,7 @@ test('aucune animation d\'entree ne part d\'une opacite nulle', async ({ page })
     return problemes;
   });
 
-  expect(fautives, 'une animation d\'entree part d\'une opacite nulle').toEqual([]);
+  expect(fautives, "une animation d'entree part d'une opacite nulle").toEqual([]);
 });
 
 test.describe('accueil public', () => {

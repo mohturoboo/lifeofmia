@@ -62,7 +62,9 @@ async function elementAuCentreDu(page: Page, bouton: ReturnType<Page['getByRole'
     const dessus = document.elementFromPoint(rect.x + rect.width / 2, rect.y + rect.height / 2);
     return {
       estLeBouton: dessus === cible || cible.contains(dessus),
-      trouve: dessus ? `${dessus.tagName}.${(dessus.className || '').toString().split(' ').slice(0, 2).join('.')}` : 'rien',
+      trouve: dessus
+        ? `${dessus.tagName}.${(dessus.className || '').toString().split(' ').slice(0, 2).join('.')}`
+        : 'rien',
       dansUneNav: Boolean(dessus?.closest('nav')),
     };
   });
@@ -157,7 +159,7 @@ test('la fenetre sort de la colonne de contenu et neutralise la navigation', asy
   });
 
   expect(etat.renduDansLeBody, 'la fenetre doit etre montee hors de la colonne de contenu').toBe(true);
-  expect(etat.contexteEnglobant, 'aucun contexte d\'empilement ne doit enfermer la fenetre').toBeNull();
+  expect(etat.contexteEnglobant, "aucun contexte d'empilement ne doit enfermer la fenetre").toBeNull();
   expect(Number(etat.rangPanneau)).toBeGreaterThan(Number(etat.rangNav));
   expect(etat.navSansPointeur, 'la navigation doit cesser de recevoir les clics').toBe('none');
   expect(etat.marqueurBody).toBe('true');

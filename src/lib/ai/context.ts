@@ -21,8 +21,14 @@ export async function buildUserContext(user: SessionUser): Promise<string> {
     prisma.habit.findMany({
       where: { userId: user.id, archivedAt: null },
       select: {
-        id: true, name: true, category: true, targetPerDay: true, unit: true,
-        isNegative: true, weekDays: true, reminderAt: true,
+        id: true,
+        name: true,
+        category: true,
+        targetPerDay: true,
+        unit: true,
+        isNegative: true,
+        weekDays: true,
+        reminderAt: true,
         logs: { where: { date: { gte: lastNDays(14, today)[0] } }, select: { date: true, status: true } },
       },
     }),
@@ -35,8 +41,14 @@ export async function buildUserContext(user: SessionUser): Promise<string> {
     prisma.goal.findMany({
       where: { userId: user.id, status: 'active' },
       select: {
-        id: true, title: true, horizon: true, progress: true, deadline: true,
-        targetValue: true, currentValue: true, unit: true,
+        id: true,
+        title: true,
+        horizon: true,
+        progress: true,
+        deadline: true,
+        targetValue: true,
+        currentValue: true,
+        unit: true,
         steps: { select: { title: true, done: true } },
       },
       take: 15,
@@ -121,7 +133,7 @@ ${weights.map((entry) => `${entry.date}: ${entry.weightKg} kg`).join(' | ') || '
 ${workouts.map((workout) => `${workout.date}: ${workout.name} (${workout.type}, ${workout.durationMin} min)`).join('\n') || 'Aucune seance.'}
 
 # Repas d'aujourd'hui
-${meals.map((meal) => `${meal.type}: ${meal.name} — ${Math.round(meal.calories)} kcal, ${Math.round(meal.protein)} g de proteines`).join('\n') || 'Aucun repas enregistre aujourd\'hui.'}
+${meals.map((meal) => `${meal.type}: ${meal.name} — ${Math.round(meal.calories)} kcal, ${Math.round(meal.protein)} g de proteines`).join('\n') || "Aucun repas enregistre aujourd'hui."}
 
 # Derniere entree de journal
 ${journal ? `${journal.date} — humeur ${journal.mood}/5, energie ${journal.energy}/5\n${journal.content.slice(0, 400)}` : 'Aucune entree.'}`;
@@ -132,7 +144,7 @@ export function systemPrompt(userContext: string, locale: string): string {
   const languages: Record<string, string> = {
     fr: 'francais',
     en: 'English',
-    ar: 'l\'arabe',
+    ar: "l'arabe",
     es: 'espagnol',
     de: 'allemand',
     it: 'italien',

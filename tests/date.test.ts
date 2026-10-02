@@ -19,7 +19,7 @@ import {
  * ici decale silencieusement les habitudes, les statistiques et les prieres.
  */
 describe('cles de date', () => {
-  it('produit la meme journee dans le fuseau de l\'utilisateur', () => {
+  it("produit la meme journee dans le fuseau de l'utilisateur", () => {
     // 22 h a Paris le 7 aout = deja le 8 a Tokyo.
     const instant = new Date('2026-08-07T22:00:00Z');
     expect(dateKeyIn('Europe/Paris', instant)).toBe('2026-08-08');

@@ -62,7 +62,7 @@ test('les onglets des reglages agissent des le premier clic', async ({ page }) =
   await expect(page.getByLabel(/Mot de passe actuel/)).toBeVisible();
 });
 
-test('le bouton reste inactif tant que la page n\'est pas prete', async ({ page }) => {
+test("le bouton reste inactif tant que la page n'est pas prete", async ({ page }) => {
   await page.goto('/habits', { waitUntil: 'commit' });
 
   /*
@@ -84,7 +84,7 @@ test('le bouton reste inactif tant que la page n\'est pas prete', async ({ page 
     return releves;
   });
 
-  expect(etats.length, 'le bouton n\'est jamais apparu').toBeGreaterThan(0);
-  expect(etats[0], 'le bouton est actif des le premier rendu, avant l\'hydratation').toBe(true);
+  expect(etats.length, "le bouton n'est jamais apparu").toBeGreaterThan(0);
+  expect(etats[0], "le bouton est actif des le premier rendu, avant l'hydratation").toBe(true);
   expect(etats[etats.length - 1], 'le bouton ne devient jamais actionnable').toBe(false);
 });

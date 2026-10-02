@@ -80,21 +80,14 @@ function isSameOrigin(request: NextRequest): boolean {
  * propres compteurs, plus stricts que celui de l'enveloppe.
  */
 export function clientIp(request: NextRequest): string {
-  return (
-    request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ??
-    request.headers.get('x-real-ip') ??
-    'local'
-  );
+  return request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? request.headers.get('x-real-ip') ?? 'local';
 }
 
 function clientKey(request: NextRequest, suffix: string): string {
   return `${suffix}:${clientIp(request)}`;
 }
 
-async function readBody<TBody>(
-  request: NextRequest,
-  schema?: ZodType<TBody>,
-): Promise<TBody> {
+async function readBody<TBody>(request: NextRequest, schema?: ZodType<TBody>): Promise<TBody> {
   if (!schema) return undefined as TBody;
   if (request.method === 'GET' || request.method === 'HEAD') return undefined as TBody;
 
@@ -141,8 +134,7 @@ export function route<TBody = unknown>(
        * par rien : un compte authentifie pouvait les marteler librement.
        * Sans limite explicite, seules les methodes mutantes sont bornees.
        */
-      const limit =
-        options.rateLimit ?? (MUTATING.has(request.method) ? { key: 'write', ...RATE_LIMITS.write } : null);
+      const limit = options.rateLimit ?? (MUTATING.has(request.method) ? { key: 'write', ...RATE_LIMITS.write } : null);
 
       if (limit) {
         const result = consume(`${limit.key}:${user.id}`, limit.limit, limit.windowMs);

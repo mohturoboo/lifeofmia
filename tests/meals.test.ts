@@ -19,8 +19,8 @@ const BASE = {
   calories: 600,
 };
 
-describe('creation d\'un repas', () => {
-  it('n\'enregistre pas de modele si la case n\'est pas cochee', () => {
+describe("creation d'un repas", () => {
+  it("n'enregistre pas de modele si la case n'est pas cochee", () => {
     const parsed = mealCreateSchema.parse(BASE);
     expect(parsed.saveAsTemplate).toBe(false);
     expect(parsed.isTemplate).toBe(false);
@@ -39,7 +39,7 @@ describe('creation d\'un repas', () => {
   });
 });
 
-describe('modification d\'un repas', () => {
+describe("modification d'un repas", () => {
   it('ignore isTemplate, meme envoye explicitement', () => {
     const parsed = mealUpdateSchema.parse({ calories: 450, isTemplate: true });
     expect(parsed).not.toHaveProperty('isTemplate');
@@ -51,7 +51,7 @@ describe('modification d\'un repas', () => {
     expect(parsed.saveAsTemplate).toBe(true);
   });
 
-  it('ne touche a rien d\'autre que le champ envoye', () => {
+  it("ne touche a rien d'autre que le champ envoye", () => {
     // Avant correction : protein, carbs, fat, fiber, quantity et unit
     // repartaient a leur valeur par defaut a chaque modification.
     expect(mealUpdateSchema.parse({ calories: 120 })).toEqual({ calories: 120 });
@@ -71,8 +71,7 @@ describe('modification d\'un repas', () => {
 describe('mises a jour partielles — tous les modules', () => {
   // Le module exporte aussi des listes de constantes : on ne garde que les schemas.
   const schemas = (Object.entries(modules) as Array<[string, unknown]>).filter(
-    (entry): entry is [string, z.ZodObject] =>
-      entry[0].endsWith('UpdateSchema') && entry[1] instanceof z.ZodObject,
+    (entry): entry is [string, z.ZodObject] => entry[0].endsWith('UpdateSchema') && entry[1] instanceof z.ZodObject,
   );
 
   it('couvre bien tous les schemas de mise a jour', () => {

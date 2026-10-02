@@ -65,7 +65,10 @@ function ResetForm() {
 
       <form onSubmit={onSubmit} className="mt-8 space-y-4">
         {error && (
-          <div role="alert" className="rounded-xl border border-red-500/25 bg-red-500/10 px-4 py-3 text-sm text-red-500">
+          <div
+            role="alert"
+            className="rounded-xl border border-red-500/25 bg-red-500/10 px-4 py-3 text-sm text-red-500"
+          >
             {error}
           </div>
         )}

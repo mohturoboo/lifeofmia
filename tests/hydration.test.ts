@@ -8,7 +8,7 @@ import { formatWater } from '@/lib/hydration';
  * litre. Le premier verre affichait donc un tiers de litre, et trois verres
  * — 750 ml — devenaient « 0.8 L ». Aucune addition ne tombait juste.
  */
-describe('affichage de l\'hydratation', () => {
+describe("affichage de l'hydratation", () => {
   it('parle en millilitres sous le litre', () => {
     expect(formatWater(0, 'fr-FR')).toBe('0 ml');
     expect(formatWater(250, 'fr-FR')).toBe('250 ml');
@@ -22,7 +22,7 @@ describe('affichage de l\'hydratation', () => {
     expect(formatWater(2000, 'fr-FR')).toBe('2 L');
   });
 
-  it('n\'affiche jamais de volume negatif', () => {
+  it("n'affiche jamais de volume negatif", () => {
     expect(formatWater(-250, 'fr-FR')).toBe('0 ml');
   });
 });

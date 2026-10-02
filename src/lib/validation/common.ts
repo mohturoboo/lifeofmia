@@ -13,17 +13,11 @@ import { installerMessagesFrancais } from '@/lib/validation/messages';
  */
 installerMessagesFrancais();
 
-export const dateKeySchema = z
-  .string()
-  .regex(/^\d{4}-\d{2}-\d{2}$/, 'Format de date attendu : YYYY-MM-DD');
+export const dateKeySchema = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Format de date attendu : YYYY-MM-DD');
 
-export const hexColorSchema = z
-  .string()
-  .regex(/^#[0-9a-fA-F]{6}$/, 'Couleur hexadécimale invalide');
+export const hexColorSchema = z.string().regex(/^#[0-9a-fA-F]{6}$/, 'Couleur hexadécimale invalide');
 
-export const timeSchema = z
-  .string()
-  .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, 'Heure attendue au format HH:mm');
+export const timeSchema = z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, 'Heure attendue au format HH:mm');
 
 /**
  * Messages de coherence temporelle, partages par les schemas et les routes.
@@ -72,10 +66,7 @@ export const tagsSchema = z.array(z.string().trim().min(1).max(32)).max(20).defa
  */
 export function updatableFrom<Shape extends z.ZodRawShape>(schema: z.ZodObject<Shape>) {
   const shape = Object.fromEntries(
-    Object.entries(schema.shape).map(([key, field]) => [
-      key,
-      field instanceof z.ZodDefault ? field.unwrap() : field,
-    ]),
+    Object.entries(schema.shape).map(([key, field]) => [key, field instanceof z.ZodDefault ? field.unwrap() : field]),
   ) as { [K in keyof Shape]: Shape[K] extends z.ZodDefault<infer Inner> ? Inner : Shape[K] };
 
   return z.object(shape).partial();

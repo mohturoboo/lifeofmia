@@ -17,10 +17,7 @@ import { test, expect, type Page } from '@playwright/test';
 const PRIERES = ['Fajr', 'Sunrise', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'] as const;
 
 async function horaires(page: Page) {
-  const [tableau, prieres] = await Promise.all([
-    page.request.get('/api/dashboard'),
-    page.request.get('/api/prayers'),
-  ]);
+  const [tableau, prieres] = await Promise.all([page.request.get('/api/dashboard'), page.request.get('/api/prayers')]);
 
   const a = (await tableau.json()) as { data?: { prayers?: { times?: Record<string, string>; method?: number } } };
   const b = (await prieres.json()) as { data?: { times?: Record<string, string>; settings?: { method: number } } };
@@ -33,7 +30,7 @@ async function horaires(page: Page) {
   };
 }
 
-test('les deux points d\'entree donnent exactement les memes horaires', async ({ page }) => {
+test("les deux points d'entree donnent exactement les memes horaires", async ({ page }) => {
   const { tableau, prieres } = await horaires(page);
 
   for (const priere of PRIERES) {

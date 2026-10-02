@@ -40,9 +40,7 @@ export async function audit(options: {
 }): Promise<void> {
   try {
     const ip =
-      options.headers?.get('x-forwarded-for')?.split(',')[0]?.trim() ??
-      options.headers?.get('x-real-ip') ??
-      null;
+      options.headers?.get('x-forwarded-for')?.split(',')[0]?.trim() ?? options.headers?.get('x-real-ip') ?? null;
 
     await prisma.auditLog.create({
       data: {

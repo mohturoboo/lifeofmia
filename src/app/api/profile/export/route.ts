@@ -12,16 +12,50 @@ import { methodeRefusee, optionsPour, type MethodeHttp } from '@/lib/api/methode
  * Renvoie l'integralite des donnees de l'utilisateur dans un fichier JSON
  * telechargeable. Le hash du mot de passe et les secrets 2FA sont exclus.
  */
-export const GET = route(async ({ user }) => {
-  const [profile, habits, habitLogs, tasks, goals, meals, waterLogs, weights, workouts, journal, prayers, transactions, projects, notes, events, focus, stats, badges, xpEvents] =
-    await Promise.all([
+export const GET = route(
+  async ({ user }) => {
+    const [
+      profile,
+      habits,
+      habitLogs,
+      tasks,
+      goals,
+      meals,
+      waterLogs,
+      weights,
+      workouts,
+      journal,
+      prayers,
+      transactions,
+      projects,
+      notes,
+      events,
+      focus,
+      stats,
+      badges,
+      xpEvents,
+    ] = await Promise.all([
       prisma.user.findUniqueOrThrow({
         where: { id: user.id },
         select: {
-          id: true, email: true, firstName: true, lastName: true, country: true, city: true,
-          timezone: true, locale: true, birthDate: true, gender: true, heightCm: true,
-          mainGoal: true, xp: true, level: true, currentStreak: true, longestStreak: true,
-          emailVerified: true, createdAt: true,
+          id: true,
+          email: true,
+          firstName: true,
+          lastName: true,
+          country: true,
+          city: true,
+          timezone: true,
+          locale: true,
+          birthDate: true,
+          gender: true,
+          heightCm: true,
+          mainGoal: true,
+          xp: true,
+          level: true,
+          currentStreak: true,
+          longestStreak: true,
+          emailVerified: true,
+          createdAt: true,
         },
       }),
       prisma.habit.findMany({ where: { userId: user.id } }),
@@ -44,40 +78,42 @@ export const GET = route(async ({ user }) => {
       prisma.xpEvent.findMany({ where: { userId: user.id } }),
     ]);
 
-  await audit({ action: 'DATA_EXPORT', userId: user.id, headers: await headers() });
+    await audit({ action: 'DATA_EXPORT', userId: user.id, headers: await headers() });
 
-  const payload = {
-    exportedAt: new Date().toISOString(),
-    application: 'LifeofM',
-    format: 'json/v1',
-    profile,
-    habits,
-    habitLogs,
-    tasks,
-    goals,
-    meals,
-    waterLogs,
-    weights,
-    workouts,
-    journal,
-    prayers,
-    transactions,
-    projects,
-    notes,
-    events,
-    focusSessions: focus,
-    dailyStats: stats,
-    badges: badges.map((entry) => ({ code: entry.badge.code, name: entry.badge.name, unlockedAt: entry.unlockedAt })),
-    xpEvents,
-  };
+    const payload = {
+      exportedAt: new Date().toISOString(),
+      application: 'LifeofM',
+      format: 'json/v1',
+      profile,
+      habits,
+      habitLogs,
+      tasks,
+      goals,
+      meals,
+      waterLogs,
+      weights,
+      workouts,
+      journal,
+      prayers,
+      transactions,
+      projects,
+      notes,
+      events,
+      focusSessions: focus,
+      dailyStats: stats,
+      badges: badges.map((entry) => ({ code: entry.badge.code, name: entry.badge.name, unlockedAt: entry.unlockedAt })),
+      xpEvents,
+    };
 
-  return new NextResponse(JSON.stringify(payload, null, 2), {
-    headers: {
-      'Content-Type': 'application/json; charset=utf-8',
-      'Content-Disposition': `attachment; filename="lifeofm-export-${new Date().toISOString().slice(0, 10)}.json"`,
-    },
-  });
-}, { rateLimit: { key: 'export', ...RATE_LIMITS.export } });
+    return new NextResponse(JSON.stringify(payload, null, 2), {
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Content-Disposition': `attachment; filename="lifeofm-export-${new Date().toISOString().slice(0, 10)}.json"`,
+      },
+    });
+  },
+  { rateLimit: { key: 'export', ...RATE_LIMITS.export } },
+);
 
 // --- Methodes non prises en charge
 //

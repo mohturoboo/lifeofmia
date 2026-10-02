@@ -103,9 +103,7 @@ export function AppShell({ user, children }: { user: ShellUser; children: ReactN
       <nav className="min-h-0 flex-1 overflow-y-auto px-3 pb-4" aria-label={t('nav.main')}>
         {NAV_SECTIONS.map((section) => (
           <div key={section.titleKey} className="mb-5">
-            <h2 className="lm-eyebrow mb-2 px-3">
-              {t(section.titleKey)}
-            </h2>
+            <h2 className="lm-eyebrow mb-2 px-3">{t(section.titleKey)}</h2>
             <ul className="space-y-0.5">
               {section.items.map((item) => {
                 const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
@@ -160,7 +158,10 @@ export function AppShell({ user, children }: { user: ShellUser; children: ReactN
             </span>
           </div>
           <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-[var(--surface-2)] ring-1 ring-white/5">
-            <div className="lm-glow h-full rounded-full lm-gradient-bg transition-[width] duration-700" style={{ width: `${progress.percent}%` }} />
+            <div
+              className="lm-glow h-full rounded-full lm-gradient-bg transition-[width] duration-700"
+              style={{ width: `${progress.percent}%` }}
+            />
           </div>
         </Link>
       </div>

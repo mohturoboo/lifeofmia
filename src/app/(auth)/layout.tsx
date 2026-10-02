@@ -42,10 +42,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           </div>
 
           {/* Panneau decoratif — purement visuel, invisible pour les lecteurs d'ecran. */}
-          <aside
-            className="relative hidden overflow-hidden bg-[var(--bg-subtle)] lg:block"
-            aria-hidden="true"
-          >
+          <aside className="relative hidden overflow-hidden bg-[var(--bg-subtle)] lg:block" aria-hidden="true">
             <div className="lm-aura" />
             <div className="relative flex h-full flex-col justify-center px-14">
               <blockquote className="max-w-md">

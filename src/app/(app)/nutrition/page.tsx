@@ -4,7 +4,18 @@ import { useState } from 'react';
 import { api, useResource } from '@/lib/client/api';
 import { useMutate } from '@/lib/client/mutate';
 import { useHydrated } from '@/lib/client/hydrated';
-import { Button, Card, CardHeader, cx, Field, IconButton, Input, Select, Skeleton, Textarea } from '@/components/ui/primitives';
+import {
+  Button,
+  Card,
+  CardHeader,
+  cx,
+  Field,
+  IconButton,
+  Input,
+  Select,
+  Skeleton,
+  Textarea,
+} from '@/components/ui/primitives';
 import { Icon } from '@/components/ui/icons';
 import { Modal } from '@/components/ui/modal';
 import { DonutChart } from '@/components/charts';
@@ -196,13 +207,9 @@ export default function NutritionPage() {
    */
   async function addWater(amount: number) {
     const previous = data?.waterMl ?? 0;
-    setData((current) =>
-      current ? { ...current, waterMl: Math.max(0, current.waterMl + amount) } : current,
-    );
+    setData((current) => (current ? { ...current, waterMl: Math.max(0, current.waterMl + amount) } : current));
 
-    const result = await mutate(() =>
-      api.post<{ waterMl: number }>('/api/water', { date, amountMl: amount }),
-    );
+    const result = await mutate(() => api.post<{ waterMl: number }>('/api/water', { date, amountMl: amount }));
 
     if (result) setData((current) => (current ? { ...current, waterMl: result.waterMl } : current));
     // L'echec restaure la valeur d'avant le clic ; la notification est deja
@@ -290,7 +297,13 @@ export default function NutritionPage() {
             </div>
 
             <div className="mt-4 flex justify-center gap-2">
-              <Button variant="secondary" size="sm" loading={!pret} onClick={() => addWater(-verreMl)} aria-label={t('nutrition.removeGlass')}>
+              <Button
+                variant="secondary"
+                size="sm"
+                loading={!pret}
+                onClick={() => addWater(-verreMl)}
+                aria-label={t('nutrition.removeGlass')}
+              >
                 <Icon name="minus" size={15} />
               </Button>
               <Button size="sm" icon="plus" loading={!pret} onClick={() => addWater(verreMl)}>
@@ -314,7 +327,13 @@ export default function NutritionPage() {
                 icon="apple"
                 accent="#ff9fbf"
                 action={
-                  <Button variant="ghost" size="sm" icon="plus" onClick={() => openCreate(type)} aria-label={t('nutrition.addMeal')} />
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    icon="plus"
+                    onClick={() => openCreate(type)}
+                    aria-label={t('nutrition.addMeal')}
+                  />
                 }
               />
 
@@ -323,15 +342,20 @@ export default function NutritionPage() {
               ) : (
                 <ul className="space-y-1.5">
                   {meals.map((meal) => (
-                    <li key={meal.id} className="group flex items-center gap-3 rounded-xl bg-[var(--surface-2)] px-3 py-2.5">
+                    <li
+                      key={meal.id}
+                      className="group flex items-center gap-3 rounded-xl bg-[var(--surface-2)] px-3 py-2.5"
+                    >
                       <div className="min-w-0 flex-1">
                         <p className="flex items-center gap-1.5 truncate text-sm text-[var(--text)]">
                           {meal.name}
-                          {meal.aiGenerated && <Icon name="sparkles" size={11} className="shrink-0 text-[var(--brand-text)]" />}
+                          {meal.aiGenerated && (
+                            <Icon name="sparkles" size={11} className="shrink-0 text-[var(--brand-text)]" />
+                          )}
                         </p>
                         <p className="text-[11px] text-[var(--text-faint)]">
-                          {Math.round(meal.calories)} kcal · P {Math.round(meal.protein)} · G {Math.round(meal.carbs)} · L{' '}
-                          {Math.round(meal.fat)}
+                          {Math.round(meal.calories)} kcal · P {Math.round(meal.protein)} · G {Math.round(meal.carbs)} ·
+                          L {Math.round(meal.fat)}
                         </p>
                       </div>
                       {/*
@@ -340,8 +364,19 @@ export default function NutritionPage() {
                         sur mobile — le bouton etait donc inatteignable au doigt.
                       */}
                       <div className="lm-commande-discrete flex shrink-0 items-center gap-0.5 lm-transition-ui">
-                        <IconButton icon="edit" label={`${t('common.edit')} — ${meal.name}`} size={13} onClick={() => openEdit(meal)} />
-                        <IconButton icon="trash" label={`${t('common.delete')} — ${meal.name}`} size={13} tone="danger" onClick={() => remove(meal)} />
+                        <IconButton
+                          icon="edit"
+                          label={`${t('common.edit')} — ${meal.name}`}
+                          size={13}
+                          onClick={() => openEdit(meal)}
+                        />
+                        <IconButton
+                          icon="trash"
+                          label={`${t('common.delete')} — ${meal.name}`}
+                          size={13}
+                          tone="danger"
+                          onClick={() => remove(meal)}
+                        />
                       </div>
                     </li>
                   ))}
@@ -374,9 +409,16 @@ export default function NutritionPage() {
                   aria-label={`${t('nutrition.addMeal')} — ${template.name}`}
                 >
                   <span className="block text-[13px] text-[var(--text)]">{template.name}</span>
-                  <span className="block text-[11px] text-[var(--text-faint)]">{Math.round(template.calories)} kcal</span>
+                  <span className="block text-[11px] text-[var(--text-faint)]">
+                    {Math.round(template.calories)} kcal
+                  </span>
                 </button>
-                <IconButton icon="edit" label={`${t('common.edit')} — ${template.name}`} size={13} onClick={() => openEdit(template)} />
+                <IconButton
+                  icon="edit"
+                  label={`${t('common.edit')} — ${template.name}`}
+                  size={13}
+                  onClick={() => openEdit(template)}
+                />
               </div>
             ))}
           </div>
@@ -402,7 +444,11 @@ export default function NutritionPage() {
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <Field label="Type" htmlFor="meal-type">
-              <Select id="meal-type" value={form.type} onChange={(event) => set('type', event.target.value as Meal['type'])}>
+              <Select
+                id="meal-type"
+                value={form.type}
+                onChange={(event) => set('type', event.target.value as Meal['type'])}
+              >
                 {MEAL_TYPES.map((type) => (
                   <option key={type} value={type}>
                     {typeLabels[type]}
@@ -439,19 +485,24 @@ export default function NutritionPage() {
           </div>
 
           <Field label={t('common.notes')} htmlFor="meal-notes" error={erreurs.notes}>
-            <Textarea id="meal-notes" rows={2} value={form.notes} onChange={(event) => set('notes', event.target.value)} />
+            <Textarea
+              id="meal-notes"
+              rows={2}
+              value={form.notes}
+              onChange={(event) => set('notes', event.target.value)}
+            />
           </Field>
 
           {!editing?.isTemplate && (
-          <label className="flex items-center gap-2.5 text-[13px] text-[var(--text-muted)]">
-            <input
-              type="checkbox"
-              checked={form.saveAsTemplate}
-              onChange={(event) => set('saveAsTemplate', event.target.checked)}
-              className="size-[18px] rounded-md accent-brand-500"
-            />
-            {t('nutrition.saveTemplate')}
-          </label>
+            <label className="flex items-center gap-2.5 text-[13px] text-[var(--text-muted)]">
+              <input
+                type="checkbox"
+                checked={form.saveAsTemplate}
+                onChange={(event) => set('saveAsTemplate', event.target.checked)}
+                className="size-[18px] rounded-md accent-brand-500"
+              />
+              {t('nutrition.saveTemplate')}
+            </label>
           )}
         </div>
       </Modal>

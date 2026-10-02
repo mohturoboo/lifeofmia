@@ -68,16 +68,8 @@ async function balayerDeTempsEnTemps(): Promise<void> {
  * compteur ne doit pas fermer la porte a tout le monde. Le fait est
  * journalise, car un compteur muet est une protection absente.
  */
-export async function consumePartage(
-  bucket: string,
-  options: BackoffOptions,
-): Promise<RateLimitResult> {
-  const {
-    limit,
-    windowMs,
-    baseDelaySeconds = DEFAUT_BASE,
-    maxDelaySeconds = DEFAUT_PLAFOND,
-  } = options;
+export async function consumePartage(bucket: string, options: BackoffOptions): Promise<RateLimitResult> {
+  const { limit, windowMs, baseDelaySeconds = DEFAUT_BASE, maxDelaySeconds = DEFAUT_PLAFOND } = options;
 
   const maintenant = Date.now();
   const debutFenetre = new Date(maintenant - windowMs);

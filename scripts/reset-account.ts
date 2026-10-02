@@ -45,9 +45,9 @@ async function main() {
    * explicitement pour que le decompte affiche soit exact.
    */
   const steps: Array<[string, () => Promise<{ count: number }>]> = [
-    ['journaux d\'habitudes', () => prisma.habitLog.deleteMany({ where: { userId } })],
+    ["journaux d'habitudes", () => prisma.habitLog.deleteMany({ where: { userId } })],
     ['habitudes', () => prisma.habit.deleteMany({ where: { userId } })],
-    ['etapes d\'objectifs', () => prisma.goalStep.deleteMany({ where: { userId } })],
+    ["etapes d'objectifs", () => prisma.goalStep.deleteMany({ where: { userId } })],
     ['taches', () => prisma.task.deleteMany({ where: { userId } })],
     ['objectifs', () => prisma.goal.deleteMany({ where: { userId } })],
     ['repas', () => prisma.meal.deleteMany({ where: { userId } })],
@@ -66,7 +66,7 @@ async function main() {
     ['evenements XP', () => prisma.xpEvent.deleteMany({ where: { userId } })],
     ['notifications', () => prisma.notification.deleteMany({ where: { userId } })],
     ['conversations IA', () => prisma.aiConversation.deleteMany({ where: { userId } })],
-    ['journal d\'audit', () => prisma.auditLog.deleteMany({ where: { userId } })],
+    ["journal d'audit", () => prisma.auditLog.deleteMany({ where: { userId } })],
   ];
 
   let total = 0;

@@ -152,8 +152,8 @@ export const POST = publicRoute(
        * allonger la reponse pour les seuls comptes existants.
        */
       if (doitVerrouiller) {
-        void sendMail(securityAlertEmail(user.email, user.firstName, failedLoginCount, minutes)).catch(
-          (error) => console.error('[login] alerte de sécurité non envoyée', error),
+        void sendMail(securityAlertEmail(user.email, user.firstName, failedLoginCount, minutes)).catch((error) =>
+          console.error('[login] alerte de sécurité non envoyée', error),
         );
         await audit({ action: 'ACCOUNT_LOCKED', userId: user.id, headers: headerList, meta: { minutes } });
       }

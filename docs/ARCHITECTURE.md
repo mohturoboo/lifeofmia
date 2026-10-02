@@ -232,17 +232,17 @@ cocher/décocher en boucle ne permet pas de gonfler son niveau.
 
 ## Sécurité — récapitulatif
 
-| Menace | Parade |
-| --- | --- |
-| Fuite de mots de passe | bcrypt 12 tours, jamais journalisés ni exportés |
-| Vol de session | Cookie `httpOnly` + `SameSite=Lax` + `Secure` en production, révocable en base |
-| CSRF | Vérification d'origine sur toutes les méthodes mutantes |
-| Force brute | Limitation par IP **et** verrouillage progressif par compte |
-| Énumération de comptes | Réponses identiques que l'email existe ou non |
-| Accès horizontal | `userId` dans la clause `where` de chaque requête |
-| XSS | Échappement React + Content-Security-Policy |
-| Fuite via l'IA | Contexte construit à partir du seul utilisateur de la session |
-| Fuite de jetons en base | Seule l'empreinte SHA-256 est stockée |
+| Menace                  | Parade                                                                         |
+| ----------------------- | ------------------------------------------------------------------------------ |
+| Fuite de mots de passe  | bcrypt 12 tours, jamais journalisés ni exportés                                |
+| Vol de session          | Cookie `httpOnly` + `SameSite=Lax` + `Secure` en production, révocable en base |
+| CSRF                    | Vérification d'origine sur toutes les méthodes mutantes                        |
+| Force brute             | Limitation par IP **et** verrouillage progressif par compte                    |
+| Énumération de comptes  | Réponses identiques que l'email existe ou non                                  |
+| Accès horizontal        | `userId` dans la clause `where` de chaque requête                              |
+| XSS                     | Échappement React + Content-Security-Policy                                    |
+| Fuite via l'IA          | Contexte construit à partir du seul utilisateur de la session                  |
+| Fuite de jetons en base | Seule l'empreinte SHA-256 est stockée                                          |
 
 ---
 
@@ -250,14 +250,14 @@ cocher/décocher en boucle ne permet pas de gonfler son niveau.
 
 80 tests couvrant la couche métier :
 
-| Fichier | Portée |
-| --- | --- |
-| `date.test.ts` | Fuseaux, franchissement de mois et d'années, années bissextiles |
-| `gamification.test.ts` | Courbe de niveaux, bornes, pondération du score |
-| `stats.test.ts` | Agrégation, régression de poids, IMC et catégories limites |
-| `prayer.test.ts` | Ordre chronologique, madhhab, hautes latitudes, prière suivante |
-| `security.test.ts` | Hachage, JWT, limitation de débit, validation des entrées |
-| `i18n.test.ts` | Complétude des 8 langues, RTL, citations |
+| Fichier                | Portée                                                          |
+| ---------------------- | --------------------------------------------------------------- |
+| `date.test.ts`         | Fuseaux, franchissement de mois et d'années, années bissextiles |
+| `gamification.test.ts` | Courbe de niveaux, bornes, pondération du score                 |
+| `stats.test.ts`        | Agrégation, régression de poids, IMC et catégories limites      |
+| `prayer.test.ts`       | Ordre chronologique, madhhab, hautes latitudes, prière suivante |
+| `security.test.ts`     | Hachage, JWT, limitation de débit, validation des entrées       |
+| `i18n.test.ts`         | Complétude des 8 langues, RTL, citations                        |
 
 Deux bugs réels ont été trouvés et corrigés par cette suite : la normalisation des
 emails avant validation Zod, et le calcul des horaires de prière au-delà du cercle

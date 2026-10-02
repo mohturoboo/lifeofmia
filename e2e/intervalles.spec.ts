@@ -147,7 +147,7 @@ test('une entree de journal ne se date pas dans le futur', async ({ page }) => {
   expect(valide.ok()).toBe(true);
 });
 
-test('le formulaire d\'evenement borne l\'heure de fin sur l\'heure de debut', async ({ page }) => {
+test("le formulaire d'evenement borne l'heure de fin sur l'heure de debut", async ({ page }) => {
   await page.goto('/calendar');
 
   await page.getByRole('button', { name: /nouvel événement|new event/i }).click();

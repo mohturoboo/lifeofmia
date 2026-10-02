@@ -76,7 +76,10 @@ function LoginForm() {
 
       <form onSubmit={onSubmit} className="mt-8 space-y-4" noValidate>
         {error && (
-          <div role="alert" className="rounded-xl border border-red-500/25 bg-red-500/10 px-4 py-3 text-sm text-red-500">
+          <div
+            role="alert"
+            className="rounded-xl border border-red-500/25 bg-red-500/10 px-4 py-3 text-sm text-red-500"
+          >
             {error}
             {attente > 0 && (
               <span className="mt-1 block text-[13px] opacity-80">
@@ -126,7 +129,10 @@ function LoginForm() {
         </Field>
 
         <div className="flex justify-end">
-          <Link href="/forgot-password" className="text-[13px] text-[var(--brand-text)] transition-opacity hover:opacity-80">
+          <Link
+            href="/forgot-password"
+            className="text-[13px] text-[var(--brand-text)] transition-opacity hover:opacity-80"
+          >
             {t('auth.forgotPassword')}
           </Link>
         </div>

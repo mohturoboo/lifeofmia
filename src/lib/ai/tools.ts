@@ -65,7 +65,9 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
       properties: {
         name: str('Nom court et actionnable, ex. "Lire 20 minutes"'),
         category: str('Categorie', { enum: ['health', 'spirituality', 'mind', 'work', 'sport', 'social', 'other'] }),
-        icon: str('Icone parmi : check, flame, book, dumbbell, moon, droplet, apple, target, clock, zap, sparkles, shield'),
+        icon: str(
+          'Icone parmi : check, flame, book, dumbbell, moon, droplet, apple, target, clock, zap, sparkles, shield',
+        ),
         color: str('Couleur hexadecimale, ex. #e9b8d5'),
         targetPerDay: num('Nombre de repetitions par jour (defaut 1)'),
         unit: str('Unite de mesure si pertinent, ex. "verres", "pages"'),
@@ -78,7 +80,8 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
   },
   {
     name: 'delete_habit',
-    description: "Supprime definitivement une habitude et son historique. Demander confirmation a l'utilisateur avant usage.",
+    description:
+      "Supprime definitivement une habitude et son historique. Demander confirmation a l'utilisateur avant usage.",
     input_schema: {
       type: 'object',
       properties: { habitId: str("Identifiant de l'habitude, issu du contexte") },
@@ -140,13 +143,13 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
   },
   {
     name: 'create_meal',
-    description: "Enregistre un repas dans le suivi alimentaire, ou propose un modele de repas reutilisable.",
+    description: 'Enregistre un repas dans le suivi alimentaire, ou propose un modele de repas reutilisable.',
     input_schema: {
       type: 'object',
       properties: {
         name: str('Nom du repas'),
         type: str('Moment du repas', { enum: ['breakfast', 'lunch', 'dinner', 'snack'] }),
-        date: str('Date au format YYYY-MM-DD (defaut : aujourd\'hui)'),
+        date: str("Date au format YYYY-MM-DD (defaut : aujourd'hui)"),
         calories: num('Calories'),
         protein: num('Proteines en grammes'),
         carbs: num('Glucides en grammes'),
@@ -166,7 +169,7 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
       properties: {
         name: str('Nom de la seance, ex. "Haut du corps"'),
         type: str('Type de seance', { enum: ['strength', 'cardio', 'walk', 'run', 'swim', 'yoga', 'other'] }),
-        date: str('Date au format YYYY-MM-DD (defaut : aujourd\'hui)'),
+        date: str("Date au format YYYY-MM-DD (defaut : aujourd'hui)"),
         durationMin: num('Duree en minutes'),
         intensity: str('Intensite', { enum: ['low', 'medium', 'high'] }),
         notes: str('Consignes ou ressenti'),
@@ -199,7 +202,7 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
         date: str('Date au format YYYY-MM-DD'),
         blocks: {
           type: 'array',
-          description: 'Blocs de la journee, dans l\'ordre chronologique',
+          description: "Blocs de la journee, dans l'ordre chronologique",
           items: {
             type: 'object',
             properties: {
@@ -244,7 +247,8 @@ const EXECUTORS: Record<string, Executor> = {
       color: typeof input.color === 'string' && /^#[0-9a-fA-F]{6}$/.test(input.color) ? input.color : '#e9b8d5',
       targetPerDay: toNumber(input.targetPerDay, 1),
       unit: input.unit ?? null,
-      reminderAt: typeof input.reminderAt === 'string' && /^\d{2}:\d{2}$/.test(input.reminderAt) ? input.reminderAt : null,
+      reminderAt:
+        typeof input.reminderAt === 'string' && /^\d{2}:\d{2}$/.test(input.reminderAt) ? input.reminderAt : null,
       isNegative: Boolean(input.isNegative),
       xpReward: Math.min(30, Math.max(5, toNumber(input.xpReward, 10))),
     });
@@ -406,9 +410,7 @@ const EXECUTORS: Record<string, Executor> = {
 
   async create_meal(user, input) {
     const date =
-      typeof input.date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(input.date)
-        ? input.date
-        : dateKeyIn(user.timezone);
+      typeof input.date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(input.date) ? input.date : dateKeyIn(user.timezone);
 
     const parsed = mealCreateSchema.parse({
       date,
@@ -440,9 +442,7 @@ const EXECUTORS: Record<string, Executor> = {
 
   async create_workout(user, input) {
     const date =
-      typeof input.date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(input.date)
-        ? input.date
-        : dateKeyIn(user.timezone);
+      typeof input.date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(input.date) ? input.date : dateKeyIn(user.timezone);
 
     const exercises = Array.isArray(input.exercises)
       ? input.exercises.slice(0, 30).map((raw) => {
@@ -503,9 +503,7 @@ const EXECUTORS: Record<string, Executor> = {
 
   async plan_day(user, input) {
     const date =
-      typeof input.date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(input.date)
-        ? input.date
-        : dateKeyIn(user.timezone);
+      typeof input.date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(input.date) ? input.date : dateKeyIn(user.timezone);
 
     const blocks = Array.isArray(input.blocks) ? input.blocks.slice(0, 15) : [];
     if (blocks.length === 0) return { ok: false, summary: 'Aucun bloc fourni.' };
@@ -513,9 +511,8 @@ const EXECUTORS: Record<string, Executor> = {
     const created: string[] = [];
     for (const raw of blocks) {
       const block = raw as Record<string, unknown>;
-      const startTime = typeof block.startTime === 'string' && /^\d{2}:\d{2}$/.test(block.startTime)
-        ? block.startTime
-        : '09:00';
+      const startTime =
+        typeof block.startTime === 'string' && /^\d{2}:\d{2}$/.test(block.startTime) ? block.startTime : '09:00';
       const title = String(block.title ?? 'Bloc').slice(0, 160);
 
       const task = await prisma.task.create({

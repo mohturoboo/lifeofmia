@@ -62,11 +62,7 @@ function toHHmm(unixSeconds: number, timezone: string): string {
   }
 }
 
-export async function fetchWeather(
-  latitude: number,
-  longitude: number,
-  timezone: string,
-): Promise<Weather> {
+export async function fetchWeather(latitude: number, longitude: number, timezone: string): Promise<Weather> {
   // 1. OpenWeatherMap (si une cle est configuree)
   if (env.openWeatherApiKey) {
     try {
@@ -105,7 +101,10 @@ export async function fetchWeather(
     const url = new URL('https://api.open-meteo.com/v1/forecast');
     url.searchParams.set('latitude', String(latitude));
     url.searchParams.set('longitude', String(longitude));
-    url.searchParams.set('current', 'temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m,weather_code');
+    url.searchParams.set(
+      'current',
+      'temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m,weather_code',
+    );
     url.searchParams.set('daily', 'sunrise,sunset');
     url.searchParams.set('timezone', timezone);
     url.searchParams.set('forecast_days', '1');
@@ -184,11 +183,7 @@ export async function searchCity(query: string): Promise<GeoPlace[]> {
       const address = result.address ?? {};
       return {
         city:
-          address.city ??
-          address.town ??
-          address.village ??
-          address.municipality ??
-          result.display_name.split(',')[0],
+          address.city ?? address.town ?? address.village ?? address.municipality ?? result.display_name.split(',')[0],
         country: address.country ?? '',
         latitude: Number(result.lat),
         longitude: Number(result.lon),

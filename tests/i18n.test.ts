@@ -29,7 +29,7 @@ describe('internationalisation', () => {
     }
   });
 
-  it('n\'introduit aucune cle superflue', () => {
+  it("n'introduit aucune cle superflue", () => {
     /*
      * Une langue peut porter des formes plurielles que le francais ignore :
      * l'arabe en distingue six la ou le francais n'en a que deux. Ce ne sont
@@ -38,9 +38,7 @@ describe('internationalisation', () => {
      * soit une categorie du CLDR. Tout le reste reste une faute.
      */
     const CATEGORIES = ['zero', 'one', 'two', 'few', 'many', 'other'];
-    const racines = new Set(
-      keys.filter((key) => key.endsWith('_one')).map((key) => key.slice(0, -'_one'.length)),
-    );
+    const racines = new Set(keys.filter((key) => key.endsWith('_one')).map((key) => key.slice(0, -'_one'.length)));
     const formePlurielleValide = (key: string) => {
       const separateur = key.lastIndexOf('_');
       if (separateur === -1) return false;
@@ -55,7 +53,7 @@ describe('internationalisation', () => {
     }
   });
 
-  it('marque l\'arabe comme langue de droite a gauche', () => {
+  it("marque l'arabe comme langue de droite a gauche", () => {
     expect(directionOf('ar')).toBe('rtl');
     expect(directionOf('fr')).toBe('ltr');
     for (const locale of LOCALES) {
@@ -80,8 +78,8 @@ describe('internationalisation', () => {
 
   it('accorde les compteurs selon la langue', () => {
     const fr = createTranslator('fr');
-    expect(fr('habits.streakCount', { count: 1 })).toBe('1 jour d\'affilée');
-    expect(fr('habits.streakCount', { count: 5 })).toBe('5 jours d\'affilée');
+    expect(fr('habits.streakCount', { count: 1 })).toBe("1 jour d'affilée");
+    expect(fr('habits.streakCount', { count: 5 })).toBe("5 jours d'affilée");
     // 0 est singulier en francais, pluriel en anglais.
     expect(fr('common.dayCount', { count: 0 })).toBe('0 jour');
     const en = createTranslator('en');
@@ -91,7 +89,7 @@ describe('internationalisation', () => {
     expect(createTranslator('ar')('common.dayCount', { count: 2 })).toBe('يومان');
   });
 
-  it('renvoie la cle brute quand elle n\'existe pas', () => {
+  it("renvoie la cle brute quand elle n'existe pas", () => {
     const t = createTranslator('en');
     expect(t('cle.inexistante' as never)).toBe('cle.inexistante');
   });
@@ -109,10 +107,11 @@ describe('citation du jour', () => {
     expect(first).toEqual(second);
   });
 
-  it('change d\'un jour a l\'autre', () => {
+  it("change d'un jour a l'autre", () => {
     const quotes = new Set(
-      Array.from({ length: quoteCount }, (_, index) =>
-        quoteOfTheDay(`2026-08-${String(index + 1).padStart(2, '0')}`, 'fr', 'user_1').text,
+      Array.from(
+        { length: quoteCount },
+        (_, index) => quoteOfTheDay(`2026-08-${String(index + 1).padStart(2, '0')}`, 'fr', 'user_1').text,
       ),
     );
     expect(quotes.size).toBeGreaterThan(1);
@@ -127,9 +126,7 @@ describe('citation du jour', () => {
   });
 
   it('differencie deux utilisateurs le meme jour', () => {
-    const results = new Set(
-      ['a', 'b', 'c', 'd', 'e', 'f'].map((id) => quoteOfTheDay('2026-08-07', 'fr', id).text),
-    );
+    const results = new Set(['a', 'b', 'c', 'd', 'e', 'f'].map((id) => quoteOfTheDay('2026-08-07', 'fr', id).text));
     expect(results.size).toBeGreaterThan(1);
   });
 });

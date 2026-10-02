@@ -23,7 +23,7 @@ const QUOTES: Quote[] = [
       ar: 'نحن ما نفعله بشكل متكرر. لذا فإن التميز ليس فعلاً بل عادة.',
       es: 'Somos lo que hacemos repetidamente. La excelencia no es un acto, sino un hábito.',
       de: 'Wir sind, was wir wiederholt tun. Exzellenz ist daher keine Tat, sondern eine Gewohnheit.',
-      it: 'Siamo ciò che facciamo ripetutamente. L\'eccellenza non è un atto, ma un\'abitudine.',
+      it: "Siamo ciò che facciamo ripetutamente. L'eccellenza non è un atto, ma un'abitudine.",
       pt: 'Somos o que fazemos repetidamente. A excelência não é um ato, mas um hábito.',
       tr: 'Biz tekrar tekrar yaptığımız şeyleriz. O hâlde mükemmellik bir eylem değil, bir alışkanlıktır.',
     },
@@ -57,7 +57,7 @@ const QUOTES: Quote[] = [
   {
     author: 'James Clear',
     text: {
-      fr: "Vous ne vous élevez pas au niveau de vos objectifs, vous retombez au niveau de vos systèmes.",
+      fr: 'Vous ne vous élevez pas au niveau de vos objectifs, vous retombez au niveau de vos systèmes.',
       en: 'You do not rise to the level of your goals. You fall to the level of your systems.',
       ar: 'أنت لا ترتقي إلى مستوى أهدافك، بل تسقط إلى مستوى أنظمتك.',
       es: 'No te elevas al nivel de tus metas, caes al nivel de tus sistemas.',
@@ -83,7 +83,7 @@ const QUOTES: Quote[] = [
   {
     author: 'Confucius',
     text: {
-      fr: "Peu importe la lenteur à laquelle vous avancez, tant que vous ne vous arrêtez pas.",
+      fr: 'Peu importe la lenteur à laquelle vous avancez, tant que vous ne vous arrêtez pas.',
       en: 'It does not matter how slowly you go, as long as you do not stop.',
       ar: 'لا يهم مدى بطء تقدمك، طالما أنك لا تتوقف.',
       es: 'No importa lo lento que vayas, mientras no te detengas.',
@@ -96,7 +96,7 @@ const QUOTES: Quote[] = [
   {
     author: 'Will Durant',
     text: {
-      fr: "La discipline est le pont entre les objectifs et les accomplissements.",
+      fr: 'La discipline est le pont entre les objectifs et les accomplissements.',
       en: 'Discipline is the bridge between goals and accomplishment.',
       ar: 'الانضباط هو الجسر بين الأهداف والإنجاز.',
       es: 'La disciplina es el puente entre las metas y los logros.',
@@ -127,7 +127,7 @@ const QUOTES: Quote[] = [
       ar: 'أفضل وقت لزراعة شجرة كان قبل عشرين عاماً. وثاني أفضل وقت هو الآن.',
       es: 'El mejor momento para plantar un árbol fue hace veinte años. El segundo mejor momento es ahora.',
       de: 'Die beste Zeit, einen Baum zu pflanzen, war vor zwanzig Jahren. Die zweitbeste ist jetzt.',
-      it: 'Il momento migliore per piantare un albero era vent\'anni fa. Il secondo momento migliore è adesso.',
+      it: "Il momento migliore per piantare un albero era vent'anni fa. Il secondo momento migliore è adesso.",
       pt: 'O melhor momento para plantar uma árvore foi há vinte anos. O segundo melhor momento é agora.',
       tr: 'Bir ağaç dikmek için en iyi zaman yirmi yıl önceydi. İkinci en iyi zaman ise şimdi.',
     },
@@ -135,12 +135,12 @@ const QUOTES: Quote[] = [
   {
     author: 'Jim Rohn',
     text: {
-      fr: 'Prenez soin de votre corps. C\'est le seul endroit où vous êtes obligé de vivre.',
+      fr: "Prenez soin de votre corps. C'est le seul endroit où vous êtes obligé de vivre.",
       en: 'Take care of your body. It is the only place you have to live.',
       ar: 'اعتنِ بجسدك، فهو المكان الوحيد الذي تعيش فيه.',
       es: 'Cuida tu cuerpo. Es el único lugar donde tienes que vivir.',
       de: 'Kümmere dich um deinen Körper. Er ist der einzige Ort, an dem du leben musst.',
-      it: 'Prenditi cura del tuo corpo. È l\'unico posto in cui devi vivere.',
+      it: "Prenditi cura del tuo corpo. È l'unico posto in cui devi vivere.",
       pt: 'Cuide do seu corpo. É o único lugar onde você tem de viver.',
       tr: 'Bedeninize iyi bakın. Yaşamak zorunda olduğunuz tek yer orası.',
     },
@@ -148,7 +148,7 @@ const QUOTES: Quote[] = [
   {
     author: 'Peter Drucker',
     text: {
-      fr: 'Ce qui se mesure s\'améliore.',
+      fr: "Ce qui se mesure s'améliore.",
       en: 'What gets measured gets improved.',
       ar: 'ما يُقاس يتحسن.',
       es: 'Lo que se mide, mejora.',
@@ -161,7 +161,7 @@ const QUOTES: Quote[] = [
   {
     author: 'Nelson Mandela',
     text: {
-      fr: 'Cela semble toujours impossible, jusqu\'à ce qu\'on le fasse.',
+      fr: "Cela semble toujours impossible, jusqu'à ce qu'on le fasse.",
       en: 'It always seems impossible until it is done.',
       ar: 'يبدو الأمر مستحيلاً دائماً حتى يتم إنجازه.',
       es: 'Siempre parece imposible hasta que se hace.',
@@ -183,11 +183,7 @@ function hash(input: string): number {
   return Math.abs(value);
 }
 
-export function quoteOfTheDay(
-  date: DateKey,
-  locale: Locale,
-  userId = '',
-): { text: string; author: string } {
+export function quoteOfTheDay(date: DateKey, locale: Locale, userId = ''): { text: string; author: string } {
   const dayNumber = Math.floor(fromDateKey(date).getTime() / 86_400_000);
   const index = (dayNumber + hash(userId)) % QUOTES.length;
   const quote = QUOTES[index];

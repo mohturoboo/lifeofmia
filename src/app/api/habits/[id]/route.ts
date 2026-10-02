@@ -26,8 +26,18 @@ export const PATCH = route(
 
     const data: Record<string, unknown> = {};
     for (const key of [
-      'name', 'description', 'icon', 'color', 'category', 'frequency',
-      'targetPerDay', 'unit', 'importance', 'xpReward', 'isNegative', 'position',
+      'name',
+      'description',
+      'icon',
+      'color',
+      'category',
+      'frequency',
+      'targetPerDay',
+      'unit',
+      'importance',
+      'xpReward',
+      'isNegative',
+      'position',
     ] as const) {
       if (body[key] !== undefined) data[key] = body[key];
     }

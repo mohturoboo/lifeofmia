@@ -36,7 +36,9 @@ async function main() {
   const emailPar = new Map(utilisateurs.map((entree) => [entree.id, entree.email]));
 
   const jourDans = (timezone: string, at: Date = new Date()) =>
-    new Intl.DateTimeFormat('en-CA', { timeZone: timezone, year: 'numeric', month: '2-digit', day: '2-digit' }).format(at);
+    new Intl.DateTimeFormat('en-CA', { timeZone: timezone, year: 'numeric', month: '2-digit', day: '2-digit' }).format(
+      at,
+    );
 
   // --- Evenements a duree nulle ou negative ----------------------------------
   const evenements = await prisma.calendarEvent.findMany({
@@ -86,15 +88,19 @@ async function main() {
     select: { id: true, userId: true, title: true, deadline: true },
   });
   const enRetard = objectifs.filter(
-    (objectif) => jourDans(fuseauPar.get(objectif.userId) ?? 'UTC', objectif.deadline!) < jourDans(fuseauPar.get(objectif.userId) ?? 'UTC'),
+    (objectif) =>
+      jourDans(fuseauPar.get(objectif.userId) ?? 'UTC', objectif.deadline!) <
+      jourDans(fuseauPar.get(objectif.userId) ?? 'UTC'),
   );
 
   console.log(`\nObjectifs ouverts dont l'echeance est passee : ${enRetard.length}`);
   for (const objectif of enRetard) {
-    console.log(`  ${emailPar.get(objectif.userId) ?? objectif.userId} — « ${objectif.title} » ${objectif.deadline?.toISOString().slice(0, 10)}`);
+    console.log(
+      `  ${emailPar.get(objectif.userId) ?? objectif.userId} — « ${objectif.title} » ${objectif.deadline?.toISOString().slice(0, 10)}`,
+    );
   }
   if (enRetard.length > 0) {
-    console.log("  (non modifies : un objectif en retard est une situation reelle, pas une donnee cassee)");
+    console.log('  (non modifies : un objectif en retard est une situation reelle, pas une donnee cassee)');
   }
 
   console.log(

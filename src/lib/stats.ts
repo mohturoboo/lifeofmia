@@ -116,10 +116,7 @@ export async function recomputeDay(userId: string, date: DateKey): Promise<DaySt
       prisma.task.findMany({
         where: {
           userId,
-          OR: [
-            { dueDate: { gte: dueStart, lte: dueEnd } },
-            { completedAt: { gte: dayStart, lte: dayEnd } },
-          ],
+          OR: [{ dueDate: { gte: dueStart, lte: dueEnd } }, { completedAt: { gte: dayStart, lte: dayEnd } }],
         },
         select: { status: true },
       }),
@@ -340,10 +337,7 @@ export function aggregate(days: DayStats[]): Aggregate {
     avgCompletion: Math.round(sum((day) => day.completionRate) / count),
     weightStart,
     weightEnd,
-    weightDelta:
-      weightStart !== null && weightEnd !== null
-        ? Math.round((weightEnd - weightStart) * 10) / 10
-        : null,
+    weightDelta: weightStart !== null && weightEnd !== null ? Math.round((weightEnd - weightStart) * 10) / 10 : null,
   };
 }
 

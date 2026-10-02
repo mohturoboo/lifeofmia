@@ -123,9 +123,7 @@ export function LineChart({
 
   if (data.length === 0) {
     return (
-      <div className="grid h-40 place-items-center text-xs text-[var(--text-faint)]">
-        {t('charts.notEnoughData')}
-      </div>
+      <div className="grid h-40 place-items-center text-xs text-[var(--text-faint)]">{t('charts.notEnoughData')}</div>
     );
   }
 
@@ -172,8 +170,7 @@ export function LineChart({
   /** Bornes de la zone sensible d'un point : a mi-chemin de ses voisins. */
   const zoneAutour = (index: number) => {
     const gauche = index === 0 ? padding.left : (xs[index - 1] + xs[index]) / 2;
-    const droite =
-      index === series.length - 1 ? width - padding.right : (xs[index] + xs[index + 1]) / 2;
+    const droite = index === series.length - 1 ? width - padding.right : (xs[index] + xs[index + 1]) / 2;
     return { x: gauche, width: Math.max(1, droite - gauche) };
   };
 
@@ -188,7 +185,9 @@ export function LineChart({
         style={{ height }}
         preserveAspectRatio="none"
         role="img"
-        aria-label={ariaLabel ?? `Evolution de ${data.length} points, de ${data[0]?.label} a ${data[data.length - 1]?.label}`}
+        aria-label={
+          ariaLabel ?? `Evolution de ${data.length} points, de ${data[0]?.label} a ${data[data.length - 1]?.label}`
+        }
       >
         <defs>
           <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
@@ -241,7 +240,14 @@ export function LineChart({
         {mainPoints.map((point, index) => (
           <g key={index}>
             {(hover === index || data.length <= 14) && (
-              <circle cx={point.x} cy={point.y} r={hover === index ? 4.5 : 2.75} fill={color} stroke="var(--surface)" strokeWidth="1.5" />
+              <circle
+                cx={point.x}
+                cy={point.y}
+                r={hover === index ? 4.5 : 2.75}
+                fill={color}
+                stroke="var(--surface)"
+                strokeWidth="1.5"
+              />
             )}
             {/* Zone de survol large : le pointage reste facile sur mobile. */}
             <rect
@@ -324,10 +330,7 @@ export function BarChart({
    */
   if (data.every((point) => point.value <= 0)) {
     return (
-      <div
-        className="grid place-items-center px-4 text-center text-xs text-[var(--text-faint)]"
-        style={{ height }}
-      >
+      <div className="grid place-items-center px-4 text-center text-xs text-[var(--text-faint)]" style={{ height }}>
         {emptyLabel ?? t('charts.noDataPeriod')}
       </div>
     );
@@ -528,7 +531,13 @@ export function RadarChart({
       })}
 
       {compareData && compareData.length === data.length && (
-        <polygon points={toPolygon(compareData)} fill={`${compareColor}22`} stroke={compareColor} strokeWidth="1.75" strokeDasharray="4 4" />
+        <polygon
+          points={toPolygon(compareData)}
+          fill={`${compareColor}22`}
+          stroke={compareColor}
+          strokeWidth="1.75"
+          strokeDasharray="4 4"
+        />
       )}
 
       <polygon points={toPolygon(data)} fill={`${color}33`} stroke={color} strokeWidth="2" />
@@ -620,7 +629,10 @@ export function Heatmap({
               <div
                 key={dayIndex}
                 title={day ? `${day.date} — ${day.value}%` : undefined}
-                className={cx('size-[11px] rounded-[3px]', day && 'cursor-pointer transition-transform hover:scale-125')}
+                className={cx(
+                  'size-[11px] rounded-[3px]',
+                  day && 'cursor-pointer transition-transform hover:scale-125',
+                )}
                 style={{
                   background: day ? color : 'transparent',
                   opacity: day ? intensity(day.value) : 0,
@@ -709,20 +721,12 @@ export function RingProgress({
       </svg>
       {/* Le contenu central est borne au diametre interieur de l'anneau pour
           qu'un libelle long passe a la ligne au lieu de deborder sur le trace. */}
-      <div
-        className="absolute px-1 text-center"
-        style={{ maxWidth: size - thickness * 2 - 6 }}
-      >
-        <div className="text-xl font-semibold leading-none text-[var(--text)]">
-          {Math.round(clamped)}%
-        </div>
+      <div className="absolute px-1 text-center" style={{ maxWidth: size - thickness * 2 - 6 }}>
+        <div className="text-xl font-semibold leading-none text-[var(--text)]">{Math.round(clamped)}%</div>
         {sublabel && (
-          <div className="mt-0.5 text-[9px] leading-tight text-balance text-[var(--text-faint)]">
-            {sublabel}
-          </div>
+          <div className="mt-0.5 text-[9px] leading-tight text-balance text-[var(--text-faint)]">{sublabel}</div>
         )}
       </div>
     </div>
   );
 }
-

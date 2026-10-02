@@ -38,9 +38,7 @@ for (const { nom, largeur, hauteur } of VIEWPORTS) {
       await expect(fenetre.getByRole('heading', { name: titre })).toBeVisible();
 
       // Le panneau est reellement peint, et devant le voile assombri.
-      await expect
-        .poll(() => fenetre.evaluate((el) => getComputedStyle(el).opacity), { timeout: 5_000 })
-        .toBe('1');
+      await expect.poll(() => fenetre.evaluate((el) => getComputedStyle(el).opacity), { timeout: 5_000 }).toBe('1');
       expect(await fenetre.evaluate((el) => getComputedStyle(el).visibility)).toBe('visible');
 
       await fenetre.evaluate((el) => Promise.all(el.getAnimations().map((a) => a.finished)));
@@ -50,8 +48,7 @@ for (const { nom, largeur, hauteur } of VIEWPORTS) {
         const corps = el.querySelector('.overflow-y-auto') as HTMLElement;
         const pied = el.querySelector('footer')!.getBoundingClientRect();
         return {
-          tient:
-            r.top >= -1 && r.bottom <= window.innerHeight + 1 && r.left >= -1 && r.right <= window.innerWidth + 1,
+          tient: r.top >= -1 && r.bottom <= window.innerHeight + 1 && r.left >= -1 && r.right <= window.innerWidth + 1,
           piedVisible: pied.bottom <= window.innerHeight + 1,
           defilable: getComputedStyle(corps).overflowY,
           contenuPlusHautQueLeCadre: corps.scrollHeight > corps.clientHeight,
@@ -63,10 +60,10 @@ for (const { nom, largeur, hauteur } of VIEWPORTS) {
         };
       });
 
-      expect(geometrie.tient, 'le panneau depasse de l\'ecran').toBe(true);
-      expect(geometrie.piedVisible, 'le bouton Enregistrer est hors de l\'ecran').toBe(true);
+      expect(geometrie.tient, "le panneau depasse de l'ecran").toBe(true);
+      expect(geometrie.piedVisible, "le bouton Enregistrer est hors de l'ecran").toBe(true);
       expect(geometrie.defilable, 'le contenu doit pouvoir defiler').toBe('auto');
-      expect(geometrie.sansDimension, 'des champs n\'ont aucune surface').toBe(0);
+      expect(geometrie.sansDimension, "des champs n'ont aucune surface").toBe(0);
 
       // Le bouton d'enregistrement reste atteignable quelle que soit la hauteur.
       await expect(fenetre.getByRole('button', { name: 'Enregistrer' })).toBeVisible();
@@ -74,7 +71,7 @@ for (const { nom, largeur, hauteur } of VIEWPORTS) {
   }
 }
 
-test('le formulaire d\'habitude montre icone, couleur et categorie ensemble', async ({ page }) => {
+test("le formulaire d'habitude montre icone, couleur et categorie ensemble", async ({ page }) => {
   await page.setViewportSize({ width: 930, height: 920 });
   await page.goto('/habits');
   await page.getByRole('button', { name: 'Nouvelle habitude' }).click();

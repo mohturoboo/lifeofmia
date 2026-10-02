@@ -155,55 +155,56 @@ export default function DashboardPage() {
   const { stats, week } = data;
   const habitsDone = data.habits.filter((habit) => habit.done).length;
 
-  const tiles: Array<{ label: string; value: string; icon: IconName; color: string; href: string; trend?: number[] }> = [
-    {
-      label: t('dash.disciplineScore'),
-      value: `${stats.disciplineScore}%`,
-      icon: 'shield',
-      color: '#fbc7da',
-      href: '/stats',
-      trend: week.map((day) => day.disciplineScore),
-    },
-    {
-      label: t('dash.habitsDone'),
-      value: `${habitsDone}/${data.habits.length}`,
-      icon: 'flame',
-      color: '#e9b8d5',
-      href: '/habits',
-      trend: week.map((day) => day.habitsDone),
-    },
-    {
-      label: t('dash.tasksDone'),
-      value: String(stats.tasksDone),
-      icon: 'checkCircle',
-      color: '#e6e6e6',
-      href: '/tasks',
-      trend: week.map((day) => day.tasksDone),
-    },
-    {
-      label: t('dash.calories'),
-      value: n(stats.calories),
-      icon: 'apple',
-      color: '#ff9fbf',
-      href: '/nutrition',
-      trend: week.map((day) => day.calories),
-    },
-    {
-      label: t('dash.currentWeight'),
-      value: data.weight ? `${data.weight.weightKg} kg` : '—',
-      icon: 'scale',
-      color: '#f6d9e4',
-      href: '/weight',
-    },
-    {
-      label: t('dash.focusTime'),
-      value: `${Math.floor(stats.focusMinutes / 60)} h ${stats.focusMinutes % 60}`,
-      icon: 'clock',
-      color: '#d9c7f0',
-      href: '/stats',
-      trend: week.map((day) => day.focusMinutes),
-    },
-  ];
+  const tiles: Array<{ label: string; value: string; icon: IconName; color: string; href: string; trend?: number[] }> =
+    [
+      {
+        label: t('dash.disciplineScore'),
+        value: `${stats.disciplineScore}%`,
+        icon: 'shield',
+        color: '#fbc7da',
+        href: '/stats',
+        trend: week.map((day) => day.disciplineScore),
+      },
+      {
+        label: t('dash.habitsDone'),
+        value: `${habitsDone}/${data.habits.length}`,
+        icon: 'flame',
+        color: '#e9b8d5',
+        href: '/habits',
+        trend: week.map((day) => day.habitsDone),
+      },
+      {
+        label: t('dash.tasksDone'),
+        value: String(stats.tasksDone),
+        icon: 'checkCircle',
+        color: '#e6e6e6',
+        href: '/tasks',
+        trend: week.map((day) => day.tasksDone),
+      },
+      {
+        label: t('dash.calories'),
+        value: n(stats.calories),
+        icon: 'apple',
+        color: '#ff9fbf',
+        href: '/nutrition',
+        trend: week.map((day) => day.calories),
+      },
+      {
+        label: t('dash.currentWeight'),
+        value: data.weight ? `${data.weight.weightKg} kg` : '—',
+        icon: 'scale',
+        color: '#f6d9e4',
+        href: '/weight',
+      },
+      {
+        label: t('dash.focusTime'),
+        value: `${Math.floor(stats.focusMinutes / 60)} h ${stats.focusMinutes % 60}`,
+        icon: 'clock',
+        color: '#d9c7f0',
+        href: '/stats',
+        trend: week.map((day) => day.focusMinutes),
+      },
+    ];
 
   return (
     <div className="lm-entree mx-auto max-w-7xl space-y-5">
@@ -214,9 +215,7 @@ export default function DashboardPage() {
         meteo et le lieu descendent en une ligne unique de metadonnees, ce qui
         libere tout le haut de page pour la seule information qui compte.
       */}
-      <section
-        className="relative flex flex-col items-center px-4 pb-2 pt-6 text-center sm:pt-10"
-      >
+      <section className="relative flex flex-col items-center px-4 pb-2 pt-6 text-center sm:pt-10">
         {/*
           --- L'anneau porte desormais son nom ---
           Trois pourcentages differents cohabitent sur cette page : l'anneau
@@ -297,9 +296,7 @@ export default function DashboardPage() {
       */}
       <section className="grid grid-cols-2 gap-3 lg:grid-cols-3 xl:grid-cols-6">
         {tiles.map((tile) => (
-          <div
-            key={tile.label}
-          >
+          <div key={tile.label}>
             <Link href={tile.href} className="lm-card lm-card-hover group relative block overflow-hidden p-4">
               {/* La courbe de tendance passe en filigrane au fond de la tuile. */}
               {tile.trend && tile.trend.some((value) => value > 0) && (
@@ -311,7 +308,11 @@ export default function DashboardPage() {
               <div className="relative">
                 <span
                   className="grid size-8 place-items-center rounded-xl transition-transform duration-300 group-hover:scale-110"
-                  style={{ background: `${tile.color}1a`, color: tile.color, boxShadow: `0 0 20px -10px ${tile.color}` }}
+                  style={{
+                    background: `${tile.color}1a`,
+                    color: tile.color,
+                    boxShadow: `0 0 20px -10px ${tile.color}`,
+                  }}
                 >
                   <Icon name={tile.icon} size={16} />
                 </span>
@@ -448,11 +449,18 @@ export default function DashboardPage() {
                       isNext && 'bg-[#dcc7ea]/10',
                     )}
                   >
-                    <span className={cx('flex items-center gap-2', isNext ? 'font-medium text-[#dcc7ea]' : 'text-[var(--text-muted)]')}>
+                    <span
+                      className={cx(
+                        'flex items-center gap-2',
+                        isNext ? 'font-medium text-[#dcc7ea]' : 'text-[var(--text-muted)]',
+                      )}
+                    >
                       {logged?.status === 'done' && <Icon name="check" size={13} className="text-[#f6d9e4]" />}
                       {t(`prayers.${name.toLowerCase()}` as 'prayers.fajr')}
                     </span>
-                    <span className={cx('tabular-nums', isNext ? 'font-semibold text-[#dcc7ea]' : 'text-[var(--text)]')}>
+                    <span
+                      className={cx('tabular-nums', isNext ? 'font-semibold text-[#dcc7ea]' : 'text-[var(--text)]')}
+                    >
                       {data.prayers!.times[name]}
                     </span>
                   </li>

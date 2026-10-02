@@ -55,7 +55,9 @@ describe('Inscription — etape 1', () => {
 
   it('explique chaque champ vide au lieu de rester muette', async () => {
     afficher();
-    await act(async () => { fireEvent.click(suivant()); });
+    await act(async () => {
+      fireEvent.click(suivant());
+    });
 
     expect(screen.getAllByText('Ce champ est obligatoire.').length).toBe(4);
     // La page ne progresse pas tant que l'etape 1 n'est pas valide.
@@ -68,42 +70,52 @@ describe('Inscription — etape 1', () => {
     saisir(/^Nom/i, 'Test');
     saisir(/Adresse email/i, 'pas-un-email');
     saisir(/Mot de passe/i, 'MotDePasse1');
-    await act(async () => { fireEvent.click(suivant()); });
+    await act(async () => {
+      fireEvent.click(suivant());
+    });
 
     expect(screen.getByText(/Adresse email invalide/)).toBeTruthy();
   });
 
-  it('distingue un mot de passe trop court d\'un mot de passe trop simple', async () => {
+  it("distingue un mot de passe trop court d'un mot de passe trop simple", async () => {
     afficher();
     saisir(/Prénom/i, 'Moha');
     saisir(/^Nom/i, 'Test');
     saisir(/Adresse email/i, 'moha@exemple.fr');
 
     saisir(/Mot de passe/i, 'abc');
-    await act(async () => { fireEvent.click(suivant()); });
+    await act(async () => {
+      fireEvent.click(suivant());
+    });
     expect(screen.getByText('8 caractères minimum.')).toBeTruthy();
 
     saisir(/Mot de passe/i, 'motdepasse');
-    await act(async () => { fireEvent.click(suivant()); });
+    await act(async () => {
+      fireEvent.click(suivant());
+    });
     expect(screen.getByText(/Ajoutez une majuscule/)).toBeTruthy();
   });
 
   it('efface le message des que le champ fautif est repris', async () => {
     afficher();
-    await act(async () => { fireEvent.click(suivant()); });
+    await act(async () => {
+      fireEvent.click(suivant());
+    });
     expect(screen.getAllByText('Ce champ est obligatoire.').length).toBe(4);
 
     saisir(/Prénom/i, 'M');
     expect(screen.getAllByText('Ce champ est obligatoire.').length).toBe(3);
   });
 
-  it('passe a l\'etape 2 quand tout est valide', async () => {
+  it("passe a l'etape 2 quand tout est valide", async () => {
     afficher();
     saisir(/Prénom/i, 'Moha');
     saisir(/^Nom/i, 'Test');
     saisir(/Adresse email/i, 'moha@exemple.fr');
     saisir(/Mot de passe/i, 'MotDePasse1');
-    await act(async () => { fireEvent.click(suivant()); });
+    await act(async () => {
+      fireEvent.click(suivant());
+    });
 
     expect(screen.getByText(/Étape 2\/2/)).toBeTruthy();
   });

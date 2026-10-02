@@ -176,7 +176,7 @@ describe('journee active', () => {
     ['une tache terminee', { tasksDone: 1 }],
     ['une priere accomplie', { prayersDone: 1 }],
     ['un repas enregistre', { calories: 420 }],
-    ['un verre d\'eau', { waterMl: 250 }],
+    ["un verre d'eau", { waterMl: 250 }],
     ['une seance de sport', { workoutMinutes: 45 }],
     ['du temps de concentration', { focusMinutes: 25 }],
     ['de la lecture', { readingMinutes: 20 }],

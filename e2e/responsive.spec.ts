@@ -66,7 +66,8 @@ async function releverDebordements(page: Page) {
       return false;
     };
 
-    const debordements: Array<{ balise: string; classe: string; texte: string; droite: number; ascendance: string[] }> = [];
+    const debordements: Array<{ balise: string; classe: string; texte: string; droite: number; ascendance: string[] }> =
+      [];
     const textesCoupes: Array<{ texte: string; visible: number; reel: number }> = [];
 
     for (const element of document.querySelectorAll('body *')) {
@@ -170,7 +171,7 @@ ${JSON.stringify(rapport.suspects, null, 2)}`,
   }
 }
 
-test('l\'en-tete du tableau de bord reste entier en 390px', async ({ page }) => {
+test("l'en-tete du tableau de bord reste entier en 390px", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/dashboard');
   await page.waitForLoadState('networkidle');

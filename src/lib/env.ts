@@ -30,9 +30,7 @@ const MIN_SECRET_LENGTH = 32;
  */
 function required(name: string, devFallback: string): string {
   if (typeof window !== 'undefined') {
-    throw new Error(
-      `${name} est un secret serveur : il ne doit jamais etre lu depuis le navigateur.`,
-    );
+    throw new Error(`${name} est un secret serveur : il ne doit jamais etre lu depuis le navigateur.`);
   }
 
   const value = process.env[name]?.trim();
@@ -42,9 +40,7 @@ function required(name: string, devFallback: string): string {
   }
 
   if (!value) {
-    throw new Error(
-      `${name} est absente. Definissez-la dans les variables d'environnement de votre hebergeur.`,
-    );
+    throw new Error(`${name} est absente. Definissez-la dans les variables d'environnement de votre hebergeur.`);
   }
   if (value === INSECURE_PLACEHOLDER) {
     throw new Error(

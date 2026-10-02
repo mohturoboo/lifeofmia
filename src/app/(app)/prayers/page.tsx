@@ -236,9 +236,7 @@ export default function PrayersPage() {
                 </Select>
               </label>
 
-              <p className="pt-1 text-[11px] leading-relaxed text-[var(--text-faint)]">
-                {t('prayers.cityHint')}
-              </p>
+              <p className="pt-1 text-[11px] leading-relaxed text-[var(--text-faint)]">{t('prayers.cityHint')}</p>
             </div>
           </Card>
         </div>

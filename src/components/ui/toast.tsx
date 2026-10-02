@@ -84,6 +84,6 @@ export function ToastProvider({ children }: { children: ReactNode }) {
 
 export function useToast(): ToastValue {
   const context = useContext(ToastContext);
-  if (!context) throw new Error('useToast doit etre utilise a l\'interieur de <ToastProvider>.');
+  if (!context) throw new Error("useToast doit etre utilise a l'interieur de <ToastProvider>.");
   return context;
 }

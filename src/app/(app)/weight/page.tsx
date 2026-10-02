@@ -3,7 +3,18 @@
 import { useState } from 'react';
 import { api, useResource } from '@/lib/client/api';
 import { useMutate } from '@/lib/client/mutate';
-import { Badge, Button, Card, CardHeader, EmptyState, Field, IconButton, Input, Skeleton, Textarea } from '@/components/ui/primitives';
+import {
+  Badge,
+  Button,
+  Card,
+  CardHeader,
+  EmptyState,
+  Field,
+  IconButton,
+  Input,
+  Skeleton,
+  Textarea,
+} from '@/components/ui/primitives';
 import { Icon } from '@/components/ui/icons';
 import { Modal } from '@/components/ui/modal';
 import { LineChart } from '@/components/charts';
@@ -70,20 +81,24 @@ export default function WeightPage() {
     setSaving(true);
     // Le detail par champ renvoye par le serveur s'affiche sous le champ
     // fautif ; la saisie reste en place pour etre corrigee.
-    const saved = await mutate(() => api.post('/api/weight', {
-        date: form.date,
-        weightKg: weight,
-        bodyFat: form.bodyFat ? Number(form.bodyFat) : null,
-        muscleKg: form.muscleKg ? Number(form.muscleKg) : null,
-        note: form.note || null,
-      }), { notifySuccess: false });
+    const saved = await mutate(
+      () =>
+        api.post('/api/weight', {
+          date: form.date,
+          weightKg: weight,
+          bodyFat: form.bodyFat ? Number(form.bodyFat) : null,
+          muscleKg: form.muscleKg ? Number(form.muscleKg) : null,
+          note: form.note || null,
+        }),
+      { notifySuccess: false },
+    );
     setSaving(false);
     if (!saved) return;
 
     toast.success(t('common.success'));
-      setModalOpen(false);
-      setForm((current) => ({ ...current, weightKg: '', bodyFat: '', muscleKg: '', note: '' }));
-      void refresh();
+    setModalOpen(false);
+    setForm((current) => ({ ...current, weightKg: '', bodyFat: '', muscleKg: '', note: '' }));
+    void refresh();
   }
 
   async function remove(entry: WeightEntry) {
@@ -196,9 +211,7 @@ export default function WeightPage() {
               <Badge color={BMI_COLORS[data.bmiCategory]}>{bmiLabels[data.bmiCategory]}</Badge>
             </div>
           )}
-          {!data.heightCm && (
-            <p className="mt-0.5 text-[11px] text-[var(--text-faint)]">{t('weight.heightHint')}</p>
-          )}
+          {!data.heightCm && <p className="mt-0.5 text-[11px] text-[var(--text-faint)]">{t('weight.heightHint')}</p>}
         </Card>
 
         <Card>
@@ -261,15 +274,13 @@ export default function WeightPage() {
 
               return (
                 <li key={entry.id} className="group flex items-center gap-3 py-2.5">
-                  <span className="w-24 shrink-0 text-xs text-[var(--text-faint)]">
-                    {formatDateEntree(entry.date)}
-                  </span>
-                  <span className="text-sm font-medium text-[var(--text)]">
-                    {formatWeight(entry.weightKg, locale)}
-                  </span>
+                  <span className="w-24 shrink-0 text-xs text-[var(--text-faint)]">{formatDateEntree(entry.date)}</span>
+                  <span className="text-sm font-medium text-[var(--text)]">{formatWeight(entry.weightKg, locale)}</span>
 
                   {delta !== null && delta !== 0 && (
-                    <span className={`flex items-center gap-0.5 text-[11px] ${delta < 0 ? 'text-[#f6d9e4]' : 'text-[#ff9fbf]'}`}>
+                    <span
+                      className={`flex items-center gap-0.5 text-[11px] ${delta < 0 ? 'text-[#f6d9e4]' : 'text-[#ff9fbf]'}`}
+                    >
                       <Icon name={delta < 0 ? 'arrowDown' : 'arrowUp'} size={11} />
                       {formatWeight(Math.abs(delta), locale)}
                     </span>
@@ -278,7 +289,14 @@ export default function WeightPage() {
                   {entry.bodyFat && <span className="text-[11px] text-[var(--text-faint)]">{entry.bodyFat}% MG</span>}
                   <span className="min-w-0 flex-1 truncate text-[11px] text-[var(--text-faint)]">{entry.note}</span>
 
-                  <IconButton icon="trash" label={t('common.delete')} size={13} tone="danger" onClick={() => remove(entry)} discret />
+                  <IconButton
+                    icon="trash"
+                    label={t('common.delete')}
+                    size={13}
+                    tone="danger"
+                    onClick={() => remove(entry)}
+                    discret
+                  />
                 </li>
               );
             })}
@@ -305,7 +323,13 @@ export default function WeightPage() {
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <Field label={t('common.date')} htmlFor="weight-date" error={erreurs.date}>
-              <Input id="weight-date" max={aujourdhui} type="date" value={form.date} onChange={(event) => set('date', event.target.value)} />
+              <Input
+                id="weight-date"
+                max={aujourdhui}
+                type="date"
+                value={form.date}
+                onChange={(event) => set('date', event.target.value)}
+              />
             </Field>
             <Field label={`${t('weight.current')} (kg)`} htmlFor="weight-kg" error={erreurs.weightKg} required>
               <Input
@@ -322,7 +346,12 @@ export default function WeightPage() {
           </div>
 
           <div className="grid grid-cols-2 gap-3">
-            <Field label={`${t('weight.bodyFat')} (%)`} htmlFor="weight-fat" error={erreurs.bodyFat} hint={t('common.optional')}>
+            <Field
+              label={`${t('weight.bodyFat')} (%)`}
+              htmlFor="weight-fat"
+              error={erreurs.bodyFat}
+              hint={t('common.optional')}
+            >
               {/* Les bornes du serveur sont rappelees sur le champ : 0 a 100 %. */}
               <Input
                 id="weight-fat"
@@ -334,7 +363,12 @@ export default function WeightPage() {
                 onChange={(event) => set('bodyFat', event.target.value)}
               />
             </Field>
-            <Field label={`${t('weight.muscle')} (kg)`} htmlFor="weight-muscle" error={erreurs.muscleKg} hint={t('common.optional')}>
+            <Field
+              label={`${t('weight.muscle')} (kg)`}
+              htmlFor="weight-muscle"
+              error={erreurs.muscleKg}
+              hint={t('common.optional')}
+            >
               <Input
                 id="weight-muscle"
                 type="number"
@@ -348,7 +382,12 @@ export default function WeightPage() {
           </div>
 
           <Field label={t('common.notes')} htmlFor="weight-note" error={erreurs.note}>
-            <Textarea id="weight-note" rows={2} value={form.note} onChange={(event) => set('note', event.target.value)} />
+            <Textarea
+              id="weight-note"
+              rows={2}
+              value={form.note}
+              onChange={(event) => set('note', event.target.value)}
+            />
           </Field>
         </div>
       </Modal>

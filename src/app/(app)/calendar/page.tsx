@@ -44,10 +44,10 @@ export default function CalendarPage() {
     return { from: from.toISOString(), to: to.toISOString() };
   }, [cursor]);
 
-  const { data, loading, refresh } = useResource<CalendarData>(
-    `/api/events?from=${range.from}&to=${range.to}`,
-    [range.from, range.to],
-  );
+  const { data, loading, refresh } = useResource<CalendarData>(`/api/events?from=${range.from}&to=${range.to}`, [
+    range.from,
+    range.to,
+  ]);
 
   const [modalOpen, setModalOpen] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -132,24 +132,28 @@ export default function CalendarPage() {
     setSaving(true);
     // Le detail par champ renvoye par le serveur s'affiche sous le champ
     // fautif ; la saisie reste en place pour etre corrigee.
-    const saved = await mutate(() => api.post('/api/events', {
-        title: form.title,
-        description: form.description || null,
-        // Converties ici, dans le fuseau du navigateur : une heure sans decalage
-        // etait interpretee dans celui du serveur, et 9 h a Paris devenait 11 h.
-        startAt: new Date(`${form.date}T${form.startTime}:00`).toISOString(),
-        endAt: new Date(`${form.date}T${form.endTime}:00`).toISOString(),
-        location: form.location || null,
-        color: form.color,
-        allDay: false,
-      }), { notifySuccess: false });
+    const saved = await mutate(
+      () =>
+        api.post('/api/events', {
+          title: form.title,
+          description: form.description || null,
+          // Converties ici, dans le fuseau du navigateur : une heure sans decalage
+          // etait interpretee dans celui du serveur, et 9 h a Paris devenait 11 h.
+          startAt: new Date(`${form.date}T${form.startTime}:00`).toISOString(),
+          endAt: new Date(`${form.date}T${form.endTime}:00`).toISOString(),
+          location: form.location || null,
+          color: form.color,
+          allDay: false,
+        }),
+      { notifySuccess: false },
+    );
     setSaving(false);
     if (!saved) return;
 
     toast.success(t('common.success'));
-      setModalOpen(false);
-      set('title', '');
-      void refresh();
+    setModalOpen(false);
+    set('title', '');
+    void refresh();
   }
 
   async function remove(id: string) {
@@ -280,7 +284,14 @@ export default function CalendarPage() {
                     {item.type === 'task' ? t('nav.tasks') : t('calendar.title')}
                   </span>
                   {item.type === 'event' && (
-                    <IconButton icon="trash" label={t('common.delete')} size={13} tone="danger" onClick={() => remove(item.id)} discret />
+                    <IconButton
+                      icon="trash"
+                      label={t('common.delete')}
+                      size={13}
+                      tone="danger"
+                      onClick={() => remove(item.id)}
+                      discret
+                    />
                   )}
                 </li>
               ))}
@@ -319,15 +330,30 @@ export default function CalendarPage() {
       >
         <div className="space-y-4">
           <Field label={t('common.title')} htmlFor="event-title" error={erreurs.title} required>
-            <Input id="event-title" value={form.title} onChange={(event) => set('title', event.target.value)} autoFocus />
+            <Input
+              id="event-title"
+              value={form.title}
+              onChange={(event) => set('title', event.target.value)}
+              autoFocus
+            />
           </Field>
 
           <div className="grid grid-cols-3 gap-3">
             <Field label={t('common.date')} htmlFor="event-date">
-              <Input id="event-date" type="date" value={form.date} onChange={(event) => set('date', event.target.value)} />
+              <Input
+                id="event-date"
+                type="date"
+                value={form.date}
+                onChange={(event) => set('date', event.target.value)}
+              />
             </Field>
             <Field label={t('calendar.start')} htmlFor="event-start" error={erreurs.startAt}>
-              <Input id="event-start" type="time" value={form.startTime} onChange={(event) => set('startTime', event.target.value)} />
+              <Input
+                id="event-start"
+                type="time"
+                value={form.startTime}
+                onChange={(event) => set('startTime', event.target.value)}
+              />
             </Field>
             <Field
               label={t('calendar.end')}
@@ -351,11 +377,20 @@ export default function CalendarPage() {
           </div>
 
           <Field label={t('calendar.location')} htmlFor="event-location" error={erreurs.location}>
-            <Input id="event-location" value={form.location} onChange={(event) => set('location', event.target.value)} />
+            <Input
+              id="event-location"
+              value={form.location}
+              onChange={(event) => set('location', event.target.value)}
+            />
           </Field>
 
           <Field label={t('common.notes')} htmlFor="event-description" error={erreurs.description}>
-            <Textarea id="event-description" rows={2} value={form.description} onChange={(event) => set('description', event.target.value)} />
+            <Textarea
+              id="event-description"
+              rows={2}
+              value={form.description}
+              onChange={(event) => set('description', event.target.value)}
+            />
           </Field>
 
           <Field label={t('habits.color')}>

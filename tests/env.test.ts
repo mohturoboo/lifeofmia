@@ -31,7 +31,7 @@ afterEach(() => {
 });
 
 describe('lib/env — import cote navigateur', () => {
-  it('s\'importe sans lever, meme en production et sans AUTH_SECRET', async () => {
+  it("s'importe sans lever, meme en production et sans AUTH_SECRET", async () => {
     expect(typeof window).not.toBe('undefined');
     await expect(loadEnv({ NODE_ENV: 'production', AUTH_SECRET: undefined })).resolves.toBeDefined();
   });
@@ -45,7 +45,7 @@ describe('lib/env — import cote navigateur', () => {
     expect(env.appUrl).toBe('https://exemple.app');
   });
 
-  it('refuse de livrer le secret au navigateur, meme s\'il est defini', async () => {
+  it("refuse de livrer le secret au navigateur, meme s'il est defini", async () => {
     const { env } = await loadEnv({ NODE_ENV: 'production', AUTH_SECRET: VALID_SECRET });
     expect(() => env.authSecret).toThrow(/ne doit jamais etre lu depuis le navigateur/);
   });
@@ -69,7 +69,7 @@ describe('lib/env — validation du secret cote serveur', () => {
     expect(() => onServer(() => env.authSecret)).toThrow(/est absente/);
   });
 
-  it('bloque la valeur d\'exemple publiee dans le depot', async () => {
+  it("bloque la valeur d'exemple publiee dans le depot", async () => {
     const { env } = await loadEnv({ NODE_ENV: 'production', AUTH_SECRET: PLACEHOLDER });
     expect(() => onServer(() => env.authSecret)).toThrow(/valeur d'exemple/);
   });
@@ -84,7 +84,7 @@ describe('lib/env — validation du secret cote serveur', () => {
     expect(onServer(() => env.authSecret)).toBe(VALID_SECRET);
   });
 
-  it('tolere l\'absence de secret hors production', async () => {
+  it("tolere l'absence de secret hors production", async () => {
     const { env } = await loadEnv({ NODE_ENV: 'development', AUTH_SECRET: undefined });
     expect(onServer(() => env.authSecret)).toBe(PLACEHOLDER);
   });

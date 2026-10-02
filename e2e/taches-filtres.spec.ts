@@ -53,8 +53,8 @@ test('un filtre inconnu est refuse, jamais elargi', async ({ page }) => {
   expect(error.fields?.scope, 'la reponse doit rappeler les valeurs acceptees').toContain('today');
 });
 
-test('chaque filtre de periode renvoie ce qu\'il annonce', async ({ page }) => {
-  expect(await titres(page, 'today'), '« aujourd\'hui » ne contient que la tache du jour').toEqual([
+test("chaque filtre de periode renvoie ce qu'il annonce", async ({ page }) => {
+  expect(await titres(page, 'today'), "« aujourd'hui » ne contient que la tache du jour").toEqual([
     `${marqueur} du jour`,
   ]);
   expect(await titres(page, 'overdue'), '« en retard » ne contient que la tache echue').toEqual([`${marqueur} echue`]);
@@ -68,7 +68,7 @@ test('chaque filtre de periode renvoie ce qu\'il annonce', async ({ page }) => {
   );
 });
 
-test('une tache sans echeance n\'apparait plus dans les trois periodes a la fois', async ({ page }) => {
+test("une tache sans echeance n'apparait plus dans les trois periodes a la fois", async ({ page }) => {
   for (const periode of ['today', 'week', 'month']) {
     expect(await titres(page, periode), `« ${periode} » ne doit pas melanger les taches sans date`).not.toContain(
       `${marqueur} sans echeance`,
@@ -76,12 +76,12 @@ test('une tache sans echeance n\'apparait plus dans les trois periodes a la fois
   }
 });
 
-test('« terminees » exige une date d\'achevement', async ({ page }) => {
+test("« terminees » exige une date d'achevement", async ({ page }) => {
   const reponse = await page.request.get('/api/tasks?scope=all&status=done');
   const { data } = (await reponse.json()) as { data?: Array<{ completedAt: string | null }> };
 
   for (const tache of data ?? []) {
-    expect(tache.completedAt, 'une tache terminee sans date d\'achevement est une incoherence').not.toBeNull();
+    expect(tache.completedAt, "une tache terminee sans date d'achevement est une incoherence").not.toBeNull();
   }
 });
 
@@ -92,13 +92,13 @@ test('cliquer un onglet change la vue et la requete', async ({ page }) => {
   });
 
   await page.goto('/tasks');
-  await expect(page.getByRole('tab', { name: 'Aujourd\'hui' })).toHaveAttribute('aria-selected', 'true');
+  await expect(page.getByRole('tab', { name: "Aujourd'hui" })).toHaveAttribute('aria-selected', 'true');
 
   await page.getByRole('tab', { name: 'En retard' }).click();
 
   await expect(page.getByRole('tab', { name: 'En retard' })).toHaveAttribute('aria-selected', 'true');
-  await expect(page.getByRole('tab', { name: 'Aujourd\'hui' })).toHaveAttribute('aria-selected', 'false');
-  expect(requetes, 'le changement d\'onglet doit declencher la requete correspondante').toContain('overdue');
+  await expect(page.getByRole('tab', { name: "Aujourd'hui" })).toHaveAttribute('aria-selected', 'false');
+  expect(requetes, "le changement d'onglet doit declencher la requete correspondante").toContain('overdue');
 
   // La liste suit : la tache echue apparait, celle du jour disparait.
   await expect(page.getByText(`${marqueur} echue`)).toBeVisible();
@@ -138,7 +138,7 @@ test('les onglets forment un vrai groupe accessible', async ({ page }) => {
 
 test('les onglets se parcourent au clavier', async ({ page }) => {
   await page.goto('/tasks');
-  const aujourdhui = page.getByRole('tab', { name: 'Aujourd\'hui' });
+  const aujourdhui = page.getByRole('tab', { name: "Aujourd'hui" });
   await expect(aujourdhui).toHaveAttribute('aria-selected', 'true');
   await aujourdhui.focus();
 

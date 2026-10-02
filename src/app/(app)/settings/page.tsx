@@ -100,26 +100,30 @@ export default function SettingsPage() {
     setSaving(true);
     // Le detail par champ renvoye par le serveur s'affiche sous le champ
     // fautif ; la saisie reste en place pour etre corrigee.
-    const saved = await mutate(() => api.patch('/api/profile', {
-        firstName: form.firstName,
-        lastName: form.lastName,
-        city: form.city,
-        country: form.country,
-        timezone: form.timezone,
-        birthDate: form.birthDate || null,
-        gender: form.gender || null,
-        heightCm: form.heightCm ? Number(form.heightCm) : null,
-        mainGoal: form.mainGoal || null,
-        timeFormat: form.timeFormat,
-        units: form.units,
-        glassMl: Number(form.glassMl) || 250,
-      }), { notifySuccess: false });
+    const saved = await mutate(
+      () =>
+        api.patch('/api/profile', {
+          firstName: form.firstName,
+          lastName: form.lastName,
+          city: form.city,
+          country: form.country,
+          timezone: form.timezone,
+          birthDate: form.birthDate || null,
+          gender: form.gender || null,
+          heightCm: form.heightCm ? Number(form.heightCm) : null,
+          mainGoal: form.mainGoal || null,
+          timeFormat: form.timeFormat,
+          units: form.units,
+          glassMl: Number(form.glassMl) || 250,
+        }),
+      { notifySuccess: false },
+    );
     setSaving(false);
     if (!saved) return;
 
     toast.success(t('settings.saved'));
-      router.refresh();
-      void refresh();
+    router.refresh();
+    void refresh();
   }
 
   async function changePassword() {
@@ -138,7 +142,6 @@ export default function SettingsPage() {
       setSaving(false);
     }
   }
-
 
   async function deleteAccount() {
     if (!window.confirm(`${t('settings.deleteHint')}\n\n${t('common.deleteConfirm')}`)) return;
@@ -193,7 +196,11 @@ export default function SettingsPage() {
           <div className="space-y-4">
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <Field label={t('auth.firstName')} htmlFor="first-name" error={erreurs.firstName}>
-                <Input id="first-name" value={form.firstName} onChange={(event) => set('firstName', event.target.value)} />
+                <Input
+                  id="first-name"
+                  value={form.firstName}
+                  onChange={(event) => set('firstName', event.target.value)}
+                />
               </Field>
               <Field label={t('auth.lastName')} htmlFor="last-name" error={erreurs.lastName}>
                 <Input id="last-name" value={form.lastName} onChange={(event) => set('lastName', event.target.value)} />
@@ -206,7 +213,12 @@ export default function SettingsPage() {
 
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
               <Field label={t('auth.birthDate')} htmlFor="birth-date" error={erreurs.birthDate}>
-                <Input id="birth-date" type="date" value={form.birthDate} onChange={(event) => set('birthDate', event.target.value)} />
+                <Input
+                  id="birth-date"
+                  type="date"
+                  value={form.birthDate}
+                  onChange={(event) => set('birthDate', event.target.value)}
+                />
               </Field>
               <Field label={t('auth.gender')} htmlFor="gender">
                 <Select id="gender" value={form.gender} onChange={(event) => set('gender', event.target.value)}>
@@ -216,7 +228,12 @@ export default function SettingsPage() {
                   <option value="other">{t('auth.genderOther')}</option>
                 </Select>
               </Field>
-              <Field label={`${t('settings.height')} (cm)`} htmlFor="height" error={erreurs.heightCm} hint={t('settings.heightHint')}>
+              <Field
+                label={`${t('settings.height')} (cm)`}
+                htmlFor="height"
+                error={erreurs.heightCm}
+                hint={t('settings.heightHint')}
+              >
                 <Input
                   id="height"
                   type="number"
@@ -278,7 +295,12 @@ export default function SettingsPage() {
 
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <Field label={t('auth.city')} htmlFor="city" error={erreurs.city}>
-                <Input id="city" list="cities" value={form.city} onChange={(event) => set('city', event.target.value)} />
+                <Input
+                  id="city"
+                  list="cities"
+                  value={form.city}
+                  onChange={(event) => set('city', event.target.value)}
+                />
                 <datalist id="cities">
                   {Object.keys(FALLBACK_CITIES).map((city) => (
                     <option key={city} value={city} />
@@ -295,7 +317,11 @@ export default function SettingsPage() {
                 <Input id="timezone" value={form.timezone} onChange={(event) => set('timezone', event.target.value)} />
               </Field>
               <Field label={t('settings.timeFormat')} htmlFor="time-format">
-                <Select id="time-format" value={form.timeFormat} onChange={(event) => set('timeFormat', event.target.value as '12h' | '24h')}>
+                <Select
+                  id="time-format"
+                  value={form.timeFormat}
+                  onChange={(event) => set('timeFormat', event.target.value as '12h' | '24h')}
+                >
                   <option value="24h">24 h</option>
                   <option value="12h">12 h (AM/PM)</option>
                 </Select>
@@ -315,7 +341,11 @@ export default function SettingsPage() {
               </Field>
 
               <Field label={t('settings.units')} htmlFor="units">
-                <Select id="units" value={form.units} onChange={(event) => set('units', event.target.value as 'metric' | 'imperial')}>
+                <Select
+                  id="units"
+                  value={form.units}
+                  onChange={(event) => set('units', event.target.value as 'metric' | 'imperial')}
+                >
                   <option value="metric">{t('settings.unitsMetric')}</option>
                   <option value="imperial">{t('settings.unitsImperial')}</option>
                 </Select>
@@ -368,7 +398,10 @@ export default function SettingsPage() {
             <CardHeader title={t('settings.changePassword')} icon="lock" accent="#ff9fbf" />
             <div className="space-y-4">
               {passwordError && (
-                <div role="alert" className="rounded-xl border border-red-500/25 bg-red-500/10 px-4 py-3 text-sm text-red-500">
+                <div
+                  role="alert"
+                  className="rounded-xl border border-red-500/25 bg-red-500/10 px-4 py-3 text-sm text-red-500"
+                >
                   {passwordError}
                 </div>
               )}
@@ -390,17 +423,29 @@ export default function SettingsPage() {
                   onChange={(event) => setPasswords((current) => ({ ...current, next: event.target.value }))}
                 />
               </Field>
-              <Button onClick={changePassword} loading={saving} disabled={!passwords.current || passwords.next.length < 8}>
+              <Button
+                onClick={changePassword}
+                loading={saving}
+                disabled={!passwords.current || passwords.next.length < 8}
+              >
                 {t('common.save')}
               </Button>
             </div>
           </Card>
 
           <Card>
-            <CardHeader title={t('settings.sessions')} subtitle={t('settings.deviceCount', { count: data.sessions.length })} icon="shield" accent="#e6e6e6" />
+            <CardHeader
+              title={t('settings.sessions')}
+              subtitle={t('settings.deviceCount', { count: data.sessions.length })}
+              icon="shield"
+              accent="#e6e6e6"
+            />
             <ul className="space-y-2">
               {data.sessions.map((session) => (
-                <li key={session.id} className="flex items-center justify-between gap-3 rounded-xl bg-[var(--surface-2)] px-3.5 py-2.5">
+                <li
+                  key={session.id}
+                  className="flex items-center justify-between gap-3 rounded-xl bg-[var(--surface-2)] px-3.5 py-2.5"
+                >
                   <div className="min-w-0">
                     <p className="truncate text-[13px] text-[var(--text)]">
                       {session.userAgent?.slice(0, 60) ?? t('settings.unknownDevice')}
@@ -412,9 +457,7 @@ export default function SettingsPage() {
                 </li>
               ))}
             </ul>
-            <p className="mt-3 text-[11px] text-[var(--text-faint)]">
-              {t('settings.passwordSignsOut')}
-            </p>
+            <p className="mt-3 text-[11px] text-[var(--text-faint)]">{t('settings.passwordSignsOut')}</p>
           </Card>
         </div>
       )}
@@ -422,7 +465,12 @@ export default function SettingsPage() {
       {section === 'data' && (
         <div className="space-y-4">
           <Card>
-            <CardHeader title={t('settings.exportData')} subtitle={t('settings.exportHint')} icon="download" accent="#fbe3ec" />
+            <CardHeader
+              title={t('settings.exportData')}
+              subtitle={t('settings.exportHint')}
+              icon="download"
+              accent="#fbe3ec"
+            />
             <a
               href="/api/profile/export"
               download
@@ -434,12 +482,21 @@ export default function SettingsPage() {
           </Card>
 
           <Card>
-            <CardHeader title={t('dash.badges')} subtitle={t('stats.badgeUnlocked', { count: data.badges.length })} icon="award" accent="#ff9fbf" />
+            <CardHeader
+              title={t('dash.badges')}
+              subtitle={t('stats.badgeUnlocked', { count: data.badges.length })}
+              icon="award"
+              accent="#ff9fbf"
+            />
             <div className="flex flex-wrap gap-2">
               {data.badges.length === 0 ? (
                 <p className="text-xs text-[var(--text-faint)]">{t('common.empty')}</p>
               ) : (
-                data.badges.map((badge) => <Badge key={badge.code} color="#ff9fbf">{badge.name}</Badge>)
+                data.badges.map((badge) => (
+                  <Badge key={badge.code} color="#ff9fbf">
+                    {badge.name}
+                  </Badge>
+                ))
               )}
             </div>
             <p className="mt-3 text-xs text-[var(--text-faint)]">
@@ -448,7 +505,12 @@ export default function SettingsPage() {
           </Card>
 
           <Card className="border-red-500/25">
-            <CardHeader title={t('settings.deleteAccount')} subtitle={t('settings.deleteHint')} icon="trash" accent="#ff9fbf" />
+            <CardHeader
+              title={t('settings.deleteAccount')}
+              subtitle={t('settings.deleteHint')}
+              icon="trash"
+              accent="#ff9fbf"
+            />
             <Button variant="danger" icon="trash" onClick={deleteAccount}>
               {t('settings.deleteAccount')}
             </Button>

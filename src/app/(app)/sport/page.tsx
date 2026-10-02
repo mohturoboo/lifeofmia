@@ -3,7 +3,19 @@
 import { useState } from 'react';
 import { api, useResource } from '@/lib/client/api';
 import { useMutate } from '@/lib/client/mutate';
-import { Badge, Button, Card, CardHeader, EmptyState, Field, IconButton, Input, Select, Skeleton, Textarea } from '@/components/ui/primitives';
+import {
+  Badge,
+  Button,
+  Card,
+  CardHeader,
+  EmptyState,
+  Field,
+  IconButton,
+  Input,
+  Select,
+  Skeleton,
+  Textarea,
+} from '@/components/ui/primitives';
 import { Icon } from '@/components/ui/icons';
 import { Modal } from '@/components/ui/modal';
 import { BarChart, DonutChart } from '@/components/charts';
@@ -93,25 +105,29 @@ export default function SportPage() {
 
     // Le detail par champ renvoye par le serveur s'affiche sous le champ
     // fautif ; la saisie reste en place pour etre corrigee.
-    const saved = await mutate(() => api.post('/api/workouts', {
-        date: form.date,
-        name: form.name,
-        type: form.type,
-        durationMin: Number(form.durationMin) || 0,
-        distanceKm: form.distanceKm ? Number(form.distanceKm) : null,
-        calories: form.calories ? Number(form.calories) : null,
-        intensity: form.intensity,
-        notes: form.notes || null,
-        exercises: isStrength ? form.exercises.filter((exercise) => exercise.name.trim().length > 0) : [],
-      }), { notifySuccess: false });
+    const saved = await mutate(
+      () =>
+        api.post('/api/workouts', {
+          date: form.date,
+          name: form.name,
+          type: form.type,
+          durationMin: Number(form.durationMin) || 0,
+          distanceKm: form.distanceKm ? Number(form.distanceKm) : null,
+          calories: form.calories ? Number(form.calories) : null,
+          intensity: form.intensity,
+          notes: form.notes || null,
+          exercises: isStrength ? form.exercises.filter((exercise) => exercise.name.trim().length > 0) : [],
+        }),
+      { notifySuccess: false },
+    );
     setSaving(false);
     if (!saved) return;
 
     toast.success(t('common.success'));
-      setModalOpen(false);
-      set('name', '');
-      set('exercises', [{ ...EMPTY_EXERCISE }]);
-      void refresh();
+    setModalOpen(false);
+    set('name', '');
+    set('exercises', [{ ...EMPTY_EXERCISE }]);
+    void refresh();
   }
 
   async function remove(workout: Workout) {
@@ -213,10 +229,15 @@ export default function SportPage() {
                     <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
                       <Badge color="#ff9fbf">{typeLabel(workout.type)}</Badge>
                       <Badge color={INTENSITY_COLORS[workout.intensity]}>
-                        {t(`sport.intensity${workout.intensity.charAt(0).toUpperCase()}${workout.intensity.slice(1)}` as 'sport.intensityLow')}
+                        {t(
+                          `sport.intensity${workout.intensity.charAt(0).toUpperCase()}${workout.intensity.slice(1)}` as 'sport.intensityLow',
+                        )}
                       </Badge>
                       <span className="text-[11px] text-[var(--text-faint)]">
-                        {new Date(`${workout.date}T12:00:00Z`).toLocaleDateString(locale, { day: 'numeric', month: 'short' })}
+                        {new Date(`${workout.date}T12:00:00Z`).toLocaleDateString(locale, {
+                          day: 'numeric',
+                          month: 'short',
+                        })}
                         {' · '}
                         {workout.durationMin} min
                         {workout.distanceKm ? ` · ${workout.distanceKm} km` : ''}
@@ -224,7 +245,14 @@ export default function SportPage() {
                     </div>
                   </div>
 
-                  <IconButton icon="trash" label={t('common.delete')} size={13} tone="danger" onClick={() => remove(workout)} discret />
+                  <IconButton
+                    icon="trash"
+                    label={t('common.delete')}
+                    size={13}
+                    tone="danger"
+                    onClick={() => remove(workout)}
+                    discret
+                  />
                 </div>
 
                 {workout.exercises.length > 0 && (
@@ -266,10 +294,21 @@ export default function SportPage() {
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <Field label={t('common.name')} htmlFor="workout-name" error={erreurs.name} required>
-              <Input id="workout-name" value={form.name} onChange={(event) => set('name', event.target.value)} autoFocus />
+              <Input
+                id="workout-name"
+                value={form.name}
+                onChange={(event) => set('name', event.target.value)}
+                autoFocus
+              />
             </Field>
             <Field label={t('common.date')} htmlFor="workout-date" error={erreurs.date}>
-              <Input id="workout-date" max={aujourdhui} type="date" value={form.date} onChange={(event) => set('date', event.target.value)} />
+              <Input
+                id="workout-date"
+                max={aujourdhui}
+                type="date"
+                value={form.date}
+                onChange={(event) => set('date', event.target.value)}
+              />
             </Field>
           </div>
 
@@ -284,13 +323,29 @@ export default function SportPage() {
               </Select>
             </Field>
             <Field label={`${t('sport.duration')} (min)`} htmlFor="workout-duration" error={erreurs.durationMin}>
-              <Input id="workout-duration" type="number" min={0} value={form.durationMin} onChange={(event) => set('durationMin', event.target.value)} />
+              <Input
+                id="workout-duration"
+                type="number"
+                min={0}
+                value={form.durationMin}
+                onChange={(event) => set('durationMin', event.target.value)}
+              />
             </Field>
             <Field label={`${t('sport.distance')} (km)`} htmlFor="workout-distance" error={erreurs.distanceKm}>
-              <Input id="workout-distance" type="number" step="0.1" value={form.distanceKm} onChange={(event) => set('distanceKm', event.target.value)} />
+              <Input
+                id="workout-distance"
+                type="number"
+                step="0.1"
+                value={form.distanceKm}
+                onChange={(event) => set('distanceKm', event.target.value)}
+              />
             </Field>
             <Field label={t('sport.intensity')} htmlFor="workout-intensity">
-              <Select id="workout-intensity" value={form.intensity} onChange={(event) => set('intensity', event.target.value)}>
+              <Select
+                id="workout-intensity"
+                value={form.intensity}
+                onChange={(event) => set('intensity', event.target.value)}
+              >
                 <option value="low">{t('sport.intensityLow')}</option>
                 <option value="medium">{t('sport.intensityMedium')}</option>
                 <option value="high">{t('sport.intensityHigh')}</option>
@@ -330,7 +385,9 @@ export default function SportPage() {
                       type="number"
                       step="0.5"
                       value={exercise.weightKg ?? ''}
-                      onChange={(event) => updateExercise(index, { weightKg: event.target.value ? Number(event.target.value) : null })}
+                      onChange={(event) =>
+                        updateExercise(index, { weightKg: event.target.value ? Number(event.target.value) : null })
+                      }
                       placeholder="kg"
                       aria-label={t('sport.weightKg')}
                       className="w-20"
@@ -340,7 +397,12 @@ export default function SportPage() {
                       size="sm"
                       icon="close"
                       aria-label={t('common.delete')}
-                      onClick={() => set('exercises', form.exercises.filter((_, position) => position !== index))}
+                      onClick={() =>
+                        set(
+                          'exercises',
+                          form.exercises.filter((_, position) => position !== index),
+                        )
+                      }
                     />
                   </div>
                 ))}
@@ -357,7 +419,12 @@ export default function SportPage() {
           )}
 
           <Field label={t('common.notes')} htmlFor="workout-notes" error={erreurs.notes}>
-            <Textarea id="workout-notes" rows={2} value={form.notes} onChange={(event) => set('notes', event.target.value)} />
+            <Textarea
+              id="workout-notes"
+              rows={2}
+              value={form.notes}
+              onChange={(event) => set('notes', event.target.value)}
+            />
           </Field>
         </div>
       </Modal>

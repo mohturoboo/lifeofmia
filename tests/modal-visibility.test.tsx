@@ -34,7 +34,7 @@ function ouvrir() {
 }
 
 describe('Modal — visible sans animation', () => {
-  it('s\'affiche meme si aucune image d\'animation n\'est jamais rendue', () => {
+  it("s'affiche meme si aucune image d'animation n'est jamais rendue", () => {
     // Reproduit un onglet en arriere-plan : requestAnimationFrame ne rappelle jamais.
     vi.spyOn(window, 'requestAnimationFrame').mockImplementation(() => 0);
 
@@ -57,7 +57,7 @@ describe('Modal — visible sans animation', () => {
     expect(style.display).toBe('');
   });
 
-  it('n\'anime jamais l\'opacite du panneau', async () => {
+  it("n'anime jamais l'opacite du panneau", async () => {
     // Une animation figee maintient son image de depart. Animer l'opacite
     // depuis 0 rendrait donc l'affichage tributaire de son bon deroulement.
     const css = await readFile(resolve(process.cwd(), 'src/app/globals.css'), 'utf8');
@@ -89,7 +89,7 @@ describe('Modal — visible sans animation', () => {
     expect(document.body.dataset.dialogOpen).toBe('true');
   });
 
-  it('place le focus sans attendre la moindre image d\'animation', () => {
+  it("place le focus sans attendre la moindre image d'animation", () => {
     // Le placement passait par requestAnimationFrame. Tout ce que l'utilisateur
     // tapait avant cette image partait vers le bouton qui venait d'ouvrir la
     // fenetre, et etait perdu sans le moindre signe.

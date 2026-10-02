@@ -4,7 +4,20 @@ import { useState } from 'react';
 import { api, useResource } from '@/lib/client/api';
 import { useHydrated } from '@/lib/client/hydrated';
 import { useMutate } from '@/lib/client/mutate';
-import { Badge, Button, Card, cx, EmptyState, Field, IconButton, Input, Select, Skeleton, Textarea, Toggle } from '@/components/ui/primitives';
+import {
+  Badge,
+  Button,
+  Card,
+  cx,
+  EmptyState,
+  Field,
+  IconButton,
+  Input,
+  Select,
+  Skeleton,
+  Textarea,
+  Toggle,
+} from '@/components/ui/primitives';
 import { HABIT_ICONS, Icon, type IconName } from '@/components/ui/icons';
 import { Modal } from '@/components/ui/modal';
 import { PageHeader } from '@/components/page-header';
@@ -54,10 +67,7 @@ export default function HabitsPage() {
   // Ouvrir un formulaire de creation ne demande aucune donnee.
   const pret = useHydrated();
   const [showArchived, setShowArchived] = useState(false);
-  const { data, loading, refresh } = useResource<Habit[]>(
-    `/api/habits?archived=${showArchived}`,
-    [showArchived],
-  );
+  const { data, loading, refresh } = useResource<Habit[]>(`/api/habits?archived=${showArchived}`, [showArchived]);
 
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<Habit | null>(null);
@@ -108,7 +118,9 @@ export default function HabitsPage() {
 
     // Le detail par champ renvoye par le serveur s'affiche sous le champ
     // fautif ; la fenetre reste ouverte pour que la saisie soit corrigible.
-    const saved = await mutate(() => (editing ? api.patch(`/api/habits/${editing.id}`, payload) : api.post('/api/habits', payload)));
+    const saved = await mutate(() =>
+      editing ? api.patch(`/api/habits/${editing.id}`, payload) : api.post('/api/habits', payload),
+    );
     setSaving(false);
     if (!saved) return;
 
@@ -202,9 +214,7 @@ export default function HabitsPage() {
             const multi = habit.targetPerDay > 1;
 
             return (
-              <div
-                key={habit.id}
-              >
+              <div key={habit.id}>
                 <Card className={cx('h-full', habit.archived && 'opacity-60')}>
                   <div className="flex items-start gap-3">
                     <button
@@ -226,18 +236,32 @@ export default function HabitsPage() {
 
                     <div className="min-w-0 flex-1">
                       <div className="flex items-start justify-between gap-2">
-                        <h2 className={cx('truncate font-sans text-[15px] font-medium', done ? 'text-[var(--text-muted)] line-through' : 'text-[var(--text)]')}>
+                        <h2
+                          className={cx(
+                            'truncate font-sans text-[15px] font-medium',
+                            done ? 'text-[var(--text-muted)] line-through' : 'text-[var(--text)]',
+                          )}
+                        >
                           {habit.name}
                         </h2>
                         <div className="flex shrink-0 gap-0.5">
                           <IconButton icon="edit" label={t('common.edit')} onClick={() => openEdit(habit)} />
                           <IconButton icon="archive" label={t('habits.archive')} onClick={() => archive(habit)} />
-                          <IconButton icon="trash" label={t('common.delete')} tone="danger" onClick={() => remove(habit)} />
+                          <IconButton
+                            icon="trash"
+                            label={t('common.delete')}
+                            tone="danger"
+                            onClick={() => remove(habit)}
+                          />
                         </div>
                       </div>
 
                       <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
-                        <Badge color={habit.color}>{t(`habits.category${habit.category.charAt(0).toUpperCase()}${habit.category.slice(1)}` as 'habits.categoryOther')}</Badge>
+                        <Badge color={habit.color}>
+                          {t(
+                            `habits.category${habit.category.charAt(0).toUpperCase()}${habit.category.slice(1)}` as 'habits.categoryOther',
+                          )}
+                        </Badge>
                         {habit.isNegative && <Badge color="#ff9fbf">{t('habits.negative')}</Badge>}
                         {multi && (
                           <span className="text-[11px] text-[var(--text-faint)]">
@@ -299,7 +323,13 @@ export default function HabitsPage() {
         }
       >
         <div className="space-y-4">
-          <Field label={t('common.name')} htmlFor="habit-name" error={erreurs.name} hint={`${form.name.length}/80`} required>
+          <Field
+            label={t('common.name')}
+            htmlFor="habit-name"
+            error={erreurs.name}
+            hint={`${form.name.length}/80`}
+            required
+          >
             <Input
               id="habit-name"
               // L'asterisque du libelle annoncait une obligation que le champ
@@ -369,10 +399,16 @@ export default function HabitsPage() {
 
           <div className="grid grid-cols-2 gap-3">
             <Field label={t('common.category')} htmlFor="habit-category">
-              <Select id="habit-category" value={form.category} onChange={(event) => set('category', event.target.value)}>
+              <Select
+                id="habit-category"
+                value={form.category}
+                onChange={(event) => set('category', event.target.value)}
+              >
                 {HABIT_CATEGORIES.map((category) => (
                   <option key={category} value={category}>
-                    {t(`habits.category${category.charAt(0).toUpperCase()}${category.slice(1)}` as 'habits.categoryOther')}
+                    {t(
+                      `habits.category${category.charAt(0).toUpperCase()}${category.slice(1)}` as 'habits.categoryOther',
+                    )}
                   </option>
                 ))}
               </Select>
@@ -391,10 +427,25 @@ export default function HabitsPage() {
 
           <div className="grid grid-cols-2 gap-3">
             <Field label={t('common.unit')} htmlFor="habit-unit" error={erreurs.unit} hint={t('common.optional')}>
-              <Input id="habit-unit" value={form.unit} onChange={(event) => set('unit', event.target.value)} placeholder={t('habits.unitPlaceholder')} />
+              <Input
+                id="habit-unit"
+                value={form.unit}
+                onChange={(event) => set('unit', event.target.value)}
+                placeholder={t('habits.unitPlaceholder')}
+              />
             </Field>
-            <Field label={t('habits.reminder')} htmlFor="habit-reminder" error={erreurs.reminderAt} hint={t('common.optional')}>
-              <Input id="habit-reminder" type="time" value={form.reminderAt} onChange={(event) => set('reminderAt', event.target.value)} />
+            <Field
+              label={t('habits.reminder')}
+              htmlFor="habit-reminder"
+              error={erreurs.reminderAt}
+              hint={t('common.optional')}
+            >
+              <Input
+                id="habit-reminder"
+                type="time"
+                value={form.reminderAt}
+                onChange={(event) => set('reminderAt', event.target.value)}
+              />
             </Field>
           </div>
 

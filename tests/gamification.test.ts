@@ -7,7 +7,7 @@ describe('progression de niveau', () => {
     expect(levelFromXp(0)).toBe(1);
   });
 
-  it('exige de plus en plus d\'XP a chaque palier', () => {
+  it("exige de plus en plus d'XP a chaque palier", () => {
     const gaps = [1, 2, 3, 4, 5].map((level) => xpForLevel(level + 1) - xpForLevel(level));
     for (let index = 1; index < gaps.length; index += 1) {
       expect(gaps[index]).toBeGreaterThan(gaps[index - 1]);
@@ -71,7 +71,7 @@ describe('score de discipline', () => {
     ).toBe(100);
   });
 
-  it('reste dans l\'intervalle 0-100 meme au-dela des cibles', () => {
+  it("reste dans l'intervalle 0-100 meme au-dela des cibles", () => {
     const score = disciplineScore({
       habitsDone: 20,
       habitsTotal: 5,
@@ -92,7 +92,7 @@ describe('score de discipline', () => {
     expect(score).toBeGreaterThan(0);
   });
 
-  it('donne plus de poids aux habitudes qu\'au sport', () => {
+  it("donne plus de poids aux habitudes qu'au sport", () => {
     const withHabits = disciplineScore({ ...empty, habitsDone: 5, habitsTotal: 5 });
     const withWorkout = disciplineScore({ ...empty, workoutMinutes: 60 });
     expect(withHabits).toBeGreaterThan(withWorkout);

@@ -65,22 +65,26 @@ export default function JournalPage() {
     setSaving(true);
     // Le detail par champ renvoye par le serveur s'affiche sous le champ
     // fautif ; la saisie reste en place pour etre corrigee.
-    const saved = await mutate(() => api.put('/api/journal', {
-        date,
-        mood: form.mood,
-        energy: form.energy,
-        title: form.title || null,
-        content: form.content,
-        gratitude: form.gratitude || null,
-        tags: [],
-        media: [],
-      }), { notifySuccess: false });
+    const saved = await mutate(
+      () =>
+        api.put('/api/journal', {
+          date,
+          mood: form.mood,
+          energy: form.energy,
+          title: form.title || null,
+          content: form.content,
+          gratitude: form.gratitude || null,
+          tags: [],
+          media: [],
+        }),
+      { notifySuccess: false },
+    );
     setSaving(false);
     if (!saved) return;
 
     toast.success(t('common.success'));
-      setDirty(false);
-      void refresh();
+    setDirty(false);
+    void refresh();
   }
 
   const moodLabels = [
@@ -177,7 +181,12 @@ export default function JournalPage() {
           </Card>
 
           <Card>
-            <CardHeader title={t('journal.gratitude')} subtitle={t('journal.gratitudeHint')} icon="sparkles" accent="#ff9fbf" />
+            <CardHeader
+              title={t('journal.gratitude')}
+              subtitle={t('journal.gratitudeHint')}
+              icon="sparkles"
+              accent="#ff9fbf"
+            />
             <Textarea
               rows={3}
               value={form.gratitude}

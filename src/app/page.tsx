@@ -128,7 +128,11 @@ export default async function LandingPage() {
                     <div key={tile.label} className="rounded-xl bg-[var(--surface-2)] p-3">
                       <p className="text-[11px] text-[var(--text-faint)]">{tile.label}</p>
                       {/* Valeur neutre : une jauge sans chiffre. */}
-                      <span aria-hidden="true" className="mt-2.5 block h-1.5 rounded-full" style={{ background: tile.color }} />
+                      <span
+                        aria-hidden="true"
+                        className="mt-2.5 block h-1.5 rounded-full"
+                        style={{ background: tile.color }}
+                      />
                     </div>
                   ))}
                 </div>
@@ -189,11 +193,7 @@ export default async function LandingPage() {
 
           <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {features.map((feature, index) => (
-              <article
-                key={feature.title}
-                data-reveal={index % 3}
-                className="lm-card lm-card-hover group p-6"
-              >
+              <article key={feature.title} data-reveal={index % 3} className="lm-card lm-card-hover group p-6">
                 <span
                   className="grid size-11 place-items-center rounded-2xl transition-transform duration-300 group-hover:scale-110"
                   style={{ background: `${feature.color}1f`, color: feature.color }}

@@ -17,18 +17,32 @@ export async function ensureBadges(): Promise<void> {
   if (existing >= BADGE_DEFINITIONS.length) return;
 
   for (const badge of BADGE_DEFINITIONS) {
-    await prisma.badge
-      .upsert({ where: { code: badge.code }, create: { ...badge }, update: {} })
-      .catch(() => undefined);
+    await prisma.badge.upsert({ where: { code: badge.code }, create: { ...badge }, update: {} }).catch(() => undefined);
   }
 }
 
 const STARTER_HABITS = [
-  { name: 'Boire 2 L d\'eau', icon: 'droplet', color: '#e6e6e6', category: 'health', targetPerDay: 8, unit: 'verres', xpReward: 10 },
+  {
+    name: "Boire 2 L d'eau",
+    icon: 'droplet',
+    color: '#e6e6e6',
+    category: 'health',
+    targetPerDay: 8,
+    unit: 'verres',
+    xpReward: 10,
+  },
   { name: 'Lire 20 minutes', icon: 'book', color: '#d9c7f0', category: 'mind', targetPerDay: 1, xpReward: 15 },
   { name: 'Bouger 30 minutes', icon: 'dumbbell', color: '#ff9fbf', category: 'sport', targetPerDay: 1, xpReward: 20 },
   { name: 'Dormir avant 23 h', icon: 'moon', color: '#e9b8d5', category: 'health', targetPerDay: 1, xpReward: 15 },
-  { name: 'Pas de réseaux sociaux', icon: 'shield', color: '#ff9fbf', category: 'mind', targetPerDay: 1, xpReward: 20, isNegative: true },
+  {
+    name: 'Pas de réseaux sociaux',
+    icon: 'shield',
+    color: '#ff9fbf',
+    category: 'mind',
+    targetPerDay: 1,
+    xpReward: 20,
+    isNegative: true,
+  },
 ];
 
 export async function seedUserWorkspace(userId: string, city: string, mainGoal?: string | null): Promise<void> {
@@ -69,7 +83,7 @@ export async function seedUserWorkspace(userId: string, city: string, mainGoal?:
       data: {
         userId,
         title: mainGoal.trim().slice(0, 160),
-        description: 'Objectif principal défini lors de l\'inscription.',
+        description: "Objectif principal défini lors de l'inscription.",
         horizon: 'long',
         priority: 'high',
         category: 'personal',

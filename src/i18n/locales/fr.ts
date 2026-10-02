@@ -17,7 +17,7 @@
 export const fr = {
   // --- Marque & generalites ---
   'app.name': 'LifeofM',
-  'app.tagline': 'Le système d\'exploitation de votre vie',
+  'app.tagline': "Le système d'exploitation de votre vie",
   'app.description':
     'Habitudes, objectifs, nutrition, sport, prières et finances — réunis dans un seul espace, guidés par une IA qui ne connaît que vous.',
 
@@ -27,7 +27,7 @@ export const fr = {
   'common.edit': 'Modifier',
   'common.add': 'Ajouter',
   'common.search': 'Rechercher',
-  'common.today': 'Aujourd\'hui',
+  'common.today': "Aujourd'hui",
   'common.all': 'Tout',
   'common.seeAll': 'Voir tout',
   'common.close': 'Fermer',
@@ -89,7 +89,7 @@ export const fr = {
   'auth.loginTitle': 'Content de vous revoir',
   'auth.loginSubtitle': 'Connectez-vous pour retrouver votre espace.',
   'auth.registerTitle': 'Créez votre espace',
-  'auth.registerSubtitle': 'Quelques informations et votre vie s\'organise.',
+  'auth.registerSubtitle': "Quelques informations et votre vie s'organise.",
   'auth.email': 'Adresse email',
   'auth.password': 'Mot de passe',
   'auth.showPassword': 'Afficher le mot de passe',
@@ -108,13 +108,13 @@ export const fr = {
   'auth.gender': 'Sexe',
   'auth.mainGoal': 'Objectif principal',
   'auth.mainGoalPlaceholder': 'Ex : perdre 10 kg et devenir plus discipliné',
-  'auth.acceptTerms': 'J\'accepte les conditions d\'utilisation et la politique de confidentialité.',
+  'auth.acceptTerms': "J'accepte les conditions d'utilisation et la politique de confidentialité.",
   'auth.forgotPassword': 'Mot de passe oublié ?',
   'auth.resetPassword': 'Réinitialiser le mot de passe',
   'auth.resetTitle': 'Choisissez un nouveau mot de passe',
   'auth.forgotTitle': 'Réinitialiser votre accès',
   'auth.forgotSubtitle': 'Indiquez votre email : nous vous envoyons un lien sécurisé.',
-  'auth.forgotSent': 'Si un compte existe pour cette adresse, un email vient d\'être envoyé.',
+  'auth.forgotSent': "Si un compte existe pour cette adresse, un email vient d'être envoyé.",
   'auth.linkInvalid': 'Ce lien est invalide ou a expiré.',
   'auth.noAccount': 'Pas encore de compte ?',
   'auth.hasAccount': 'Déjà inscrit ?',
@@ -173,7 +173,7 @@ export const fr = {
   'habits.timesPerDay': 'Fois par jour',
   'habits.reminder': 'Rappel',
   'habits.negative': 'Habitude à éviter',
-  'habits.negativeHint': 'Cochez si l\'objectif est de ne PAS la faire.',
+  'habits.negativeHint': "Cochez si l'objectif est de ne PAS la faire.",
   'habits.namePlaceholder': 'Ex. : lire 20 minutes',
   'habits.unitPlaceholder': 'verres, pages…',
   'habits.toAvoid': 'à éviter',
@@ -194,12 +194,12 @@ export const fr = {
   'icons.check': 'Coche',
   'habits.archived': 'Archivées',
   'habits.archive': 'Archiver',
-  'habits.streakCount_one': '{count} jour d\'affilée',
-  'habits.streakCount_other': '{count} jours d\'affilée',
+  'habits.streakCount_one': "{count} jour d'affilée",
+  'habits.streakCount_other': "{count} jours d'affilée",
   'habits.completion': 'Taux de réussite',
   'habits.markDone': 'Marquer comme fait',
   'habits.markUndone': 'Annuler',
-  'habits.empty': 'Aucune habitude pour l\'instant. Créez la première.',
+  'habits.empty': "Aucune habitude pour l'instant. Créez la première.",
   'habits.categoryHealth': 'Santé',
   'habits.categorySpirituality': 'Spiritualité',
   'habits.categoryMind': 'Esprit',
@@ -281,7 +281,7 @@ export const fr = {
 
   // --- Poids ---
   'weight.title': 'Poids',
-  'weight.subtitle': 'Mesurer, c\'est déjà progresser.',
+  'weight.subtitle': "Mesurer, c'est déjà progresser.",
   'weight.current': 'Poids actuel',
   'weight.target': 'Poids cible',
   'weight.bmi': 'IMC',
@@ -298,7 +298,7 @@ export const fr = {
   'weight.bmiNormal': 'Corpulence normale',
   'weight.bmiOverweight': 'Surpoids',
   'weight.bmiObese': 'Obésité',
-  'weight.heightHint': 'Renseignez votre taille dans les réglages pour calculer l\'IMC.',
+  'weight.heightHint': "Renseignez votre taille dans les réglages pour calculer l'IMC.",
   'weight.empty': 'Aucune mesure enregistrée.',
   'weight.perWeek': 'par semaine',
   'weight.needSecond': 'Ajoutez une deuxième mesure pour voir votre évolution.',
@@ -307,7 +307,7 @@ export const fr = {
 
   // --- Sport ---
   'sport.title': 'Sport',
-  'sport.subtitle': 'Le corps suit ce que l\'esprit décide.',
+  'sport.subtitle': "Le corps suit ce que l'esprit décide.",
   'sport.newSession': 'Nouvelle séance',
   'sport.exercises': 'Exercices',
   'sport.last30Days': '30 derniers jours',
@@ -335,14 +335,14 @@ export const fr = {
 
   // --- Journal ---
   'journal.title': 'Journal',
-  'journal.subtitle': 'Écrire sa journée, c\'est la comprendre.',
+  'journal.subtitle': "Écrire sa journée, c'est la comprendre.",
   'journal.mood': 'Humeur',
   'journal.energy': 'Énergie',
   'journal.thoughts': 'Pensées',
   'journal.gratitude': 'Gratitude',
   'journal.gratitudeHint': 'Trois choses pour lesquelles vous êtes reconnaissant.',
   'journal.aiSummary': 'Résumé par Life AI',
-  'journal.writePlaceholder': 'Comment s\'est passée votre journée ?',
+  'journal.writePlaceholder': "Comment s'est passée votre journée ?",
   'journal.titlePlaceholder': 'Une phrase qui résume la journée',
   'journal.moodVeryBad': 'Très difficile',
   'journal.moodBad': 'Difficile',
@@ -353,7 +353,8 @@ export const fr = {
   // --- Prieres ---
   'prayers.title': 'Prières',
   'prayers.subtitle': 'Des horaires calculés pour votre position exacte.',
-  'prayers.cityHint': 'Les horaires suivent votre ville. Changez-la dans les réglages pour les mettre à jour automatiquement.',
+  'prayers.cityHint':
+    'Les horaires suivent votre ville. Changez-la dans les réglages pour les mettre à jour automatiquement.',
   'prayers.fajr': 'Fajr',
   'prayers.sunrise': 'Chourouk',
   'prayers.dhuhr': 'Dhuhr',
@@ -375,7 +376,7 @@ export const fr = {
 
   // --- Calendrier / finances / notes ---
   'calendar.title': 'Calendrier',
-  'calendar.subtitle': 'Votre temps, vu d\'ensemble.',
+  'calendar.subtitle': "Votre temps, vu d'ensemble.",
   'calendar.newEvent': 'Nouvel événement',
   'calendar.location': 'Lieu',
   'calendar.start': 'Début',
@@ -387,7 +388,7 @@ export const fr = {
   'calendar.nextMonth': 'Mois suivant',
 
   'finance.title': 'Finances',
-  'finance.subtitle': 'Savoir où va votre argent, c\'est reprendre la main.',
+  'finance.subtitle': "Savoir où va votre argent, c'est reprendre la main.",
   'finance.income': 'Revenus',
   'finance.expense': 'Dépenses',
   'finance.balance': 'Solde',
@@ -412,7 +413,7 @@ export const fr = {
   'charts.notEnoughData': 'Pas encore assez de données',
   'charts.noDataPeriod': 'Aucune donnée sur cette période',
   'charts.donutLabel': 'Répartition en anneau',
-  'charts.radarLabel': 'Diagramme radar d\'équilibre de vie',
+  'charts.radarLabel': "Diagramme radar d'équilibre de vie",
   'charts.heatmapLabel_one': 'Régularité sur {count} jour',
   'charts.heatmapLabel_other': 'Régularité sur {count} jours',
   'stats.byCategory': 'Répartition par catégorie',
@@ -436,7 +437,7 @@ export const fr = {
   'compare.sinceStart': 'Depuis le début',
   'compare.metric': 'Indicateur',
   'compare.currentVsPrevious': 'Période courante face à la précédente',
-  'compare.radarHint': 'Plein : aujourd\'hui · pointillés : avant',
+  'compare.radarHint': "Plein : aujourd'hui · pointillés : avant",
   'compare.radarCurrentOnly': 'Période courante',
   'compare.tableCaption': 'Comparaison des indicateurs entre la période courante et la précédente',
   'compare.noReference':
@@ -449,7 +450,7 @@ export const fr = {
   'ai.placeholder': 'Demandez ce que vous voulez : « Je veux perdre 10 kg »...',
   'ai.thinking': 'Life AI réfléchit...',
   'ai.newChat': 'Nouvelle conversation',
-  'ai.disabled': 'Life AI n\'est pas encore disponible.',
+  'ai.disabled': "Life AI n'est pas encore disponible.",
   'ai.disabledHint': 'Cette fonctionnalité arrive bientôt sur votre espace.',
   'ai.actionsPerformed': 'Actions effectuées',
   'ai.suggestion1': 'Je veux perdre 10 kg',
@@ -471,11 +472,11 @@ export const fr = {
   'settings.themeSystem': 'Système',
   'settings.timeFormat': 'Format horaire',
   'settings.units': 'Unités',
-  'settings.glassSize': 'Contenance d\'un verre (ml)',
+  'settings.glassSize': "Contenance d'un verre (ml)",
   'settings.unitsMetric': 'Métrique (kg, cm)',
   'settings.unitsImperial': 'Impérial (lb, in)',
   'settings.height': 'Taille',
-  'settings.heightHint': 'Nécessaire pour l\'IMC',
+  'settings.heightHint': "Nécessaire pour l'IMC",
   'settings.cityHint': 'Changer de ville met automatiquement à jour la météo et les horaires de prière.',
   'settings.passwordHint': '8 caractères minimum, avec une majuscule et un chiffre',
   'settings.unknownDevice': 'Appareil inconnu',
@@ -485,7 +486,7 @@ export const fr = {
   'settings.changePassword': 'Changer de mot de passe',
   'settings.sessions': 'Sessions actives',
   'settings.exportData': 'Exporter mes données',
-  'settings.exportHint': 'Télécharge l\'intégralité de vos données au format JSON (RGPD).',
+  'settings.exportHint': "Télécharge l'intégralité de vos données au format JSON (RGPD).",
   'settings.deleteAccount': 'Supprimer mon compte',
   'settings.deleteHint': 'Suppression définitive de votre compte et de toutes vos données.',
   'settings.saved': 'Modifications enregistrées',
@@ -518,7 +519,7 @@ export const fr = {
   'landing.heroSubtitle':
     'Habitudes, objectifs, santé, spiritualité et finances dans une seule application, avec une IA qui construit votre plan à votre place.',
   'landing.cta': 'Commencer gratuitement',
-  'landing.ctaSecondary': 'J\'ai déjà un compte',
+  'landing.ctaSecondary': "J'ai déjà un compte",
   'landing.featuresTitle': 'Tout ce qui compte, au même endroit',
   'landing.f1Title': 'Habitudes et discipline',
   'landing.f1Text': 'Créez vos rituels, validez-les chaque jour, regardez votre série grandir.',
@@ -529,7 +530,7 @@ export const fr = {
   'landing.f4Title': 'Prières et spiritualité',
   'landing.f4Text': 'Horaires calculés pour votre ville exacte, même sans connexion.',
   'landing.f5Title': 'Analyse et comparaison',
-  'landing.f5Text': 'Comparez qui vous étiez il y a un an à qui vous êtes aujourd\'hui.',
+  'landing.f5Text': "Comparez qui vous étiez il y a un an à qui vous êtes aujourd'hui.",
   'landing.f6Title': 'Life AI',
   'landing.f6Text': 'Un agent qui lit vos données, construit vos plans et ajuste votre journée.',
   'landing.privacyTitle': 'Vos données restent les vôtres',
@@ -537,8 +538,8 @@ export const fr = {
     'Chaque compte est totalement isolé. Mots de passe hachés, sessions révocables, export et suppression à la demande.',
   'landing.footerRights': 'Tous droits réservés.',
   'notFound.title': 'Page introuvable',
-  'notFound.text': 'Cette page n\'existe pas ou a été déplacée.',
-  'notFound.home': 'Retour à l\'accueil',
+  'notFound.text': "Cette page n'existe pas ou a été déplacée.",
+  'notFound.home': "Retour à l'accueil",
   'landing.previewLabel': 'Aperçu',
   'landing.previewTitle': 'Votre journée',
   'landing.previewHabitPrayer': 'Prière du Fajr',
@@ -563,14 +564,11 @@ export type DictionaryKey = keyof typeof fr;
 type FormePlurielle = 'zero' | 'one' | 'two' | 'few' | 'many' | 'other';
 
 /** Racines des cles a pluriel, deduites de celles qui portent `_one`. */
-export type RacinePluriel = Extract<DictionaryKey, `${string}_one`> extends `${infer Racine}_one`
-  ? Racine
-  : never;
+export type RacinePluriel = Extract<DictionaryKey, `${string}_one`> extends `${infer Racine}_one` ? Racine : never;
 
 /**
  * Un dictionnaire fournit TOUTES les cles du francais, et peut y ajouter les
  * formes plurielles supplementaires de sa propre grammaire — mais uniquement
  * celles-la : une cle inventee reste une erreur de compilation.
  */
-export type Dictionary = Record<DictionaryKey, string> &
-  Partial<Record<`${RacinePluriel}_${FormePlurielle}`, string>>;
+export type Dictionary = Record<DictionaryKey, string> & Partial<Record<`${RacinePluriel}_${FormePlurielle}`, string>>;

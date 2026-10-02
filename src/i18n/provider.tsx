@@ -22,13 +22,7 @@ interface I18nValue {
 
 const I18nContext = createContext<I18nValue | null>(null);
 
-export function I18nProvider({
-  initialLocale,
-  children,
-}: {
-  initialLocale: Locale;
-  children: ReactNode;
-}) {
+export function I18nProvider({ initialLocale, children }: { initialLocale: Locale; children: ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>(initialLocale);
 
   const setLocale = useCallback((next: Locale) => {
@@ -60,7 +54,7 @@ export function I18nProvider({
 export function useI18n(): I18nValue {
   const context = useContext(I18nContext);
   if (!context) {
-    throw new Error('useI18n doit etre utilise a l\'interieur de <I18nProvider>.');
+    throw new Error("useI18n doit etre utilise a l'interieur de <I18nProvider>.");
   }
   return context;
 }

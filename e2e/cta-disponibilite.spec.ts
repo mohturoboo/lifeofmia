@@ -80,11 +80,11 @@ for (const { chemin, libelle } of CIBLES) {
      * absolue garde l'objectif de l'enonce en vue, sur une route tiede.
      */
     expect(mesure.tti - mesure.load, 'le bouton doit suivre le chargement de pres').toBeLessThan(400);
-    expect(mesure.tti, 'le bouton doit etre actionnable en moins d\'une seconde').toBeLessThan(1_500);
+    expect(mesure.tti, "le bouton doit etre actionnable en moins d'une seconde").toBeLessThan(1_500);
   });
 }
 
-test('l\'attente est signalee, pas seulement grisee', async ({ page }) => {
+test("l'attente est signalee, pas seulement grisee", async ({ page }) => {
   const mesure = await disponibilite(page, '/habits', 'Nouvelle habitude');
 
   // `aria-busy` accompagne le spinner : l'attente est annoncee aux lecteurs

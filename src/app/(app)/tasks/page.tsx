@@ -5,7 +5,19 @@ import { useState, type KeyboardEvent } from 'react';
 import { api, useResource } from '@/lib/client/api';
 import { useHydrated } from '@/lib/client/hydrated';
 import { useMutate } from '@/lib/client/mutate';
-import { Badge, Button, Card, cx, EmptyState, Field, IconButton, Input, Select, Skeleton, Textarea } from '@/components/ui/primitives';
+import {
+  Badge,
+  Button,
+  Card,
+  cx,
+  EmptyState,
+  Field,
+  IconButton,
+  Input,
+  Select,
+  Skeleton,
+  Textarea,
+} from '@/components/ui/primitives';
 import { Icon } from '@/components/ui/icons';
 import { Modal } from '@/components/ui/modal';
 import { useToast } from '@/components/ui/toast';
@@ -156,10 +168,9 @@ export default function TasksPage() {
   }
 
   async function toggle(task: Task) {
-    await mutate(
-      () => api.patch(`/api/tasks/${task.id}`, { status: task.status === 'done' ? 'todo' : 'done' }),
-      { notifySuccess: false },
-    );
+    await mutate(() => api.patch(`/api/tasks/${task.id}`, { status: task.status === 'done' ? 'todo' : 'done' }), {
+      notifySuccess: false,
+    });
     void refresh();
     void refreshSansEcheance();
   }
@@ -176,14 +187,13 @@ export default function TasksPage() {
     const overdue = task.dueDate && !done && new Date(task.dueDate) < new Date();
 
     return (
-      <li
-        key={task.id}
-        style={{ marginInlineStart: depth * 24 }}
-      >
+      <li key={task.id} style={{ marginInlineStart: depth * 24 }}>
         <div
           className={cx(
             'group flex items-start gap-3 rounded-xl border p-3 transition-colors',
-            done ? 'border-transparent bg-[var(--surface-2)]' : 'border-[var(--border)] hover:border-[var(--border-strong)]',
+            done
+              ? 'border-transparent bg-[var(--surface-2)]'
+              : 'border-[var(--border)] hover:border-[var(--border-strong)]',
           )}
         >
           <button
@@ -193,7 +203,9 @@ export default function TasksPage() {
             aria-label={done ? t('habits.markUndone') : t('habits.markDone')}
             className={cx(
               'mt-0.5 grid size-5 shrink-0 place-items-center rounded-md border-2 lm-transition-ui',
-              done ? 'border-transparent bg-[#f6d9e4] text-[var(--on-pink)]' : 'border-[var(--border-strong)] hover:border-[#f6d9e4]',
+              done
+                ? 'border-transparent bg-[#f6d9e4] text-[var(--on-pink)]'
+                : 'border-[var(--border-strong)] hover:border-[#f6d9e4]',
             )}
           >
             {done && <Icon name="check" size={12} />}
@@ -209,10 +221,17 @@ export default function TasksPage() {
 
             <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
               <Badge color={PRIORITY_COLORS[task.priority]}>
-                {t(`tasks.priority${task.priority.charAt(0).toUpperCase()}${task.priority.slice(1)}` as 'tasks.priorityLow')}
+                {t(
+                  `tasks.priority${task.priority.charAt(0).toUpperCase()}${task.priority.slice(1)}` as 'tasks.priorityLow',
+                )}
               </Badge>
               {task.dueDate && (
-                <span className={cx('flex items-center gap-1 text-[11px]', overdue ? 'text-red-500' : 'text-[var(--text-faint)]')}>
+                <span
+                  className={cx(
+                    'flex items-center gap-1 text-[11px]',
+                    overdue ? 'text-red-500' : 'text-[var(--text-faint)]',
+                  )}
+                >
                   <Icon name="calendar" size={11} />
                   {new Date(task.dueDate).toLocaleDateString(locale, { day: 'numeric', month: 'short' })}
                 </span>
@@ -228,9 +247,7 @@ export default function TasksPage() {
           </div>
 
           <div className="lm-commande-discrete flex shrink-0 gap-0.5 lm-transition-ui">
-            {depth === 0 && (
-              <IconButton icon="plus" label={t('tasks.subtasks')} onClick={() => openCreate(task.id)} />
-            )}
+            {depth === 0 && <IconButton icon="plus" label={t('tasks.subtasks')} onClick={() => openCreate(task.id)} />}
             <IconButton icon="edit" label={t('common.edit')} onClick={() => openEdit(task)} />
             <IconButton icon="trash" label={t('common.delete')} tone="danger" onClick={() => remove(task)} />
           </div>
@@ -340,9 +357,7 @@ export default function TasksPage() {
         <section className="mt-6">
           <h2 className="lm-eyebrow mb-2 px-1">{t('tasks.noDate')}</h2>
           <ul className="space-y-2">
-            {(sansEcheance ?? [])
-              .filter((task) => showDone || task.status !== 'done')
-              .map((task) => renderTask(task))}
+            {(sansEcheance ?? []).filter((task) => showDone || task.status !== 'done').map((task) => renderTask(task))}
           </ul>
         </section>
       )}
@@ -365,16 +380,30 @@ export default function TasksPage() {
       >
         <div className="space-y-4">
           <Field label={t('common.title')} htmlFor="task-title" error={erreurs.title} required>
-            <Input id="task-title" value={form.title} onChange={(event) => set('title', event.target.value)} autoFocus />
+            <Input
+              id="task-title"
+              value={form.title}
+              onChange={(event) => set('title', event.target.value)}
+              autoFocus
+            />
           </Field>
 
           <Field label={t('common.notes')} htmlFor="task-description" error={erreurs.description}>
-            <Textarea id="task-description" rows={3} value={form.description} onChange={(event) => set('description', event.target.value)} />
+            <Textarea
+              id="task-description"
+              rows={3}
+              value={form.description}
+              onChange={(event) => set('description', event.target.value)}
+            />
           </Field>
 
           <div className="grid grid-cols-2 gap-3">
             <Field label={t('common.priority')} htmlFor="task-priority">
-              <Select id="task-priority" value={form.priority} onChange={(event) => set('priority', event.target.value as Task['priority'])}>
+              <Select
+                id="task-priority"
+                value={form.priority}
+                onChange={(event) => set('priority', event.target.value as Task['priority'])}
+              >
                 <option value="low">{t('tasks.priorityLow')}</option>
                 <option value="medium">{t('tasks.priorityMedium')}</option>
                 <option value="high">{t('tasks.priorityHigh')}</option>
@@ -382,11 +411,21 @@ export default function TasksPage() {
               </Select>
             </Field>
             <Field label={t('tasks.dueDate')} htmlFor="task-due" error={erreurs.dueDate}>
-              <Input id="task-due" type="date" value={form.dueDate} onChange={(event) => set('dueDate', event.target.value)} />
+              <Input
+                id="task-due"
+                type="date"
+                value={form.dueDate}
+                onChange={(event) => set('dueDate', event.target.value)}
+              />
             </Field>
           </div>
 
-          <Field label={t('tasks.estimate')} htmlFor="task-estimate" error={erreurs.estimateMin} hint={t('common.optional')}>
+          <Field
+            label={t('tasks.estimate')}
+            htmlFor="task-estimate"
+            error={erreurs.estimateMin}
+            hint={t('common.optional')}
+          >
             <Input
               id="task-estimate"
               type="number"

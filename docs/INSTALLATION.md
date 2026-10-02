@@ -2,12 +2,12 @@
 
 ## Prérequis
 
-| Outil | Version | Note |
-| --- | --- | --- |
-| Node.js | ≥ 20 (testé sur 24) | obligatoire |
-| npm | ≥ 10 | fourni avec Node |
-| PostgreSQL | ≥ 14 | **production uniquement** |
-| Docker | récent | facultatif |
+| Outil      | Version             | Note                      |
+| ---------- | ------------------- | ------------------------- |
+| Node.js    | ≥ 20 (testé sur 24) | obligatoire               |
+| npm        | ≥ 10                | fourni avec Node          |
+| PostgreSQL | ≥ 14                | **production uniquement** |
+| Docker     | récent              | facultatif                |
 
 En développement, aucune base de données n'est à installer : SQLite est utilisé et le
 fichier est créé automatiquement.
@@ -50,10 +50,10 @@ Pour partir d'une base vide, sautez `npm run db:seed` et créez votre compte via
 
 ### Obligatoires
 
-| Variable | Rôle |
-| --- | --- |
-| `DATABASE_URL` | Chaîne de connexion Prisma |
-| `AUTH_SECRET` | Clé de signature des jetons de session. **Obligatoire en production**, l'application refuse de démarrer sans. |
+| Variable       | Rôle                                                                                                          |
+| -------------- | ------------------------------------------------------------------------------------------------------------- |
+| `DATABASE_URL` | Chaîne de connexion Prisma                                                                                    |
+| `AUTH_SECRET`  | Clé de signature des jetons de session. **Obligatoire en production**, l'application refuse de démarrer sans. |
 
 Générer un secret solide :
 
@@ -63,13 +63,13 @@ node -e "console.log(require('crypto').randomBytes(48).toString('base64url'))"
 
 ### Facultatives — l'application fonctionne sans
 
-| Variable | Sans elle |
-| --- | --- |
-| `ANTHROPIC_API_KEY` | L'agent IA affiche un écran expliquant comment l'activer. Tout le reste fonctionne. |
-| `AI_MODEL` | Vaut `claude-sonnet-5`. |
-| `OPENWEATHER_API_KEY` | La météo bascule sur Open-Meteo, gratuit et sans clé. |
-| `SMTP_*` | Les emails de vérification et de réinitialisation sont **écrits dans la console du serveur** : les liens restent utilisables. |
-| `NEXT_PUBLIC_APP_URL` | Vaut `http://localhost:3000`. À définir en production pour que les liens des emails soient corrects. |
+| Variable              | Sans elle                                                                                                                     |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `ANTHROPIC_API_KEY`   | L'agent IA affiche un écran expliquant comment l'activer. Tout le reste fonctionne.                                           |
+| `AI_MODEL`            | Vaut `claude-sonnet-5`.                                                                                                       |
+| `OPENWEATHER_API_KEY` | La météo bascule sur Open-Meteo, gratuit et sans clé.                                                                         |
+| `SMTP_*`              | Les emails de vérification et de réinitialisation sont **écrits dans la console du serveur** : les liens restent utilisables. |
+| `NEXT_PUBLIC_APP_URL` | Vaut `http://localhost:3000`. À définir en production pour que les liens des emails soient corrects.                          |
 
 Les horaires de prière n'exigent aucune clé : l'API AlAdhan est publique, et un calcul
 astronomique local prend le relais si le réseau est indisponible.

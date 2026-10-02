@@ -85,10 +85,7 @@ for (const chemin of PAGES) {
     await page.waitForLoadState('networkidle');
 
     const tropPetites = await ciblesTropPetites(page);
-    expect(
-      tropPetites,
-      `cibles trop petites : ${JSON.stringify(tropPetites, null, 2)}`,
-    ).toEqual([]);
+    expect(tropPetites, `cibles trop petites : ${JSON.stringify(tropPetites, null, 2)}`).toEqual([]);
   });
 }
 
@@ -106,7 +103,10 @@ test('les commandes de carte sont atteignables sans survol', async ({ page }) =>
   expect(creation.ok()).toBe(true);
   await page.reload();
 
-  const carte = page.locator('div', { hasText: nom }).filter({ has: page.getByRole('button', { name: /archiver/i }) }).last();
+  const carte = page
+    .locator('div', { hasText: nom })
+    .filter({ has: page.getByRole('button', { name: /archiver/i }) })
+    .last();
   await expect(carte).toBeVisible();
 
   for (const libelle of [/modifier/i, /archiver/i, /supprimer/i]) {

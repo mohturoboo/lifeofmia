@@ -32,4 +32,6 @@ if (erreurs.length > 0) {
   console.error(`\n${erreurs.length} erreur(s) i18n.`);
   process.exit(1);
 }
-console.log(`i18n : ${Object.keys(DICTIONARIES).length} langues et ${SOURCES_FRANCAISES.length} sources controlees, aucune erreur.`);
+console.log(
+  `i18n : ${Object.keys(DICTIONARIES).length} langues et ${SOURCES_FRANCAISES.length} sources controlees, aucune erreur.`,
+);

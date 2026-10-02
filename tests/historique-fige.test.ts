@@ -43,14 +43,14 @@ describe('fenetre d existence d une habitude', () => {
   it('laisse intact le denominateur des journees passees quand une habitude est ajoutee', () => {
     const semaine = dateKeyRange('2026-08-05', '2026-08-11');
     const anciennes = [habit(), habit()];
-    const avant = semaine.map(
-      (date) => anciennes.filter((entry) => habitCountsOn(entry, date, TZ)).length,
-    );
+    const avant = semaine.map((date) => anciennes.filter((entry) => habitCountsOn(entry, date, TZ)).length);
 
     // L'utilisateur cree une sixieme habitude le 11.
     const apres = semaine.map(
-      (date) => [...anciennes, habit({ createdAt: new Date('2026-08-11T10:00:00Z') })]
-        .filter((entry) => habitCountsOn(entry, date, TZ)).length,
+      (date) =>
+        [...anciennes, habit({ createdAt: new Date('2026-08-11T10:00:00Z') })].filter((entry) =>
+          habitCountsOn(entry, date, TZ),
+        ).length,
     );
 
     // Toutes les journees anterieures gardent exactement le meme total attendu.
@@ -66,8 +66,10 @@ describe('fenetre d existence d une habitude', () => {
      * passe.
      */
     const ancienneLogique = semaine.map(
-      (date) => [...anciennes, habit({ createdAt: new Date('2026-08-11T10:00:00Z') })]
-        .filter((entry) => isHabitScheduled(entry.weekDays, entry.frequency, date)).length,
+      (date) =>
+        [...anciennes, habit({ createdAt: new Date('2026-08-11T10:00:00Z') })].filter((entry) =>
+          isHabitScheduled(entry.weekDays, entry.frequency, date),
+        ).length,
     );
     expect(ancienneLogique.slice(0, -1)).not.toEqual(avant.slice(0, -1));
   });

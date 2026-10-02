@@ -109,7 +109,10 @@ describe('LineChart — axe temporel', () => {
 describe('BarChart — lisibilite', () => {
   it('etire les colonnes sur toute la hauteur du graphique', () => {
     const { container } = render(
-      <BarChart data={SEMAINE.map((label, index) => ({ label, value: [0, 12, 27, 5, 0, 18, 22][index] }))} maxValue={100} />,
+      <BarChart
+        data={SEMAINE.map((label, index) => ({ label, value: [0, 12, 27, 5, 0, 18, 22][index] }))}
+        maxValue={100}
+      />,
     );
 
     const root = container.firstElementChild as HTMLElement;
@@ -124,7 +127,10 @@ describe('BarChart — lisibilite', () => {
 
   it('donne une hauteur non nulle a une valeur nulle', () => {
     const { container } = render(
-      <BarChart data={SEMAINE.map((label, index) => ({ label, value: [0, 12, 27, 5, 0, 18, 22][index] }))} maxValue={100} />,
+      <BarChart
+        data={SEMAINE.map((label, index) => ({ label, value: [0, 12, 27, 5, 0, 18, 22][index] }))}
+        maxValue={100}
+      />,
     );
 
     const hauteurs = Array.from(container.querySelectorAll<HTMLElement>('[style*="height"]'))
