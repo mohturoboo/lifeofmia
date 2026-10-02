@@ -79,6 +79,7 @@ export const de: Dictionary = {
   'nav.main': 'Hauptnavigation',
   'nav.quick': 'Schnellnavigation',
   'nav.openMenu': 'Menü öffnen',
+  'nav.menu': 'Menü',
 
   'auth.login': 'Anmelden',
   'auth.register': 'Konto erstellen',

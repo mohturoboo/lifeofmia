@@ -79,6 +79,7 @@ export const tr: Dictionary = {
   'nav.main': 'Ana gezinme',
   'nav.quick': 'Hızlı gezinme',
   'nav.openMenu': 'Menüyü aç',
+  'nav.menu': 'Menü',
 
   'auth.login': 'Giris yap',
   'auth.register': 'Hesap olustur',

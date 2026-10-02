@@ -99,6 +99,7 @@ export const fr = {
   'nav.main': 'Navigation principale',
   'nav.quick': 'Navigation rapide',
   'nav.openMenu': 'Ouvrir le menu',
+  'nav.menu': 'Menu',
 
   // --- Authentification ---
   'auth.login': 'Connexion',

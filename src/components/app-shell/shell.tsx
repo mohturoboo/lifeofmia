@@ -43,6 +43,23 @@ export function AppShell({ user, children }: { user: ShellUser; children: ReactN
   const fermerTiroir = useCallback(() => setDrawerOpen(false), []);
   usePiegeFocus(drawerOpen, tiroirRef, fermerTiroir);
   const [menuOpen, setMenuOpen] = useState(false);
+  const menuBoutonRef = useRef<HTMLButtonElement>(null);
+
+  /*
+   * Echap referme le menu utilisateur et rend le focus a son bouton. Ce n'est
+   * pas une surface modale (pas de voile opaque, la page reste lisible) : pas
+   * de piege a focus, seulement la sortie attendue au clavier.
+   */
+  useEffect(() => {
+    if (!menuOpen) return;
+    const surTouche = (evenement: KeyboardEvent) => {
+      if (evenement.key !== 'Escape') return;
+      setMenuOpen(false);
+      menuBoutonRef.current?.focus();
+    };
+    document.addEventListener('keydown', surTouche);
+    return () => document.removeEventListener('keydown', surTouche);
+  }, [menuOpen]);
 
   // Toute navigation referme les surcouches ouvertes.
   useEffect(() => {
@@ -190,7 +207,7 @@ export function AppShell({ user, children }: { user: ShellUser; children: ReactN
               tabIndex={-1}
               role="dialog"
               aria-modal="true"
-              aria-label={t('nav.dashboard')}
+              aria-label={t('nav.menu')}
               initial={{ x: '-100%' }}
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
@@ -264,11 +281,16 @@ export function AppShell({ user, children }: { user: ShellUser; children: ReactN
                 disque rose aurait alourdi l'en-tete, alors que seul le point
                 de contact posait probleme.
               */}
+              {/*
+                Simple liste de liens, pas un `role="menu"` : ce role promet
+                une navigation aux fleches qui n'existait pas.
+              */}
               <button
+                ref={menuBoutonRef}
                 type="button"
                 onClick={() => setMenuOpen((value) => !value)}
                 aria-expanded={menuOpen}
-                aria-haspopup="menu"
+                aria-controls="menu-utilisateur"
                 aria-label={t('nav.settings')}
                 className="grid size-11 place-items-center rounded-full lm-transition-ui"
               >
@@ -281,11 +303,12 @@ export function AppShell({ user, children }: { user: ShellUser; children: ReactN
                 {menuOpen && (
                   <>
                     <div className="fixed inset-0 z-10" onClick={() => setMenuOpen(false)} aria-hidden="true" />
+                    {/* Position seule : une opacite figee a 0 rendrait le menu invisible. */}
                     <motion.div
-                      role="menu"
-                      initial={{ opacity: 0, y: -8, scale: 0.97 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: -8, scale: 0.97 }}
+                      id="menu-utilisateur"
+                      initial={{ y: -8, scale: 0.97 }}
+                      animate={{ y: 0, scale: 1 }}
+                      exit={{ y: -8, scale: 0.97 }}
                       transition={{ duration: 0.14 }}
                       className="absolute end-0 z-20 mt-2 w-60 overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-2xl"
                     >
@@ -298,7 +321,6 @@ export function AppShell({ user, children }: { user: ShellUser; children: ReactN
 
                       <Link
                         href="/settings"
-                        role="menuitem"
                         className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-[var(--text-muted)] transition-colors hover:bg-[var(--surface-2)] hover:text-[var(--text)]"
                       >
                         <Icon name="settings" size={16} />
@@ -306,7 +328,6 @@ export function AppShell({ user, children }: { user: ShellUser; children: ReactN
                       </Link>
                       <button
                         type="button"
-                        role="menuitem"
                         onClick={logout}
                         className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-[#ff9fbf] transition-colors hover:bg-[#ff9fbf]/10"
                       >

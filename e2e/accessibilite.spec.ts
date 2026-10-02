@@ -131,6 +131,28 @@ test('Echap ferme le tiroir de navigation', async ({ page }) => {
   await expect(tiroir).toBeHidden();
 });
 
+test('le tiroir de navigation porte le nom « Menu »', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/dashboard');
+  await page.getByRole('button', { name: /ouvrir le menu/i }).click();
+  // Il s'appelait « Tableau de bord », comme la page.
+  await expect(page.getByRole('dialog', { name: 'Menu' })).toBeVisible();
+});
+
+test('Echap ferme le menu utilisateur et rend le focus a son bouton', async ({ page }) => {
+  await page.goto('/dashboard');
+
+  const bouton = page.locator('button[aria-controls="menu-utilisateur"]');
+  await bouton.click();
+  await expect(bouton).toHaveAttribute('aria-expanded', 'true');
+  await expect(page.locator('#menu-utilisateur')).toBeVisible();
+
+  await page.keyboard.press('Escape');
+  await expect(page.locator('#menu-utilisateur')).toBeHidden();
+  await expect(bouton).toHaveAttribute('aria-expanded', 'false');
+  await expect(bouton).toBeFocused();
+});
+
 test('le tiroir confine le focus et le rend a son declencheur', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/dashboard');

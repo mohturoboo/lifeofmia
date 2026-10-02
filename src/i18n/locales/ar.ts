@@ -80,6 +80,7 @@ export const ar: Dictionary = {
   'nav.main': 'التنقل الرئيسي',
   'nav.quick': 'التنقل السريع',
   'nav.openMenu': 'فتح القائمة',
+  'nav.menu': 'القائمة',
 
   'auth.login': 'تسجيل الدخول',
   'auth.register': 'إنشاء حساب',
