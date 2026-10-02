@@ -154,7 +154,7 @@ test('la page Comparaison explique l\'absence de reference au lieu d\'afficher u
 
   // Les dates affichees portent une annee sur quatre chiffres : « 12 juin 26 »
   // se lisait comme un jour de juin.
-  await expect(page.getByText(/periode/i).first()).toBeVisible();
+  await expect(page.getByText(motif('periode')).first()).toBeVisible();
 
   const corps = await page.locator('main').innerText();
   expect(corps.length, 'lire avant le rendu rendrait l\'assertion vide').toBeGreaterThan(0);

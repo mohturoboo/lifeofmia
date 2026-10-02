@@ -92,7 +92,8 @@ test('le formulaire d\'habitude montre icone, couleur et categorie ensemble', as
       return b.height > 0 && b.bottom > corps.top && b.top < corps.bottom;
     };
     return {
-      icone: dansLeCadre(el.querySelector('#check, [aria-label="check"]')),
+      // Derniere icone du selecteur (« Coche ») : son nom est traduit, plus l'identifiant `check`.
+      icone: dansLeCadre(el.querySelector('#check, [aria-label="Coche"]')),
       couleur: dansLeCadre(el.querySelector('button[style*="background"]')),
       categorie: dansLeCadre(el.querySelector('select')),
     };

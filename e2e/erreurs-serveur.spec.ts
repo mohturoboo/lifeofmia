@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { motifExact } from './texte';
 
 /**
  * Les erreurs de validation du serveur doivent atteindre l'utilisateur.
@@ -25,7 +26,7 @@ test('un nom d\'habitude trop long est explique sous le champ', async ({ page })
 
   await page.getByRole('dialog').getByRole('button', { name: 'Enregistrer' }).click();
 
-  await expect(page.locator('#habit-name-error')).toHaveText('Le nom ne peut pas depasser 80 caracteres.');
+  await expect(page.locator('#habit-name-error')).toHaveText(motifExact('Le nom ne peut pas depasser 80 caracteres.'));
   await expect(champ).toHaveAttribute('aria-invalid', 'true');
   await expect(champ).toHaveAttribute('aria-describedby', 'habit-name-error');
 
@@ -51,7 +52,7 @@ test('une taille hors bornes est expliquee sous le champ', async ({ page }) => {
 
   await page.getByRole('button', { name: 'Enregistrer' }).first().click();
 
-  await expect(page.locator('#height-error')).toHaveText('La taille doit etre comprise entre 50 et 250 cm.');
+  await expect(page.locator('#height-error')).toHaveText(motifExact('La taille doit etre comprise entre 50 et 250 cm.'));
   await expect(champ).toHaveAttribute('aria-invalid', 'true');
 });
 

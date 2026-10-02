@@ -1,4 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
+import { motif } from './texte';
 
 /**
  * Coherence temporelle, de bout en bout.
@@ -35,7 +36,7 @@ test('un evenement dont la fin precede le debut est refuse, pas corrige', async 
 
   expect(reponse.status()).toBe(422);
   const corps = (await reponse.json()) as { error?: { message?: string; fields?: Record<string, string> } };
-  expect(corps.error?.fields?.endAt ?? corps.error?.message).toMatch(/posterieure au debut/i);
+  expect(corps.error?.fields?.endAt ?? corps.error?.message).toMatch(motif('posterieure au debut'));
 });
 
 test('un evenement de duree nulle est refuse', async ({ page }) => {
@@ -162,6 +163,6 @@ test('le formulaire d\'evenement borne l\'heure de fin sur l\'heure de debut', a
 
   // Une fin anterieure est signalee avant toute soumission.
   await fin.fill('09:00');
-  await expect(page.getByText(/posterieure au debut/i).first()).toBeVisible();
+  await expect(page.getByText(motif('posterieure au debut')).first()).toBeVisible();
   expect(await fin.getAttribute('aria-invalid')).toBe('true');
 });
