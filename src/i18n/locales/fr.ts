@@ -528,7 +528,7 @@ export const fr = {
   'landing.f3Title': 'Objectifs et projets',
   'landing.f3Text': 'Du court au long terme, découpés en étapes concrètes et mesurables.',
   'landing.f4Title': 'Prières et spiritualité',
-  'landing.f4Text': 'Horaires calculés pour votre ville exacte, même sans connexion.',
+  'landing.f4Text': 'Horaires calculés pour votre ville exacte.',
   'landing.f5Title': 'Analyse et comparaison',
   'landing.f5Text': "Comparez qui vous étiez il y a un an à qui vous êtes aujourd'hui.",
   'landing.f6Title': 'Life AI',

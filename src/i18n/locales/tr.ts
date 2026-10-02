@@ -459,7 +459,7 @@ export const tr: Dictionary = {
   'landing.f3Title': 'Hedefler ve projeler',
   'landing.f3Text': 'Kisadan uzun vadeye, somut ve olculebilir adimlara bolunmus.',
   'landing.f4Title': 'Namaz ve maneviyat',
-  'landing.f4Text': 'Tam sehriniz icin hesaplanan vakitler, cevrimdisiyken bile.',
+  'landing.f4Text': 'Tam sehriniz icin hesaplanan vakitler.',
   'landing.f5Title': 'Analiz ve karsilastirma',
   'landing.f5Text': 'Bir yil onceki halinizle bugunku halinizi karsilastirin.',
   'landing.f6Title': 'Life AI',

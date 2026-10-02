@@ -459,7 +459,7 @@ export const pt: Dictionary = {
   'landing.f3Title': 'Objetivos e projetos',
   'landing.f3Text': 'Do curto ao longo prazo, divididos em etapas concretas e mensuraveis.',
   'landing.f4Title': 'Oracoes e espiritualidade',
-  'landing.f4Text': 'Horarios calculados para a sua cidade exata, mesmo sem ligacao.',
+  'landing.f4Text': 'Horarios calculados para a sua cidade exata.',
   'landing.f5Title': 'Analise e comparacao',
   'landing.f5Text': 'Compare quem era ha um ano com quem e hoje.',
   'landing.f6Title': 'Life AI',

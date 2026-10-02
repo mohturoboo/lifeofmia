@@ -466,7 +466,7 @@ export const ar: Dictionary = {
   'landing.f3Title': 'الأهداف والمشاريع',
   'landing.f3Text': 'من القصير إلى الطويل المدى، مقسمة إلى خطوات ملموسة وقابلة للقياس.',
   'landing.f4Title': 'الصلاة والروحانية',
-  'landing.f4Text': 'أوقات محسوبة لمدينتك بالضبط، حتى بدون اتصال.',
+  'landing.f4Text': 'أوقات محسوبة لمدينتك بالضبط.',
   'landing.f5Title': 'التحليل والمقارنة',
   'landing.f5Text': 'قارن من كنت قبل عام بمن أنت اليوم.',
   'landing.f6Title': 'Life AI',
