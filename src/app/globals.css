@@ -170,7 +170,7 @@
   --border-strong: #cfcfcf;
   --text: #0a0a0a;
   --text-muted: #5c5c5c;
-  --text-faint: #767676;
+  --text-faint: #686868;
   /* Le rose bebe est trop clair pour du TEXTE sur blanc : le mode clair
      utilise un rose profond. Le rose pale reste reserve aux aplats. */
   --brand-text: #9b677a;
@@ -190,7 +190,7 @@
   --border-strong: #333333;
   --text: #ffffff;
   --text-muted: #b4b4b4;
-  --text-faint: #7a7a7a;
+  --text-faint: #858585;
   --brand-text: #fbc7da;
   --ring: rgb(251 199 218 / 0.45);
   --pink: linear-gradient(135deg, #fddced 0%, #fbc7da 45%, #f8b0c9 100%);
