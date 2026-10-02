@@ -126,7 +126,7 @@ export default async function LandingPage() {
                     { label: t('dash.tasksDone'), color: '#f6d9e4' },
                   ].map((tile) => (
                     <div key={tile.label} className="rounded-xl bg-[var(--surface-2)] p-3">
-                      <p className="text-[11px] text-[var(--text-faint)]">{tile.label}</p>
+                      <p className="text-[11px] text-[var(--text-muted)]">{tile.label}</p>
                       {/* Valeur neutre : une jauge sans chiffre. */}
                       <span
                         aria-hidden="true"
@@ -154,7 +154,7 @@ export default async function LandingPage() {
                         {habit.done && <Icon name="check" size={13} />}
                       </span>
                       <span
-                        className={`text-[13px] ${habit.done ? 'text-[var(--text-faint)] line-through' : 'text-[var(--text)]'}`}
+                        className={`text-[13px] ${habit.done ? 'text-[var(--text-muted)] line-through' : 'text-[var(--text)]'}`}
                       >
                         {habit.name}
                       </span>
