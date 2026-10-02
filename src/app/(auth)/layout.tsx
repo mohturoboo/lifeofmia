@@ -22,20 +22,23 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       <ToastProvider>
         <div className="grid grid-cols-1 min-h-dvh lg:grid-cols-2">
           <div className="relative flex flex-col px-5 py-8 sm:px-10">
-            <Link href="/" className="inline-flex w-fit items-center gap-2.5">
-              <span className="grid size-9 place-items-center rounded-xl lm-gradient-bg text-[var(--on-pink)]">
-                <Icon name="zap" size={19} />
-              </span>
-              <span className="text-lg font-semibold tracking-tight text-[var(--text)]">LifeofM</span>
-            </Link>
+            {/* Reperes `header` / `footer` : tout le contenu visible est dans une region. */}
+            <header>
+              <Link href="/" className="inline-flex w-fit items-center gap-2.5">
+                <span className="grid size-9 place-items-center rounded-xl lm-gradient-bg text-[var(--on-pink)]">
+                  <Icon name="zap" size={19} />
+                </span>
+                <span className="text-lg font-semibold tracking-tight text-[var(--text)]">LifeofM</span>
+              </Link>
+            </header>
 
             <main id="main" className="flex flex-1 items-center justify-center py-10">
               <div className="w-full max-w-sm">{children}</div>
             </main>
 
-            <p className="text-center text-xs text-[var(--text-faint)]">
+            <footer className="text-center text-xs text-[var(--text-faint)]">
               © {new Date().getFullYear()} LifeofM
-            </p>
+            </footer>
           </div>
 
           {/* Panneau decoratif — purement visuel, invisible pour les lecteurs d'ecran. */}
