@@ -88,9 +88,11 @@ export const api = {
  * Suffisant ici : les vues sont majoritairement journalieres et se rafraichissent
  * apres chaque mutation via `refresh()`, sans necessiter un cache global.
  */
-export function useResource<T>(path: string | null, deps: unknown[] = []) {
-  const [data, setData] = useState<T | null>(null);
-  const [loading, setLoading] = useState(Boolean(path));
+export function useResource<T>(path: string | null, deps: unknown[] = [], initialData: T | null = null) {
+  const [data, setData] = useState<T | null>(initialData);
+  const [loading, setLoading] = useState(Boolean(path) && initialData === null);
+  // Donnees deja fournies par le serveur : le premier chargement est inutile.
+  const skipFirstLoad = useRef(initialData !== null);
   const [error, setError] = useState<string | null>(null);
   // Evite qu'une reponse lente ecrase une reponse plus recente.
   const requestId = useRef(0);
@@ -117,6 +119,10 @@ export function useResource<T>(path: string | null, deps: unknown[] = []) {
   }, [path, ...deps]);
 
   useEffect(() => {
+    if (skipFirstLoad.current) {
+      skipFirstLoad.current = false;
+      return;
+    }
     void load();
   }, [load]);
 
