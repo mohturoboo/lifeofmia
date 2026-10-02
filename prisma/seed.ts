@@ -11,6 +11,7 @@
  */
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
+import { levelFromXp } from '../src/lib/levels';
 
 const prisma = new PrismaClient();
 
@@ -414,7 +415,8 @@ async function main() {
   const totalXp = dailyStats.reduce((sum, day) => sum + day.xpEarned, 0);
   await prisma.user.update({
     where: { id: user.id },
-    data: { xp: totalXp, level: Math.max(1, Math.floor(Math.sqrt(totalXp / 50))) },
+    // Meme courbe que l'application : le niveau affiche ne doit pas changer au premier gain d'XP.
+    data: { xp: totalXp, level: levelFromXp(totalXp) },
   });
 
   for (const code of ['first_step', 'week_streak', 'month_streak', 'scribe', 'level_10']) {
