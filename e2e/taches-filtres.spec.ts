@@ -1,5 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
-import { motifExact } from './texte';
+import { motif, motifExact } from './texte';
 
 /**
  * Les filtres de la liste de taches.
@@ -134,4 +134,40 @@ test('les onglets forment un vrai groupe accessible', async ({ page }) => {
   // groupe d'onglets tout en partageant son cadre.
   const terminees = page.getByRole('button', { name: motifExact('Terminees') });
   await expect(terminees).toHaveAttribute('aria-pressed', 'false');
+});
+
+test('les onglets se parcourent au clavier', async ({ page }) => {
+  await page.goto('/tasks');
+  const aujourdhui = page.getByRole('tab', { name: 'Aujourd\'hui' });
+  await expect(aujourdhui).toHaveAttribute('aria-selected', 'true');
+  await aujourdhui.focus();
+
+  // Fleche droite : onglet suivant, selectionne et focalise.
+  await page.keyboard.press('ArrowRight');
+  const semaine = page.getByRole('tab', { name: 'Semaine' });
+  await expect(semaine).toHaveAttribute('aria-selected', 'true');
+  await expect(semaine).toBeFocused();
+
+  // Fin, puis fleche droite : retour au premier.
+  await page.keyboard.press('End');
+  await expect(page.getByRole('tab', { selected: true })).toBeFocused();
+  await expect(page.getByRole('tab').last()).toHaveAttribute('aria-selected', 'true');
+  await page.keyboard.press('ArrowRight');
+  await expect(aujourdhui).toHaveAttribute('aria-selected', 'true');
+
+  // Fleche gauche depuis le premier : dernier onglet.
+  await page.keyboard.press('ArrowLeft');
+  await expect(page.getByRole('tab').last()).toBeFocused();
+  await page.keyboard.press('Home');
+  await expect(aujourdhui).toBeFocused();
+});
+
+test('le panneau vise par les onglets existe meme sur une liste vide', async ({ page }) => {
+  // Liste vide forcee : c'est l'etat ou `aria-controls` visait un element absent.
+  await page.route('**/api/tasks?*', (route) => route.fulfill({ json: { data: [] } }));
+  await page.goto('/tasks');
+
+  await expect(page.getByText(motif('Aucune tache')).first()).toBeVisible();
+  const cible = await page.getByRole('tab', { selected: true }).getAttribute('aria-controls');
+  await expect(page.locator(`#${cible}`)).toHaveAttribute('role', 'tabpanel');
 });

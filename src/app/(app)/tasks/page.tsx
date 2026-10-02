@@ -1,7 +1,7 @@
 'use client';
 
 import { AnimatePresence } from 'framer-motion';
-import { useState } from 'react';
+import { useState, type KeyboardEvent } from 'react';
 import { api, useResource } from '@/lib/client/api';
 import { useHydrated } from '@/lib/client/hydrated';
 import { useMutate } from '@/lib/client/mutate';
@@ -79,6 +79,27 @@ export default function TasksPage() {
   };
 
   const visible = (data ?? []).filter((task) => showDone || task.status !== 'done');
+
+  /*
+   * Clavier des onglets (motif APG) : un seul onglet dans l'ordre de tabulation,
+   * les fleches, Debut et Fin passent aux autres et les activent aussitot.
+   */
+  function naviguerOnglets(event: KeyboardEvent<HTMLDivElement>) {
+    const index = SCOPES.indexOf(scope);
+    // En arabe (dir="rtl"), la fleche droite recule.
+    const pas = getComputedStyle(event.currentTarget).direction === 'rtl' ? -1 : 1;
+    const cibles: Record<string, number> = {
+      ArrowRight: index + pas,
+      ArrowLeft: index - pas,
+      Home: 0,
+      End: SCOPES.length - 1,
+    };
+    if (!(event.key in cibles)) return;
+    event.preventDefault();
+    const suivant = SCOPES[(cibles[event.key] + SCOPES.length) % SCOPES.length];
+    setScope(suivant);
+    document.getElementById(`onglet-${suivant}`)?.focus();
+  }
 
   const scopeLabels: Record<(typeof SCOPES)[number], string> = {
     today: t('common.today'),
@@ -247,7 +268,7 @@ export default function TasksPage() {
         quelle que soit la periode. Un interrupteur, donc `aria-pressed`.
       */}
       <div className="mb-4 flex flex-wrap items-center gap-1 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-1">
-        <div role="tablist" aria-label={t('tasks.title')} className="flex flex-wrap gap-1">
+        <div role="tablist" aria-label={t('tasks.title')} onKeyDown={naviguerOnglets} className="flex flex-wrap gap-1">
           {SCOPES.map((value) => (
             <button
               key={value}
@@ -287,29 +308,33 @@ export default function TasksPage() {
         </button>
       </div>
 
-      {loading ? (
-        <div className="space-y-2">
-          {[0, 1, 2, 3].map((index) => (
-            <Skeleton key={index} className="h-16 rounded-xl" />
-          ))}
-        </div>
-      ) : visible.length === 0 ? (
-        <Card>
-          <EmptyState
-            icon="checkCircle"
-            title={t('tasks.empty')}
-            action={
-              <Button icon="plus" onClick={() => openCreate()}>
-                {t('tasks.new')}
-              </Button>
-            }
-          />
-        </Card>
-      ) : (
-        <ul id="liste-taches" role="tabpanel" aria-labelledby={`onglet-${scope}`} className="space-y-2">
-          <AnimatePresence initial={false}>{visible.map((task) => renderTask(task))}</AnimatePresence>
-        </ul>
-      )}
+      {/* Le panneau existe toujours : `aria-controls` des onglets doit viser un
+          element present, y compris pendant le chargement et sur une liste vide. */}
+      <div id="liste-taches" role="tabpanel" aria-labelledby={`onglet-${scope}`}>
+        {loading ? (
+          <div className="space-y-2">
+            {[0, 1, 2, 3].map((index) => (
+              <Skeleton key={index} className="h-16 rounded-xl" />
+            ))}
+          </div>
+        ) : visible.length === 0 ? (
+          <Card>
+            <EmptyState
+              icon="checkCircle"
+              title={t('tasks.empty')}
+              action={
+                <Button icon="plus" onClick={() => openCreate()}>
+                  {t('tasks.new')}
+                </Button>
+              }
+            />
+          </Card>
+        ) : (
+          <ul className="space-y-2">
+            <AnimatePresence initial={false}>{visible.map((task) => renderTask(task))}</AnimatePresence>
+          </ul>
+        )}
+      </div>
 
       {vueDatee && (sansEcheance ?? []).filter((task) => showDone || task.status !== 'done').length > 0 && (
         <section className="mt-6">
