@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
-import { recomputeDay } from '../src/lib/stats';
-import { dateKeyIn, dateKeyRange } from '../src/lib/date';
+import { recomputeDay } from '../../src/lib/stats';
+import { dateKeyIn, dateKeyRange } from '../../src/lib/date';
 
 /**
  * Recalcule l'historique statistique avec la regle de fenetre d'existence.
@@ -16,9 +16,9 @@ import { dateKeyIn, dateKeyRange } from '../src/lib/date';
  * lire un historique fausse. Ce script rejoue `recomputeDay()` sur chaque
  * journee depuis la creation du compte, avec la regle corrigee.
  *
- *   npx tsx scripts/recompute-stats.ts            # inventaire, sans ecrire
- *   npx tsx scripts/recompute-stats.ts --appliquer
- *   npx tsx scripts/recompute-stats.ts --appliquer --email=... (un seul compte)
+ *   npx tsx scripts/maintenance/recompute-stats.ts            # inventaire, sans ecrire
+ *   npx tsx scripts/maintenance/recompute-stats.ts --appliquer
+ *   npx tsx scripts/maintenance/recompute-stats.ts --appliquer --email=... (un seul compte)
  */
 const prisma = new PrismaClient();
 const appliquer = process.argv.includes('--appliquer');

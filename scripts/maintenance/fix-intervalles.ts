@@ -21,8 +21,8 @@ import { PrismaClient } from '@prisma/client';
  * interpretation : la fin est portee a une heure apres le debut — la valeur
  * que la route imposait deja — et chaque correction est journalisee.
  *
- *   npx tsx scripts/fix-intervalles.ts              # inventaire, sans ecrire
- *   npx tsx scripts/fix-intervalles.ts --appliquer  # repare les evenements
+ *   npx tsx scripts/maintenance/fix-intervalles.ts              # inventaire, sans ecrire
+ *   npx tsx scripts/maintenance/fix-intervalles.ts --appliquer  # repare les evenements
  */
 const prisma = new PrismaClient();
 const appliquer = process.argv.includes('--appliquer');

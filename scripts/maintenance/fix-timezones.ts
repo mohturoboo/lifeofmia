@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { FALLBACK_CITIES } from '../src/lib/cities';
+import { FALLBACK_CITIES } from '../../src/lib/cities';
 
 /**
  * Remet d'aplomb les profils dont le fuseau ne correspond pas a la ville.
@@ -14,8 +14,8 @@ import { FALLBACK_CITIES } from '../src/lib/cities';
  * et signale les autres sans les modifier : mieux vaut une incoherence visible
  * qu'une correction devinee.
  *
- *   npx tsx scripts/fix-timezones.ts           # inventaire, sans rien changer
- *   npx tsx scripts/fix-timezones.ts --appliquer
+ *   npx tsx scripts/maintenance/fix-timezones.ts           # inventaire, sans rien changer
+ *   npx tsx scripts/maintenance/fix-timezones.ts --appliquer
  */
 const prisma = new PrismaClient();
 const appliquer = process.argv.includes('--appliquer');
