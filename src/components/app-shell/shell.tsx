@@ -256,7 +256,7 @@ export function AppShell({ user, children }: { user: ShellUser; children: ReactN
               <select
                 value={locale}
                 onChange={(event) => setLocale(event.target.value as Locale)}
-                className="h-9 cursor-pointer appearance-none rounded-full border border-[var(--border)] bg-[var(--surface-2)] ps-3 pe-7 text-xs text-[var(--text)] transition-colors hover:border-brand-300/40 focus:outline-none focus:ring-4 focus:ring-[var(--ring)]"
+                className="h-11 cursor-pointer appearance-none sm:h-9 rounded-full border border-[var(--border)] bg-[var(--surface-2)] ps-3 pe-7 text-xs text-[var(--text)] transition-colors hover:border-brand-300/40 focus:outline-none focus:ring-4 focus:ring-[var(--ring)]"
               >
                 {LOCALES.map((code) => (
                   <option key={code} value={code}>

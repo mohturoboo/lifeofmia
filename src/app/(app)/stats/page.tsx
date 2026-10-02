@@ -125,7 +125,7 @@ export default function StatsPage() {
                 onClick={() => setPeriod(value)}
                 aria-pressed={period === value}
                 className={cx(
-                  'rounded-lg px-3 py-1.5 text-[13px] transition-colors',
+                  'min-h-11 sm:min-h-0 rounded-lg px-3 py-1.5 text-[13px] transition-colors',
                   period === value
                     ? 'bg-[var(--surface-2)] font-medium text-[var(--text)]'
                     : 'text-[var(--text-muted)] hover:text-[var(--text)]',

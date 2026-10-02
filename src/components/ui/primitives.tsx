@@ -47,7 +47,7 @@ const BUTTON_VARIANTS: Record<ButtonVariant, string> = {
 
 /* Pastilles franchement arrondies, interlettrage ouvert. */
 const BUTTON_SIZES: Record<ButtonSize, string> = {
-  sm: 'h-9 px-4 text-[12.5px] tracking-[0.03em] gap-1.5 rounded-full',
+  sm: 'h-11 sm:h-9 px-4 text-[12.5px] tracking-[0.03em] gap-1.5 rounded-full',
   md: 'h-11 px-6 text-[13.5px] tracking-[0.03em] gap-2 rounded-full',
   lg: 'h-13 px-8 text-[14.5px] tracking-[0.04em] gap-2.5 rounded-full',
 };

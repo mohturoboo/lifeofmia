@@ -202,7 +202,8 @@ export default function TasksPage() {
             aria-pressed={done}
             aria-label={done ? t('habits.markUndone') : t('habits.markDone')}
             className={cx(
-              'mt-0.5 grid size-5 shrink-0 place-items-center rounded-md border-2 lm-transition-ui',
+              // `before:` etend la zone tactile a 44 px sans changer la taille visible de la case.
+              'relative mt-0.5 grid size-5 shrink-0 place-items-center rounded-md border-2 lm-transition-ui before:absolute before:-inset-3 before:content-[""]',
               done
                 ? 'border-transparent bg-[#f6d9e4] text-[var(--on-pink)]'
                 : 'border-[var(--border-strong)] hover:border-[#f6d9e4]',
@@ -297,7 +298,7 @@ export default function TasksPage() {
               tabIndex={scope === value ? 0 : -1}
               onClick={() => setScope(value)}
               className={cx(
-                'rounded-lg px-3 py-1.5 text-[13px] transition-colors',
+                'min-h-11 min-w-11 sm:min-h-0 sm:min-w-0 rounded-lg px-3 py-1.5 text-[13px] transition-colors',
                 scope === value
                   ? 'bg-[var(--surface-2)] font-medium text-[var(--text)]'
                   : 'text-[var(--text-muted)] hover:text-[var(--text)]',
@@ -315,7 +316,7 @@ export default function TasksPage() {
           aria-pressed={showDone}
           onClick={() => setShowDone((value) => !value)}
           className={cx(
-            'rounded-lg px-3 py-1.5 text-[13px] transition-colors',
+            'min-h-11 min-w-11 sm:min-h-0 sm:min-w-0 rounded-lg px-3 py-1.5 text-[13px] transition-colors',
             showDone
               ? 'bg-[var(--surface-2)] font-medium text-[var(--text)]'
               : 'text-[var(--text-muted)] hover:text-[var(--text)]',

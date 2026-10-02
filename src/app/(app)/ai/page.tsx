@@ -312,7 +312,7 @@ export default function AiPage() {
               type="button"
               onClick={() => setConversationId(conversation.id)}
               className={cx(
-                'shrink-0 rounded-lg border px-3 py-1.5 text-[12px] transition-colors',
+                'min-h-11 sm:min-h-0 shrink-0 rounded-lg border px-3 py-1.5 text-[12px] transition-colors',
                 conversationId === conversation.id
                   ? 'border-brand-500/40 bg-brand-500/10 text-[var(--text)]'
                   : 'border-[var(--border)] text-[var(--text-muted)] hover:text-[var(--text)]',

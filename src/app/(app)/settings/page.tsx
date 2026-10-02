@@ -178,7 +178,7 @@ export default function SettingsPage() {
             onClick={() => setSection(item.id)}
             aria-pressed={section === item.id}
             className={cx(
-              'flex shrink-0 items-center gap-2 rounded-lg px-3.5 py-2 text-[13px] transition-colors',
+              'min-h-11 sm:min-h-0 flex shrink-0 items-center gap-2 rounded-lg px-3.5 py-2 text-[13px] transition-colors',
               section === item.id
                 ? 'bg-[var(--surface-2)] font-medium text-[var(--text)]'
                 : 'text-[var(--text-muted)] hover:text-[var(--text)]',
