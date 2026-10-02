@@ -33,23 +33,31 @@ const jost = Jost({
   display: 'swap',
 });
 
-export const metadata: Metadata = {
-  title: {
-    default: 'LifeofM — Le systeme d\'exploitation de votre vie',
-    template: '%s · LifeofM',
-  },
-  description:
-    'Habitudes, objectifs, nutrition, sport, prieres et finances reunis dans un seul espace personnel, guides par une IA.',
-  applicationName: 'LifeofM',
-  authors: [{ name: 'LifeofM' }],
-  keywords: ['habitudes', 'productivite', 'discipline', 'objectifs', 'sante', 'prieres', 'IA'],
-  robots: { index: true, follow: true },
-  openGraph: {
-    title: 'LifeofM',
-    description: 'Reprenez le controle de votre vie.',
-    type: 'website',
-  },
-};
+/*
+ * Metadonnees dans la langue du compte (francais pour un visiteur). Les pages
+ * fournissent leur propre titre, insere dans le gabarit.
+ */
+export async function generateMetadata(): Promise<Metadata> {
+  const user = await getCurrentUser().catch(() => null);
+  const t = createTranslator(resolveLocale(user?.locale));
+  return {
+    title: {
+      default: `LifeofM — ${t('app.tagline')}`,
+      template: '%s · LifeofM',
+    },
+    description: t('app.description'),
+    applicationName: 'LifeofM',
+    authors: [{ name: 'LifeofM' }],
+    keywords: ['habitudes', 'productivité', 'discipline', 'objectifs', 'santé', 'prières', 'IA'],
+    robots: { index: true, follow: true },
+    icons: { icon: '/favicon.svg' },
+    openGraph: {
+      title: 'LifeofM',
+      description: t('app.tagline'),
+      type: 'website',
+    },
+  };
+}
 
 export const viewport: Viewport = {
   width: 'device-width',

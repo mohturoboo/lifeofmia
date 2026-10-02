@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import { cookies, headers } from 'next/headers';
 import { randomBytes } from 'node:crypto';
 import type { User } from '@prisma/client';
@@ -141,8 +142,12 @@ export async function revokeAllSessions(userId: string): Promise<void> {
 /**
  * Recupere l'utilisateur courant, ou `null`.
  * Double verification : signature du jeton **et** session non revoquee en base.
+ *
+ * Memorise le temps d'une requete de rendu (`cache`) : layout racine, layout
+ * de l'espace connecte et titre de page le lisent sans repeter les deux
+ * requetes en base. Hors rendu serveur (routes d'API), `cache` ne memorise rien.
  */
-export async function getCurrentUser(): Promise<SessionUser | null> {
+export const getCurrentUser = cache(async function getCurrentUser(): Promise<SessionUser | null> {
   const cookieStore = await cookies();
   const token = cookieStore.get(SESSION_COOKIE)?.value;
   if (!token) return null;
@@ -161,7 +166,7 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
     select: SESSION_USER_SELECT,
   });
   return user;
-}
+});
 
 export function clientIpFrom(headerList: Headers): string | null {
   const forwarded = headerList.get('x-forwarded-for');

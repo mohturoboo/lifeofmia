@@ -34,6 +34,13 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  /*
+   * Metadonnees bloquantes pour tous les clients. Le layout racine lit la
+   * session (cookies) : la page est dynamique, et Next 15 diffusait alors
+   * `<title>` et la description APRES `</head>`, dans le `<body>`, pour les
+   * navigateurs. Lighthouse et une partie des robots ne les y trouvaient pas.
+   */
+  htmlLimitedBots: /.*/,
   experimental: {
     optimizePackageImports: ['framer-motion'],
   },
