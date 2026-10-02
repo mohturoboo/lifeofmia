@@ -174,7 +174,7 @@ export default function CalendarPage() {
               <button
                 type="button"
                 onClick={() => setCursor(new Date(cursor.getFullYear(), cursor.getMonth() - 1, 1))}
-                aria-label="Mois precedent"
+                aria-label={t('calendar.previousMonth')}
                 className="grid size-11 place-items-center rounded-lg text-[var(--text-muted)] lm-transition-ui hover:bg-[var(--surface-2)]"
               >
                 <Icon name="chevronLeft" size={16} className="rtl:rotate-180" />
@@ -185,7 +185,7 @@ export default function CalendarPage() {
               <button
                 type="button"
                 onClick={() => setCursor(new Date(cursor.getFullYear(), cursor.getMonth() + 1, 1))}
-                aria-label="Mois suivant"
+                aria-label={t('calendar.nextMonth')}
                 className="grid size-11 place-items-center rounded-lg text-[var(--text-muted)] lm-transition-ui hover:bg-[var(--surface-2)]"
               >
                 <Icon name="chevronRight" size={16} className="rtl:rotate-180" />
@@ -318,7 +318,7 @@ export default function CalendarPage() {
         }
       >
         <div className="space-y-4">
-          <Field label="Titre" htmlFor="event-title" error={erreurs.title} required>
+          <Field label={t('common.title')} htmlFor="event-title" error={erreurs.title} required>
             <Input id="event-title" value={form.title} onChange={(event) => set('title', event.target.value)} autoFocus />
           </Field>
 
@@ -326,11 +326,11 @@ export default function CalendarPage() {
             <Field label={t('common.date')} htmlFor="event-date">
               <Input id="event-date" type="date" value={form.date} onChange={(event) => set('date', event.target.value)} />
             </Field>
-            <Field label="Debut" htmlFor="event-start" error={erreurs.startAt}>
+            <Field label={t('calendar.start')} htmlFor="event-start" error={erreurs.startAt}>
               <Input id="event-start" type="time" value={form.startTime} onChange={(event) => set('startTime', event.target.value)} />
             </Field>
             <Field
-              label="Fin"
+              label={t('calendar.end')}
               htmlFor="event-end"
               error={erreurs.endAt || (finAvantDebut ? FIN_AVANT_DEBUT : undefined)}
             >

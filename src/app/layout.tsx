@@ -3,6 +3,7 @@ import { Cormorant_Garamond, Jost } from 'next/font/google';
 import { ThemeScript } from '@/components/theme-provider';
 import { getCurrentUser } from '@/lib/auth/session';
 import { resolveLocale } from '@/i18n/config';
+import { createTranslator } from '@/i18n';
 import { directionOf } from '@/i18n/config';
 import type { Theme } from '@/components/theme-provider';
 import './globals.css';
@@ -88,7 +89,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           href="#main"
           className="lm-sr-only focus:not-sr-only focus:absolute focus:start-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-[var(--surface)] focus:px-4 focus:py-2 focus:text-sm focus:shadow-lg"
         >
-          Aller au contenu principal
+          {createTranslator(locale)('common.skipToContent')}
         </a>
         {children}
       </body>

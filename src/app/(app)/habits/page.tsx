@@ -308,7 +308,7 @@ export default function HabitsPage() {
               maxLength={80}
               value={form.name}
               onChange={(event) => set('name', event.target.value)}
-              placeholder="Ex : lire 20 minutes"
+              placeholder={t('habits.namePlaceholder')}
               autoFocus
             />
           </Field>
@@ -387,8 +387,8 @@ export default function HabitsPage() {
           </div>
 
           <div className="grid grid-cols-2 gap-3">
-            <Field label="Unite" htmlFor="habit-unit" error={erreurs.unit} hint={t('common.optional')}>
-              <Input id="habit-unit" value={form.unit} onChange={(event) => set('unit', event.target.value)} placeholder="verres, pages..." />
+            <Field label={t('common.unit')} htmlFor="habit-unit" error={erreurs.unit} hint={t('common.optional')}>
+              <Input id="habit-unit" value={form.unit} onChange={(event) => set('unit', event.target.value)} placeholder={t('habits.unitPlaceholder')} />
             </Field>
             <Field label={t('habits.reminder')} htmlFor="habit-reminder" error={erreurs.reminderAt} hint={t('common.optional')}>
               <Input id="habit-reminder" type="time" value={form.reminderAt} onChange={(event) => set('reminderAt', event.target.value)} />

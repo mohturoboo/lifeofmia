@@ -290,7 +290,7 @@ export default function NutritionPage() {
             </div>
 
             <div className="mt-4 flex justify-center gap-2">
-              <Button variant="secondary" size="sm" loading={!pret} onClick={() => addWater(-verreMl)} aria-label="Retirer un verre">
+              <Button variant="secondary" size="sm" loading={!pret} onClick={() => addWater(-verreMl)} aria-label={t('nutrition.removeGlass')}>
                 <Icon name="minus" size={15} />
               </Button>
               <Button size="sm" icon="plus" loading={!pret} onClick={() => addWater(verreMl)}>

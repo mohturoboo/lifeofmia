@@ -2,6 +2,7 @@
 
 import type { ReactNode } from 'react';
 import { Icon, type IconName } from '@/components/ui/icons';
+import { useTOptionnel } from '@/i18n/provider';
 
 /**
  * En-tete commun a toutes les pages de module : icone coloree, titre,
@@ -56,6 +57,7 @@ export function DateNav({
     onChange(next.toISOString().slice(0, 10));
   };
 
+  const t = useTOptionnel();
   const label = new Date(`${date}T12:00:00Z`).toLocaleDateString(locale, {
     weekday: 'short',
     day: 'numeric',
@@ -67,7 +69,7 @@ export function DateNav({
       <button
         type="button"
         onClick={() => shift(-1)}
-        aria-label="Jour precedent"
+        aria-label={t('common.previousDay')}
         className="grid size-11 place-items-center rounded-lg text-[var(--text-muted)] lm-transition-ui hover:bg-[var(--surface-2)]"
       >
         <Icon name="chevronLeft" size={16} className="rtl:rotate-180" />
@@ -78,7 +80,7 @@ export function DateNav({
       <button
         type="button"
         onClick={() => shift(1)}
-        aria-label="Jour suivant"
+        aria-label={t('common.nextDay')}
         className="grid size-11 place-items-center rounded-lg text-[var(--text-muted)] lm-transition-ui hover:bg-[var(--surface-2)]"
       >
         <Icon name="chevronRight" size={16} className="rtl:rotate-180" />

@@ -397,7 +397,7 @@ export default function DashboardPage() {
                       )}
                     </span>
 
-                    {habit.isNegative && <Badge color="#ff9fbf">à éviter</Badge>}
+                    {habit.isNegative && <Badge color="#ff9fbf">{t('habits.toAvoid')}</Badge>}
                     <span className="text-[11px] font-medium text-[var(--text-faint)]">+{habit.xpReward} XP</span>
                   </button>
                 </li>

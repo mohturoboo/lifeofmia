@@ -4,6 +4,7 @@ import { useRef, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { usePiegeFocus } from '@/lib/client/piege-focus';
 import { cx, IconButton } from '@/components/ui/primitives';
+import { useTOptionnel } from '@/i18n/provider';
 
 /**
  * Fenetre modale accessible.
@@ -36,6 +37,7 @@ const SIZES = { sm: 'max-w-sm', md: 'max-w-lg', lg: 'max-w-2xl' } as const;
 
 export function Modal({ open, onClose, title, description, children, footer, size = 'md', onSubmit }: ModalProps) {
   const panelRef = useRef<HTMLDivElement>(null);
+  const t = useTOptionnel();
 
   /*
    * Echap, piege a focus, restitution du focus au declencheur et blocage du
@@ -104,7 +106,7 @@ export function Modal({ open, onClose, title, description, children, footer, siz
               </p>
             )}
           </div>
-          <IconButton icon="close" label="Fermer" size={17} onClick={onClose} />
+          <IconButton icon="close" label={t('common.close')} size={17} onClick={onClose} />
         </header>
 
         {onSubmit ? (

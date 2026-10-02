@@ -2,7 +2,7 @@
 
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react';
 import { createTranslator, formatNumber, type Locale, type Translator } from '@/i18n';
-import { directionOf } from '@/i18n/config';
+import { DEFAULT_LOCALE, directionOf } from '@/i18n/config';
 
 /**
  * Contexte d'internationalisation cote client.
@@ -64,6 +64,18 @@ export function useI18n(): I18nValue {
   }
   return context;
 }
+
+/**
+ * Pour les composants partages (graphiques, modale) qui peuvent etre rendus
+ * hors de tout fournisseur — tests unitaires notamment : repli sur le
+ * dictionnaire de reference au lieu d'une erreur.
+ */
+export function useTOptionnel(): Translator {
+  const context = useContext(I18nContext);
+  return context?.t ?? traductionParDefaut;
+}
+
+const traductionParDefaut = createTranslator(DEFAULT_LOCALE);
 
 /** Raccourci le plus courant dans les composants. */
 export function useT(): Translator {

@@ -162,7 +162,7 @@ export default function SportPage() {
 
       <div className="mb-4 grid grid-cols-1 gap-4 lg:grid-cols-3">
         <Card className="lg:col-span-2">
-          <CardHeader title="30 derniers jours" icon="chart" accent="#ff9fbf" />
+          <CardHeader title={t('sport.last30Days')} icon="chart" accent="#ff9fbf" />
           <BarChart
             data={data.monthly.map((day) => ({
               label: day.date.slice(8),
@@ -175,7 +175,7 @@ export default function SportPage() {
         </Card>
 
         <Card>
-          <CardHeader title="Repartition" icon="compare" accent="#ff9fbf" />
+          <CardHeader title={t('sport.breakdown')} icon="compare" accent="#ff9fbf" />
           {Object.keys(data.byType).length === 0 ? (
             <p className="py-6 text-center text-xs text-[var(--text-faint)]">{t('sport.empty')}</p>
           ) : (
@@ -274,7 +274,7 @@ export default function SportPage() {
           </div>
 
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-            <Field label="Type" htmlFor="workout-type">
+            <Field label={t('common.type')} htmlFor="workout-type">
               <Select id="workout-type" value={form.type} onChange={(event) => set('type', event.target.value)}>
                 {WORKOUT_TYPES.map((type) => (
                   <option key={type} value={type}>
@@ -306,7 +306,7 @@ export default function SportPage() {
                     <Input
                       value={exercise.name}
                       onChange={(event) => updateExercise(index, { name: event.target.value })}
-                      placeholder="Exercice"
+                      placeholder={t('sport.exercisePlaceholder')}
                       aria-label={`${t('sport.exercises')} ${index + 1}`}
                       className="flex-[2]"
                     />

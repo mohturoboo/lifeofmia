@@ -83,7 +83,7 @@ export function AppShell({ user, children }: { user: ShellUser; children: ReactN
         <span className="text-[17px] font-semibold tracking-tight text-[var(--text)]">LifeofM</span>
       </Link>
 
-      <nav className="min-h-0 flex-1 overflow-y-auto px-3 pb-4" aria-label="Navigation principale">
+      <nav className="min-h-0 flex-1 overflow-y-auto px-3 pb-4" aria-label={t('nav.main')}>
         {NAV_SECTIONS.map((section) => (
           <div key={section.titleKey} className="mb-5">
             <h2 className="lm-eyebrow mb-2 px-3">
@@ -214,7 +214,7 @@ export function AppShell({ user, children }: { user: ShellUser; children: ReactN
             <button
               type="button"
               onClick={() => setDrawerOpen(true)}
-              aria-label="Ouvrir le menu"
+              aria-label={t('nav.openMenu')}
               className="grid size-11 place-items-center rounded-full text-[var(--text-muted)] transition-colors hover:bg-[var(--surface-2)] hover:text-[var(--text)] lg:hidden"
             >
               <Icon name="menu" size={19} />
@@ -328,7 +328,7 @@ export function AppShell({ user, children }: { user: ShellUser; children: ReactN
 
       {/* --- Navigation basse (mobile) --- */}
       <nav
-        aria-label="Navigation rapide"
+        aria-label={t('nav.quick')}
         className="lm-mobile-nav lm-card fixed inset-x-3 bottom-3 mb-[env(safe-area-inset-bottom)] flex overflow-hidden lg:hidden"
         style={{ zIndex: 'var(--z-nav)' }}
       >

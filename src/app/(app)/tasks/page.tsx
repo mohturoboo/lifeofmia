@@ -364,7 +364,7 @@ export default function TasksPage() {
         }
       >
         <div className="space-y-4">
-          <Field label="Titre" htmlFor="task-title" error={erreurs.title} required>
+          <Field label={t('common.title')} htmlFor="task-title" error={erreurs.title} required>
             <Input id="task-title" value={form.title} onChange={(event) => set('title', event.target.value)} autoFocus />
           </Field>
 

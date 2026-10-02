@@ -155,12 +155,12 @@ export default function JournalPage() {
           </Card>
 
           <Card>
-            <Field label="Titre" htmlFor="journal-title" error={erreurs.title} className="mb-4">
+            <Field label={t('common.title')} htmlFor="journal-title" error={erreurs.title} className="mb-4">
               <Input
                 id="journal-title"
                 value={form.title}
                 onChange={(event) => set('title', event.target.value)}
-                placeholder="Une phrase qui resume la journee"
+                placeholder={t('journal.titlePlaceholder')}
               />
             </Field>
 

@@ -117,7 +117,7 @@ function LoginForm() {
             <button
               type="button"
               onClick={() => setShowPassword((value) => !value)}
-              aria-label={showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
+              aria-label={showPassword ? t('auth.hidePassword') : t('auth.showPassword')}
               className="absolute inset-y-0 end-0 grid w-11 place-items-center text-[var(--text-faint)] transition-colors hover:text-[var(--text)]"
             >
               <Icon name={showPassword ? 'eyeOff' : 'eye'} size={17} />

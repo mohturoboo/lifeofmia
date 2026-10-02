@@ -375,7 +375,7 @@ export default function GoalsPage() {
         }
       >
         <div className="space-y-4">
-          <Field label="Titre" htmlFor="goal-title" error={erreurs.title} required>
+          <Field label={t('common.title')} htmlFor="goal-title" error={erreurs.title} required>
             <Input
               id="goal-title"
               required
@@ -402,7 +402,7 @@ export default function GoalsPage() {
                 ))}
               </Select>
             </Field>
-            <Field label="Horizon" htmlFor="goal-horizon">
+            <Field label={t('goals.horizon')} htmlFor="goal-horizon">
               <Select id="goal-horizon" value={form.horizon} onChange={(event) => set('horizon', event.target.value as Goal['horizon'])}>
                 <option value="short">{t('goals.shortTerm')}</option>
                 <option value="mid">{t('goals.midTerm')}</option>
@@ -412,13 +412,13 @@ export default function GoalsPage() {
           </div>
 
           <div className="grid grid-cols-3 gap-3">
-            <Field label="Actuel" htmlFor="goal-current" error={erreurs.currentValue}>
+            <Field label={t('goals.currentValue')} htmlFor="goal-current" error={erreurs.currentValue}>
               <Input id="goal-current" type="number" value={form.currentValue} onChange={(event) => set('currentValue', event.target.value)} />
             </Field>
-            <Field label="Cible" htmlFor="goal-target" error={erreurs.targetValue}>
+            <Field label={t('goals.targetValue')} htmlFor="goal-target" error={erreurs.targetValue}>
               <Input id="goal-target" type="number" value={form.targetValue} onChange={(event) => set('targetValue', event.target.value)} />
             </Field>
-            <Field label="Unite" htmlFor="goal-unit" error={erreurs.unit}>
+            <Field label={t('common.unit')} htmlFor="goal-unit" error={erreurs.unit}>
               <Input id="goal-unit" value={form.unit} onChange={(event) => set('unit', event.target.value)} placeholder="kg" />
             </Field>
           </div>
@@ -444,7 +444,7 @@ export default function GoalsPage() {
           </Field>
 
           {!editing && (
-            <Field label={t('goals.steps')} hint="Un objectif sans etapes reste un souhait.">
+            <Field label={t('goals.steps')} hint={t('goals.stepsHint')}>
               <div className="space-y-2">
                 {form.steps.map((step, index) => (
                   <div key={index} className="flex gap-2">

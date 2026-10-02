@@ -3,6 +3,8 @@ import { Icon } from '@/components/ui/icons';
 import { I18nProvider } from '@/i18n/provider';
 import { ToastProvider } from '@/components/ui/toast';
 import { ThemeProvider } from '@/components/theme-provider';
+import { createTranslator } from '@/i18n';
+import { DEFAULT_LOCALE } from '@/i18n/config';
 
 /**
  * Mise en page des ecrans d'authentification.
@@ -10,9 +12,11 @@ import { ThemeProvider } from '@/components/theme-provider';
  * mobile pour laisser toute la place au formulaire).
  */
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
+  // Aucune langue n'est connue avant la connexion : langue par defaut.
+  const t = createTranslator(DEFAULT_LOCALE);
   return (
     <ThemeProvider initialTheme="dark">
-      <I18nProvider initialLocale="fr">
+      <I18nProvider initialLocale={DEFAULT_LOCALE}>
         <ToastProvider>
           <div className="grid grid-cols-1 min-h-dvh lg:grid-cols-2">
             <div className="relative flex flex-col px-5 py-8 sm:px-10">
@@ -41,17 +45,17 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
               <div className="relative flex h-full flex-col justify-center px-14">
                 <blockquote className="max-w-md">
                   <p className="text-balance text-3xl font-semibold leading-tight tracking-tight text-[var(--text)]">
-                    « Nous sommes ce que nous faisons de maniere repetee. »
+                    {t('auth.panelQuote')}
                   </p>
-                  <footer className="mt-5 text-sm text-[var(--text-muted)]">Aristote</footer>
+                  <footer className="mt-5 text-sm text-[var(--text-muted)]">{t('auth.panelQuoteAuthor')}</footer>
                 </blockquote>
 
                 <div className="mt-14 grid grid-cols-2 gap-3">
                   {[
-                    { icon: 'flame' as const, label: 'Habitudes', color: '#fbc7da' },
-                    { icon: 'target' as const, label: 'Objectifs', color: '#d9c7f0' },
-                    { icon: 'scale' as const, label: 'Sante', color: '#f6d9e4' },
-                    { icon: 'sparkles' as const, label: 'Life AI', color: '#ff9fbf' },
+                    { icon: 'flame' as const, label: t('nav.habits'), color: '#fbc7da' },
+                    { icon: 'target' as const, label: t('nav.goals'), color: '#d9c7f0' },
+                    { icon: 'scale' as const, label: t('goals.categoryHealth'), color: '#f6d9e4' },
+                    { icon: 'sparkles' as const, label: t('nav.ai'), color: '#ff9fbf' },
                   ].map((item) => (
                     <div key={item.label} className="lm-card flex items-center gap-3 p-4">
                       <span

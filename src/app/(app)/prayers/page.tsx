@@ -237,7 +237,7 @@ export default function PrayersPage() {
               </label>
 
               <p className="pt-1 text-[11px] leading-relaxed text-[var(--text-faint)]">
-                Les horaires suivent votre ville. Changez-la dans les reglages pour les mettre a jour automatiquement.
+                {t('prayers.cityHint')}
               </p>
             </div>
           </Card>

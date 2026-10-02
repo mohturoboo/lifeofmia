@@ -294,7 +294,7 @@ export default function AiPage() {
             placeholder={t('ai.placeholder')}
             className="max-h-32 min-h-11 flex-1 resize-none rounded-xl border border-[var(--border)] bg-[var(--surface-2)] px-3.5 py-3 text-sm text-[var(--text)] placeholder:text-[var(--text-faint)] focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-[var(--ring)]"
           />
-          <Button type="submit" loading={thinking} disabled={input.trim().length === 0} aria-label="Envoyer">
+          <Button type="submit" loading={thinking} disabled={input.trim().length === 0} aria-label={t('common.send')}>
             <Icon name="send" size={16} className="rtl:-scale-x-100" />
           </Button>
         </form>

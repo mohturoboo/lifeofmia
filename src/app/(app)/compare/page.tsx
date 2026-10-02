@@ -122,7 +122,7 @@ export default function ComparePage() {
       </div>
 
       <Card className="mb-4">
-        <CardHeader title={t('compare.metric')} subtitle="Periode courante face a la precedente" icon="chart" accent="#d9c7f0" />
+        <CardHeader title={t('compare.metric')} subtitle={t('compare.currentVsPrevious')} icon="chart" accent="#d9c7f0" />
 
         {/*
           Sans periode de reference, le tableau ne peut afficher que des ecarts
@@ -137,7 +137,7 @@ export default function ComparePage() {
         <div className="overflow-x-auto">
           <table className="w-full min-w-[520px] text-sm">
             <caption className="lm-sr-only">
-              Comparaison des indicateurs entre la periode courante et la precedente
+              {t('compare.tableCaption')}
             </caption>
             <thead>
               <tr className="border-b border-[var(--border)] text-start text-[11px] uppercase tracking-wide text-[var(--text-faint)]">
@@ -202,7 +202,7 @@ export default function ComparePage() {
         <Card>
           <CardHeader
             title={t('stats.radar')}
-            subtitle={data.radar.previous ? "Plein : aujourd'hui · pointilles : avant" : "Periode courante"}
+            subtitle={data.radar.previous ? t('compare.radarHint') : t('compare.radarCurrentOnly')}
             icon="compare"
             accent="#d9c7f0"
           />

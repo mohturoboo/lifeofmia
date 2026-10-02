@@ -189,7 +189,7 @@ export default function NotesPage() {
         }
       >
         <div className="space-y-4">
-          <Field label="Titre" htmlFor="note-title" error={erreurs.title} required>
+          <Field label={t('common.title')} htmlFor="note-title" error={erreurs.title} required>
             <Input id="note-title" value={form.title} onChange={(event) => set('title', event.target.value)} autoFocus />
           </Field>
 

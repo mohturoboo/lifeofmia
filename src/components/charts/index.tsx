@@ -2,6 +2,7 @@
 
 import { useId, useMemo, useState } from 'react';
 import { cx } from '@/components/ui/primitives';
+import { useTOptionnel } from '@/i18n/provider';
 
 /**
  * Bibliotheque de graphiques.
@@ -92,6 +93,7 @@ export function LineChart({
   ariaLabel,
   domain,
 }: LineChartProps) {
+  const t = useTOptionnel();
   const gradientId = useId();
   const [hover, setHover] = useState<number | null>(null);
 
@@ -122,7 +124,7 @@ export function LineChart({
   if (data.length === 0) {
     return (
       <div className="grid h-40 place-items-center text-xs text-[var(--text-faint)]">
-        Pas encore assez de donnees
+        {t('charts.notEnoughData')}
       </div>
     );
   }
@@ -297,7 +299,7 @@ export function BarChart({
   height = 180,
   unit = '',
   maxValue,
-  emptyLabel = 'Aucune donnee sur cette periode',
+  emptyLabel,
 }: {
   data: Point[];
   color?: string;
@@ -307,6 +309,7 @@ export function BarChart({
   /** Texte affiche quand toutes les valeurs de la serie sont nulles. */
   emptyLabel?: string;
 }) {
+  const t = useTOptionnel();
   const max = maxValue ?? Math.max(1, ...data.map((point) => point.value));
 
   if (data.length === 0) {
@@ -325,7 +328,7 @@ export function BarChart({
         className="grid place-items-center px-4 text-center text-xs text-[var(--text-faint)]"
         style={{ height }}
       >
-        {emptyLabel}
+        {emptyLabel ?? t('charts.noDataPeriod')}
       </div>
     );
   }
@@ -403,6 +406,7 @@ export function DonutChart({
   centerLabel?: string;
   centerValue?: string;
 }) {
+  const t = useTOptionnel();
   const total = data.reduce((sum, point) => sum + point.value, 0);
   const radius = (size - thickness) / 2;
   const center = size / 2;
@@ -410,7 +414,7 @@ export function DonutChart({
 
   return (
     <div className="flex flex-wrap items-center justify-center gap-6">
-      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label="Repartition en anneau">
+      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label={t('charts.donutLabel')}>
         <circle cx={center} cy={center} r={radius} fill="none" stroke="var(--surface-2)" strokeWidth={thickness} />
         {total > 0 &&
           data.map((point, index) => {
@@ -473,6 +477,7 @@ export function RadarChart({
   compareData?: Point[];
   compareColor?: string;
 }) {
+  const t = useTOptionnel();
   const center = size / 2;
   const radius = center - 34;
   const count = Math.max(3, data.length);
@@ -502,7 +507,7 @@ export function RadarChart({
       height={size}
       className="mx-auto h-auto max-w-full"
       role="img"
-      aria-label="Diagramme radar d'equilibre de vie"
+      aria-label={t('charts.radarLabel')}
     >
       {[0.25, 0.5, 0.75, 1].map((ratio) => (
         <polygon
@@ -558,6 +563,7 @@ export function Heatmap({
   color?: string;
   weekdayLabels?: string[];
 }) {
+  const t = useTOptionnel();
   // Chaque colonne represente une semaine (7 cases verticales).
   const weeks = useMemo(() => {
     const columns: Array<Array<{ date: string; value: number } | null>> = [];
@@ -596,7 +602,7 @@ export function Heatmap({
    */
   return (
     <div className="min-w-0 overflow-x-auto pb-1">
-      <div className="flex gap-[3px]" role="img" aria-label={`Regularite sur ${data.length} jours`}>
+      <div className="flex gap-[3px]" role="img" aria-label={t('charts.heatmapLabel', { count: data.length })}>
         <div className="mr-1 flex flex-col gap-[3px]">
           {weekdayLabels.map((label, index) => (
             <span key={index} className="h-[11px] w-3 text-[8px] leading-[11px] text-[var(--text-faint)]">

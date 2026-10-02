@@ -43,6 +43,14 @@ const TIER_COLORS: Record<string, string> = {
   platinum: '#e4d9f5',
 };
 
+/** Initiales lundi, mercredi, vendredi, dimanche dans la langue (2024-01-01 est un lundi). */
+const JOURS_HEATMAP = (locale: string) =>
+  Array.from({ length: 7 }, (_, index) =>
+    index % 2 === 0
+      ? new Date(Date.UTC(2024, 0, 1 + index)).toLocaleDateString(locale, { weekday: 'narrow', timeZone: 'UTC' })
+      : '',
+  );
+
 export default function StatsPage() {
   const { t, locale, n } = useI18n();
   const [period, setPeriod] = useState<(typeof PERIODS)[number]>('30d');
@@ -155,8 +163,8 @@ export default function StatsPage() {
       </div>
 
       <Card className="mb-4">
-        <CardHeader title={t('stats.heatmap')} subtitle="Un carre par jour, plus il est vif plus la journee a ete disciplinee" icon="calendar" accent="#fbc7da" />
-        <Heatmap data={data.heatmap} color="#fbc7da" />
+        <CardHeader title={t('stats.heatmap')} subtitle={t('stats.heatmapHint')} icon="calendar" accent="#fbc7da" />
+        <Heatmap data={data.heatmap} color="#fbc7da" weekdayLabels={JOURS_HEATMAP(locale)} />
       </Card>
 
       <div className="mb-4 grid grid-cols-1 gap-4 lg:grid-cols-2">
@@ -232,7 +240,7 @@ export default function StatsPage() {
           <CardHeader title={t('dash.badges')} subtitle={t('stats.badgeUnlocked', { count: data.badges.length })} icon="crown" accent="#ff9fbf" />
           {data.badges.length === 0 ? (
             <p className="py-8 text-center text-xs text-[var(--text-faint)]">
-              Validez vos premieres habitudes pour debloquer des badges.
+              {t('stats.badgesHint')}
             </p>
           ) : (
             <div className="flex flex-wrap gap-2">

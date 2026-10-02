@@ -216,7 +216,7 @@ export default function SettingsPage() {
                   <option value="other">{t('auth.genderOther')}</option>
                 </Select>
               </Field>
-              <Field label={`${t('settings.height')} (cm)`} htmlFor="height" error={erreurs.heightCm} hint="Necessaire pour l'IMC">
+              <Field label={`${t('settings.height')} (cm)`} htmlFor="height" error={erreurs.heightCm} hint={t('settings.heightHint')}>
                 <Input
                   id="height"
                   type="number"
@@ -249,7 +249,7 @@ export default function SettingsPage() {
         <Card>
           <CardHeader
             title={t('settings.localization')}
-            subtitle="Change la ville met automatiquement a jour la meteo et les horaires de priere."
+            subtitle={t('settings.cityHint')}
             icon="globe"
             accent="#e6e6e6"
           />
@@ -381,7 +381,7 @@ export default function SettingsPage() {
                   onChange={(event) => setPasswords((current) => ({ ...current, current: event.target.value }))}
                 />
               </Field>
-              <Field label={t('auth.newPassword')} htmlFor="new-password" hint="8 caracteres minimum, avec majuscule et chiffre">
+              <Field label={t('auth.newPassword')} htmlFor="new-password" hint={t('settings.passwordHint')}>
                 <Input
                   id="new-password"
                   type="password"
@@ -397,13 +397,13 @@ export default function SettingsPage() {
           </Card>
 
           <Card>
-            <CardHeader title={t('settings.sessions')} subtitle={`${data.sessions.length} appareil(s)`} icon="shield" accent="#e6e6e6" />
+            <CardHeader title={t('settings.sessions')} subtitle={t('settings.deviceCount', { count: data.sessions.length })} icon="shield" accent="#e6e6e6" />
             <ul className="space-y-2">
               {data.sessions.map((session) => (
                 <li key={session.id} className="flex items-center justify-between gap-3 rounded-xl bg-[var(--surface-2)] px-3.5 py-2.5">
                   <div className="min-w-0">
                     <p className="truncate text-[13px] text-[var(--text)]">
-                      {session.userAgent?.slice(0, 60) ?? 'Appareil inconnu'}
+                      {session.userAgent?.slice(0, 60) ?? t('settings.unknownDevice')}
                     </p>
                     <p className="text-[11px] text-[var(--text-faint)]">
                       {session.ip ?? '—'} · {new Date(session.createdAt).toLocaleDateString(locale)}
@@ -413,7 +413,7 @@ export default function SettingsPage() {
               ))}
             </ul>
             <p className="mt-3 text-[11px] text-[var(--text-faint)]">
-              Changer de mot de passe deconnecte automatiquement tous les autres appareils.
+              {t('settings.passwordSignsOut')}
             </p>
           </Card>
         </div>

@@ -139,7 +139,7 @@ export default function FinancePage() {
               <button
                 type="button"
                 onClick={() => shiftMonth(-1)}
-                aria-label="Mois precedent"
+                aria-label={t('calendar.previousMonth')}
                 className="grid size-11 place-items-center rounded-lg text-[var(--text-muted)] lm-transition-ui hover:bg-[var(--surface-2)]"
               >
                 <Icon name="chevronLeft" size={16} className="rtl:rotate-180" />
@@ -150,7 +150,7 @@ export default function FinancePage() {
               <button
                 type="button"
                 onClick={() => shiftMonth(1)}
-                aria-label="Mois suivant"
+                aria-label={t('calendar.nextMonth')}
                 className="grid size-11 place-items-center rounded-lg text-[var(--text-muted)] lm-transition-ui hover:bg-[var(--surface-2)]"
               >
                 <Icon name="chevronRight" size={16} className="rtl:rotate-180" />
