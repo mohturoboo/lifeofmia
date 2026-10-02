@@ -535,6 +535,9 @@ export const ar: Dictionary = {
   'landing.privacyText':
     'كل حساب معزول تماماً. كلمات مرور مشفرة، جلسات قابلة للإلغاء، وتصدير وحذف عند الطلب.',
   'landing.footerRights': 'جميع الحقوق محفوظة.',
+  'notFound.title': 'الصفحة غير موجودة',
+  'notFound.text': 'هذه الصفحة غير موجودة أو تم نقلها.',
+  'notFound.home': 'العودة إلى الصفحة الرئيسية',
   'landing.previewLabel': 'معاينة',
   'landing.previewTitle': 'يومك',
   'landing.previewHabitPrayer': 'صلاة الفجر',

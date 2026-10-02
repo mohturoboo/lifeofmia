@@ -526,6 +526,9 @@ export const de: Dictionary = {
   'landing.privacyText':
     'Jedes Konto ist vollstandig isoliert. Gehashte Passworter, widerrufbare Sitzungen, Export und Loschung auf Anfrage.',
   'landing.footerRights': 'Alle Rechte vorbehalten.',
+  'notFound.title': 'Seite nicht gefunden',
+  'notFound.text': 'Diese Seite existiert nicht oder wurde verschoben.',
+  'notFound.home': 'Zur Startseite',
   'landing.previewLabel': 'Vorschau',
   'landing.previewTitle': 'Dein Tag',
   'landing.previewHabitPrayer': 'Fadschr-Gebet',

@@ -526,6 +526,9 @@ export const tr: Dictionary = {
   'landing.privacyText':
     'Her hesap tamamen izole edilmistir. Sifrelenmis parolalar, iptal edilebilir oturumlar, talep uzerine disa aktarma ve silme.',
   'landing.footerRights': 'Tum haklari saklidir.',
+  'notFound.title': 'Sayfa bulunamadı',
+  'notFound.text': 'Bu sayfa mevcut değil veya taşınmış.',
+  'notFound.home': 'Ana sayfaya dön',
   'landing.previewLabel': 'Önizleme',
   'landing.previewTitle': 'Gününüz',
   'landing.previewHabitPrayer': 'Sabah namazı',

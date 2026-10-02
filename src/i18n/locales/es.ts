@@ -526,6 +526,9 @@ export const es: Dictionary = {
   'landing.privacyText':
     'Cada cuenta esta totalmente aislada. Contrasenas cifradas, sesiones revocables, exportacion y eliminacion a peticion.',
   'landing.footerRights': 'Todos los derechos reservados.',
+  'notFound.title': 'Página no encontrada',
+  'notFound.text': 'Esta página no existe o ha sido movida.',
+  'notFound.home': 'Volver al inicio',
   'landing.previewLabel': 'Vista previa',
   'landing.previewTitle': 'Tu día',
   'landing.previewHabitPrayer': 'Oración del Fajr',

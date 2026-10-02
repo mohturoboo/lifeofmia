@@ -600,6 +600,9 @@ export const fr = {
   'landing.privacyText':
     'Chaque compte est totalement isolé. Mots de passe hachés, sessions révocables, export et suppression à la demande.',
   'landing.footerRights': 'Tous droits réservés.',
+  'notFound.title': 'Page introuvable',
+  'notFound.text': 'Cette page n\'existe pas ou a été déplacée.',
+  'notFound.home': 'Retour à l\'accueil',
   'landing.previewLabel': 'Aperçu',
   'landing.previewTitle': 'Votre journée',
   'landing.previewHabitPrayer': 'Prière du Fajr',

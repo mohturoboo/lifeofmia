@@ -526,6 +526,9 @@ export const en: Dictionary = {
   'landing.privacyText':
     'Every account is fully isolated. Hashed passwords, revocable sessions, export and deletion on demand.',
   'landing.footerRights': 'All rights reserved.',
+  'notFound.title': 'Page not found',
+  'notFound.text': 'This page does not exist or has been moved.',
+  'notFound.home': 'Back to home',
   'landing.previewLabel': 'Preview',
   'landing.previewTitle': 'Your day',
   'landing.previewHabitPrayer': 'Fajr prayer',
