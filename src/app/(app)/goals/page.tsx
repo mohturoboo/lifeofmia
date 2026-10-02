@@ -283,17 +283,23 @@ export default function GoalsPage() {
                           <div className="mt-4 space-y-1.5">
                             {goal.steps.map((step) => (
                               <div key={step.id} className="group flex items-center gap-2.5">
+                                {/* Cible de 44 px autour d'une case visible de 16 px, comme `IconButton`. */}
                                 <button
                                   type="button"
                                   onClick={() => toggleStep(goal.id, step)}
                                   aria-pressed={step.done}
-                                  className={cx(
-                                    'grid size-4 shrink-0 place-items-center rounded border-2 transition-all',
-                                    step.done ? 'border-transparent text-[var(--on-pink)]' : 'border-[var(--border-strong)]',
-                                  )}
-                                  style={step.done ? { background: goal.color } : undefined}
+                                  aria-label={step.title}
+                                  className="-m-3.5 grid size-11 shrink-0 place-items-center rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-6px] focus-visible:outline-[var(--brand-text)]"
                                 >
-                                  {step.done && <Icon name="check" size={10} />}
+                                  <span
+                                    className={cx(
+                                      'grid size-4 place-items-center rounded border-2 transition-all',
+                                      step.done ? 'border-transparent text-[var(--on-pink)]' : 'border-[var(--border-strong)]',
+                                    )}
+                                    style={step.done ? { background: goal.color } : undefined}
+                                  >
+                                    {step.done && <Icon name="check" size={10} />}
+                                  </span>
                                 </button>
                                 <span
                                   className={cx(
@@ -323,7 +329,7 @@ export default function GoalsPage() {
                                 onBlur={() => addStep(goal.id)}
                                 placeholder={t('goals.addStep')}
                                 aria-label={t('goals.addStep')}
-                                className="flex-1 bg-transparent text-[13px] text-[var(--text)] placeholder:text-[var(--text-faint)] focus:outline-none"
+                                className="h-11 flex-1 rounded-lg bg-transparent px-2 text-[13px] text-[var(--text)] placeholder:text-[var(--text-faint)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-text)]"
                               />
                             </div>
                           </div>
