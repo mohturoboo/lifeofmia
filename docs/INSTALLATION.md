@@ -193,7 +193,7 @@ Ces plateformes construisent directement le `Dockerfile`.
 
 ```bash
 npm run typecheck   # aucune erreur TypeScript
-npm run test        # 80 tests
+npm run test        # tests unitaires
 npm run build       # build de production
 ```
 

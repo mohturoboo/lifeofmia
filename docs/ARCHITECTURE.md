@@ -34,13 +34,14 @@ apparaître, l'API REST existante le servirait telle quelle.
 ## Arborescence
 
 ```
-MOHOS/
+lifeofmia/
 ├── prisma/
 │   ├── schema.prisma           27 modèles
 │   └── seed.ts                 90 jours de données réalistes
 ├── scripts/
-│   └── use-db.mjs              bascule SQLite ↔ PostgreSQL
-├── tests/                      80 tests Vitest
+│   ├── use-db.mjs              bascule SQLite ↔ PostgreSQL
+│   └── maintenance/            corrections ponctuelles de données
+├── tests/                      tests Vitest
 ├── docs/
 └── src/
     ├── app/
@@ -248,7 +249,7 @@ cocher/décocher en boucle ne permet pas de gonfler son niveau.
 
 ## Tests
 
-80 tests couvrant la couche métier :
+Tests couvrant la couche métier :
 
 | Fichier                | Portée                                                          |
 | ---------------------- | --------------------------------------------------------------- |
