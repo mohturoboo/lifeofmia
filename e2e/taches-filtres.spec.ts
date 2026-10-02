@@ -1,5 +1,6 @@
 import { test, expect, type Page } from '@playwright/test';
 import { motif, motifExact } from './texte';
+import { aujourdhui } from './session';
 
 /**
  * Les filtres de la liste de taches.
@@ -18,7 +19,7 @@ import { motif, motifExact } from './texte';
  * le verrouille aussi, puisque c'est ce qui etait mis en doute.
  */
 
-const JOUR = new Date().toISOString().slice(0, 10);
+const JOUR = aujourdhui();
 
 /*
  * Tous les tests partagent un compte : un marqueur unique par test evite qu'ils
