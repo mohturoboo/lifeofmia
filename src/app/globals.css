@@ -556,7 +556,3 @@
     border-width: 0;
   }
 }
-
-[dir='rtl'] .lm-flip {
-  transform: scaleX(-1);
-}

@@ -290,17 +290,6 @@ export const transactionSchema = z.object({
 
 export const transactionUpdateSchema = updatableFrom(transactionSchema);
 
-export const projectSchema = z.object({
-  name: z.string().trim().min(1, 'Nom requis.').max(120),
-  description: optionalText(2000),
-  status: z.enum(['active', 'paused', 'done', 'archived']).default('active'),
-  color: hexColorSchema.default('#e6e6e6'),
-  deadline: optionalDate,
-  progress: z.number().int().min(0).max(100).default(0),
-});
-
-export const projectUpdateSchema = updatableFrom(projectSchema);
-
 export const noteSchema = z.object({
   title: z.string().trim().min(1, 'Titre requis.').max(160),
   content: z.string().max(50000).default(''),

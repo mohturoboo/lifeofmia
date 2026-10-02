@@ -76,7 +76,7 @@ describe('mises a jour partielles — tous les modules', () => {
   );
 
   it('couvre bien tous les schemas de mise a jour', () => {
-    expect(schemas.length).toBeGreaterThanOrEqual(9);
+    expect(schemas.length).toBeGreaterThanOrEqual(8);
   });
 
   it.each(schemas)('%s ne reecrit aucun champ absent', (_nom, schema) => {
