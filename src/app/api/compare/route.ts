@@ -32,7 +32,8 @@ export const GET = route(async ({ user, searchParams }) => {
   const accountStart = dateKeyIn(user.timezone, user.createdAt);
 
   // Pour « depuis le debut », la periode part de la creation du compte.
-  let days: number = COMPARE_PERIODS[period] ?? 30;
+  // `Object.hasOwn` : « ?period=constructor » resolvait une fonction et faisait echouer la route.
+  let days: number = Object.hasOwn(COMPARE_PERIODS, period) ? COMPARE_PERIODS[period] : 30;
   if (period === 'all') {
     const first = await prisma.dailyStat.findFirst({
       where: { userId: user.id },

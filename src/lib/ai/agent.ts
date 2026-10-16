@@ -128,29 +128,3 @@ export async function runAgent(
 
   return { text: finalText, actions, tokensIn, tokensOut };
 }
-
-/** Resume la journee d'un utilisateur a partir de son entree de journal. */
-export async function summarizeJournal(
-  user: SessionUser,
-  entry: { date: string; mood: number; energy: number; content: string },
-): Promise<string> {
-  if (!isAiEnabled()) throw new AiDisabledError();
-
-  const response = await anthropic().messages.create({
-    model: env.aiModel,
-    max_tokens: 400,
-    system:
-      "Tu resumes la journee d'un utilisateur a partir de son journal personnel. Trois a quatre phrases maximum : ce qui s'est passe, l'etat d'esprit, et un point d'attention bienveillant pour demain. Pas de liste a puces, pas de titre.",
-    messages: [
-      {
-        role: 'user',
-        content: `Date : ${entry.date}\nHumeur : ${entry.mood}/5\nEnergie : ${entry.energy}/5\n\n${entry.content}`,
-      },
-    ],
-  });
-
-  const text = response.content.find(
-    (block): block is Anthropic.TextBlock => block.type === 'text',
-  );
-  return text?.text ?? '';
-}

@@ -162,7 +162,7 @@ Le middleware s'exécute dans le runtime Edge, qui ne dispose ni de `node:crypto
 Prisma. Il se limite donc à vérifier la **signature** du jeton avec `jose` pour décider
 d'une redirection.
 
-La révocation de session, elle, est vérifiée côté Node dans `requireUser()`. Ce
+La révocation de session, elle, est vérifiée côté Node dans `getCurrentUser()`. Ce
 double niveau donne une redirection rapide sans requête, et une garantie réelle au
 moment où les données sont servies. La constante `SESSION_COOKIE` vit dans
 `lib/auth/constants.ts` précisément pour que le middleware puisse l'importer sans

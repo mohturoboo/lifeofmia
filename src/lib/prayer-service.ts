@@ -50,10 +50,10 @@ function coordonnees(user: SessionUser): { latitude: number; longitude: number }
 
 /** Reglages de calcul du profil, crees a la volee au premier acces. */
 export async function prayerSettingsFor(userId: string) {
-  return (
-    (await prisma.prayerSettings.findUnique({ where: { userId } })) ??
-    (await prisma.prayerSettings.create({ data: { userId } }))
-  );
+  // `upsert` plutot que lecture puis creation : la page Prieres et le tableau
+  // de bord charges ensemble tentaient chacun la creation, et le second
+  // echouait sur la contrainte d'unicite.
+  return prisma.prayerSettings.upsert({ where: { userId }, create: { userId }, update: {} });
 }
 
 export async function getPrayerTimes(user: SessionUser, date: DateKey): Promise<ResultatPrieres | null> {

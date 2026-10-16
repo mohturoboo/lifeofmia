@@ -1,4 +1,4 @@
-import { describe, expect, it, beforeEach } from 'vitest';
+import { describe, expect, it, beforeEach, vi } from 'vitest';
 import { evaluatePassword, hashPassword, verifyPassword } from '@/lib/auth/password';
 import { signAccessToken, verifyAccessToken } from '@/lib/auth/jwt';
 import { consume, reset, RATE_LIMITS } from '@/lib/auth/rate-limit';
@@ -82,6 +82,27 @@ describe('limitation de debit', () => {
     consume('test-key', 1, 60_000);
     expect(consume('autre-cle', 1, 60_000).allowed).toBe(true);
     reset('autre-cle');
+  });
+
+  it('purge chaque compteur selon sa propre fenetre', () => {
+    vi.useFakeTimers();
+    try {
+      // Un compteur a fenetre d'une heure atteint sa limite...
+      for (let attempt = 0; attempt < 2; attempt += 1) consume('longue', 2, 60 * 60_000);
+      expect(consume('longue', 2, 60 * 60_000).allowed).toBe(false);
+
+      // ...puis une ecriture a fenetre d'une minute declenche le balayage.
+      vi.advanceTimersByTime(5 * 60_000);
+      consume('courte', 300, 60_000);
+
+      // Avant correction, le balayage appliquait la fenetre d'une minute a
+      // tous les compteurs : celui d'une heure repartait de zero.
+      expect(consume('longue', 2, 60 * 60_000).allowed).toBe(false);
+    } finally {
+      reset('longue');
+      reset('courte');
+      vi.useRealTimers();
+    }
   });
 
   it('definit des limites strictes sur les routes sensibles', () => {

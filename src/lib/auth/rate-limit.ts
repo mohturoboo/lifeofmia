@@ -8,18 +8,27 @@
 
 interface Bucket {
   hits: number[];
+  /** Fenetre propre au compteur : le balayage ne doit pas en appliquer une autre. */
+  windowMs: number;
 }
 
 const store = new Map<string, Bucket>();
 let lastSweep = Date.now();
 
-/** Nettoyage periodique pour eviter une croissance non bornee de la Map. */
-function sweep(windowMs: number) {
+/**
+ * Nettoyage periodique pour eviter une croissance non bornee de la Map.
+ *
+ * Chaque compteur est purge selon SA fenetre. Purger avec celle de l'appel en
+ * cours effacait, apres une simple ecriture (fenetre d'une minute), les
+ * tentatives des compteurs a fenetre d'une heure — export, IA — qui
+ * repartaient alors de zero.
+ */
+function sweep() {
   const now = Date.now();
   if (now - lastSweep < 60_000) return;
   lastSweep = now;
   for (const [key, bucket] of store) {
-    bucket.hits = bucket.hits.filter((t) => now - t < windowMs);
+    bucket.hits = bucket.hits.filter((t) => now - t < bucket.windowMs);
     if (bucket.hits.length === 0) store.delete(key);
   }
 }
@@ -31,9 +40,10 @@ export interface RateLimitResult {
 }
 
 export function consume(key: string, limit: number, windowMs: number): RateLimitResult {
-  sweep(windowMs);
+  sweep();
   const now = Date.now();
-  const bucket = store.get(key) ?? { hits: [] };
+  const bucket = store.get(key) ?? { hits: [], windowMs };
+  bucket.windowMs = windowMs;
   bucket.hits = bucket.hits.filter((t) => now - t < windowMs);
 
   if (bucket.hits.length >= limit) {

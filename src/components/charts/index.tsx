@@ -716,4 +716,3 @@ export function RingProgress({
   );
 }
 
-export { PALETTE };

@@ -54,9 +54,15 @@ export async function consumeToken(plain: string, type: TokenType): Promise<stri
     return null;
   }
 
-  await prisma.verificationToken.update({
-    where: { id: record.id },
+  /*
+   * Consommation atomique : la condition `usedAt: null` est reverifiee par la
+   * base au moment de l'ecriture. Deux requetes simultanees avec le meme lien
+   * passaient sinon toutes deux la lecture ci-dessus, et le jeton « a usage
+   * unique » servait deux fois.
+   */
+  const { count } = await prisma.verificationToken.updateMany({
+    where: { id: record.id, usedAt: null },
     data: { usedAt: new Date() },
   });
-  return record.userId;
+  return count === 1 ? record.userId : null;
 }

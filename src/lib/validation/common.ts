@@ -25,8 +25,6 @@ export const timeSchema = z
   .string()
   .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, 'Heure attendue au format HH:mm');
 
-export const cuidSchema = z.string().min(1, 'Identifiant requis');
-
 /**
  * Messages de coherence temporelle, partages par les schemas et les routes.
  *
@@ -89,11 +87,6 @@ export const localeSchema = z.enum(LOCALES);
 export const themeSchema = z.enum(['dark', 'light', 'system']);
 export const timeFormatSchema = z.enum(['12h', '24h']);
 export const unitsSchema = z.enum(['metric', 'imperial']);
-
-export const paginationSchema = z.object({
-  page: z.coerce.number().int().min(1).default(1),
-  perPage: z.coerce.number().int().min(1).max(200).default(50),
-});
 
 /** Convertit une chaine ISO (ou vide) en Date, en tolerant `null`. */
 export const optionalDate = z

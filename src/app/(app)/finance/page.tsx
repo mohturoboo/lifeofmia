@@ -9,6 +9,7 @@ import { Modal } from '@/components/ui/modal';
 import { DonutChart } from '@/components/charts';
 import { PageHeader } from '@/components/page-header';
 import { useI18n } from '@/i18n/provider';
+import { toDateKey } from '@/lib/date';
 
 interface Transaction {
   id: string;
@@ -62,7 +63,7 @@ export default function FinancePage() {
     label: '',
     amount: '',
     category: 'other',
-    date: new Date().toISOString().slice(0, 10),
+    date: toDateKey(new Date()),
     recurring: false,
   });
 

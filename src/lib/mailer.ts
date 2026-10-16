@@ -51,6 +51,21 @@ export async function sendMail(message: MailMessage): Promise<void> {
 }
 
 /**
+ * Echappe une valeur saisie par l'utilisateur avant de l'inserer dans le HTML.
+ *
+ * Le prenom est libre a l'inscription : insere tel quel, « <a href=...> »
+ * devenait un lien cliquable dans un email envoye au nom de LifeofM.
+ */
+function escapeHtml(value: string): string {
+  return value
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
+}
+
+/**
  * Gabarit d'email aux couleurs de la marque : noir et rose bebe.
  *
  * Les polices de la marque ne sont pas chargeables dans un client mail ; on
@@ -84,7 +99,7 @@ export function passwordResetEmail(to: string, firstName: string, token: string)
     to,
     subject: 'Reinitialisation de votre mot de passe — LifeofM',
     html: layout(
-      `Bonjour ${firstName}`,
+      `Bonjour ${escapeHtml(firstName)}`,
       'Vous avez demande la reinitialisation de votre mot de passe. Ce lien est valable une heure et ne peut servir qu\'une seule fois.',
       'Choisir un nouveau mot de passe',
       url,
@@ -120,7 +135,7 @@ export function securityAlertEmail(
   return {
     to,
     subject: 'Tentatives de connexion sur votre compte — LifeofM',
-    html: layout(`Bonjour ${firstName}`, corps),
+    html: layout(`Bonjour ${escapeHtml(firstName)}`, corps),
     text:
       `Bonjour ${firstName},\n\n` +
       `${tentatives} tentatives de connexion infructueuses ont ete detectees sur votre compte. ` +

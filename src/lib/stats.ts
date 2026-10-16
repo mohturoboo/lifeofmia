@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import { disciplineScore } from '@/lib/levels';
-import { dateKeyIn, lastNDays, weekDayOf, type DateKey } from '@/lib/date';
+import { dateKeyIn, dayBoundsIn, lastNDays, weekDayOf, type DateKey } from '@/lib/date';
 import { parseNumberArray } from '@/lib/json';
 
 /**
@@ -78,12 +78,22 @@ export function habitCountsOn(habit: HabitWindow, date: DateKey, timezone: strin
  * Appelee apres chaque ecriture significative (habitude, tache, repas, poids...).
  */
 export async function recomputeDay(userId: string, date: DateKey): Promise<DayStats> {
-  const dayStart = new Date(`${date}T00:00:00.000Z`);
-  const dayEnd = new Date(`${date}T23:59:59.999Z`);
+  const owner = await prisma.user.findUnique({ where: { id: userId }, select: { timezone: true } });
+  const timezone = owner?.timezone ?? 'UTC';
 
-  const [owner, habits, habitLogs, tasks, prayerLogs, meals, water, weight, workouts, focus, journal, xpEvents] =
+  /*
+   * Deux sortes de bornes. `dueDate` est une date calendaire stockee autour
+   * de midi : elle se filtre sur la journee UTC de la cle, comme dans la
+   * route des taches. `completedAt` et les evenements d'XP sont des instants :
+   * ils se filtrent sur la journee LOCALE, sans quoi une tache terminee a
+   * 00 h 30 a Paris comptait pour la veille.
+   */
+  const dueStart = new Date(`${date}T00:00:00.000Z`);
+  const dueEnd = new Date(`${date}T23:59:59.999Z`);
+  const { start: dayStart, end: dayEnd } = dayBoundsIn(date, timezone);
+
+  const [habits, habitLogs, tasks, prayerLogs, meals, water, weight, workouts, focus, journal, xpEvents] =
     await Promise.all([
-      prisma.user.findUnique({ where: { id: userId }, select: { timezone: true } }),
       /*
        * Les habitudes archivees sont chargees elles aussi : c'est
        * `habitCountsOn` qui decide, journee par journee, si l'habitude existait
@@ -107,14 +117,19 @@ export async function recomputeDay(userId: string, date: DateKey): Promise<DaySt
         where: {
           userId,
           OR: [
-            { dueDate: { gte: dayStart, lte: dayEnd } },
+            { dueDate: { gte: dueStart, lte: dueEnd } },
             { completedAt: { gte: dayStart, lte: dayEnd } },
           ],
         },
         select: { status: true },
       }),
       prisma.prayerLog.count({ where: { userId, date, status: { not: 'missed' } } }),
-      prisma.meal.aggregate({ where: { userId, date }, _sum: { calories: true, protein: true } }),
+      // Les valeurs nutritionnelles sont celles d'UNE portion : le total du jour
+      // les multiplie par la quantite, comme la page Nutrition.
+      prisma.meal.findMany({
+        where: { userId, date, isTemplate: false },
+        select: { calories: true, protein: true, quantity: true },
+      }),
       prisma.waterLog.aggregate({ where: { userId, date }, _sum: { amountMl: true } }),
       prisma.weightEntry.findFirst({ where: { userId, date }, select: { weightKg: true } }),
       prisma.workout.aggregate({ where: { userId, date }, _sum: { durationMin: true } }),
@@ -126,7 +141,6 @@ export async function recomputeDay(userId: string, date: DateKey): Promise<DaySt
       }),
     ]);
 
-  const timezone = owner?.timezone ?? 'UTC';
   const scheduled = habits.filter((habit) => habitCountsOn(habit, date, timezone));
   const logsByHabit = new Map(habitLogs.map((log) => [log.habitId, log]));
 
@@ -168,8 +182,8 @@ export async function recomputeDay(userId: string, date: DateKey): Promise<DaySt
     tasksDone,
     tasksTotal,
     prayersDone: prayerLogs,
-    calories: Math.round(meals._sum.calories ?? 0),
-    proteinG: Math.round(meals._sum.protein ?? 0),
+    calories: Math.round(meals.reduce((sum, meal) => sum + meal.calories * meal.quantity, 0)),
+    proteinG: Math.round(meals.reduce((sum, meal) => sum + meal.protein * meal.quantity, 0)),
     waterMl: water._sum.amountMl ?? 0,
     weightKg: weight?.weightKg ?? null,
     workoutMinutes,

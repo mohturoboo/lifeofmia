@@ -67,6 +67,49 @@ export function daysBetween(from: DateKey, to: DateKey): number {
   return Math.round(diff / 86_400_000);
 }
 
+/** Decalage (ms) entre l'heure murale d'un fuseau et UTC, a un instant donne. */
+function zoneOffsetMs(timezone: string, at: Date): number {
+  try {
+    const parts = new Intl.DateTimeFormat('en-US', {
+      timeZone: timezone,
+      hourCycle: 'h23',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    }).formatToParts(at);
+    const get = (type: string) => Number(parts.find((part) => part.type === type)?.value ?? 0);
+    const wall = Date.UTC(get('year'), get('month') - 1, get('day'), get('hour'), get('minute'), get('second'));
+    return wall - Math.floor(at.getTime() / 1000) * 1000;
+  } catch {
+    return 0;
+  }
+}
+
+/** Instant UTC du minuit local d'une cle dans un fuseau (heure d'ete comprise). */
+function zonedMidnight(key: DateKey, timezone: string): Date {
+  const [y, m, d] = key.split('-').map(Number);
+  const guess = Date.UTC(y, (m ?? 1) - 1, d ?? 1);
+  const first = guess - zoneOffsetMs(timezone, new Date(guess));
+  // Second passage : le decalage peut differer de part et d'autre d'un changement d'heure.
+  return new Date(guess - zoneOffsetMs(timezone, new Date(first)));
+}
+
+/**
+ * Bornes [debut, fin] d'une journee LOCALE, exprimees en instants.
+ *
+ * Indispensable pour filtrer un horodatage (`completedAt`, `createdAt`) sur
+ * « la journee de l'utilisateur » : des bornes `T00:00Z`/`T23:59Z` decoupent
+ * la journee de Greenwich, decalee de plusieurs heures pour Paris ou Tokyo.
+ */
+export function dayBoundsIn(key: DateKey, timezone: string): { start: Date; end: Date } {
+  const start = zonedMidnight(key, timezone);
+  const end = new Date(zonedMidnight(addDaysToKey(key, 1), timezone).getTime() - 1);
+  return { start, end };
+}
+
 /** Jour de la semaine (0 = dimanche) dans le fuseau de l'utilisateur. */
 export function weekDayOf(key: DateKey): number {
   return fromDateKey(key).getUTCDay();

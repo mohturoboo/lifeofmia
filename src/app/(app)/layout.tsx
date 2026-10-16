@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
 import { getCurrentUser } from '@/lib/auth/session';
+import { effectiveStreak } from '@/lib/gamification';
 import { resolveLocale } from '@/i18n/config';
 import { I18nProvider } from '@/i18n/provider';
 import { ThemeProvider, type Theme } from '@/components/theme-provider';
@@ -29,7 +30,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
               avatarUrl: user.avatarUrl,
               xp: user.xp,
               level: user.level,
-              currentStreak: user.currentStreak,
+              currentStreak: effectiveStreak(user, user.timezone),
             }}
           >
             {children}

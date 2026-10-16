@@ -104,17 +104,5 @@ export function formatFullDate(locale: Locale, date: Date, timezone?: string): s
   }
 }
 
-export function formatShortDate(locale: Locale, date: Date, timezone?: string): string {
-  try {
-    return new Intl.DateTimeFormat(LOCALE_META[locale].intl, {
-      day: '2-digit',
-      month: 'short',
-      timeZone: timezone,
-    }).format(date);
-  } catch {
-    return date.toISOString().slice(0, 10);
-  }
-}
-
 export { DEFAULT_LOCALE, LOCALE_META, resolveLocale };
 export type { Locale, Dictionary, DictionaryKey };

@@ -87,10 +87,10 @@ export const POST = route(
       include: { exercises: true },
     });
 
-    await recomputeDay(user.id, body.date);
     // L'XP suit la duree, plafonnee : une seance de trois heures ne vaut pas
-    // six fois une seance de trente minutes.
+    // six fois une seance de trente minutes. Versee avant le recalcul du jour.
     await awardXp(user.id, Math.min(60, 15 + Math.floor(body.durationMin / 5)), `Seance : ${body.name}`, 'workout');
+    await recomputeDay(user.id, body.date);
     await refreshStreak(user.id, user.timezone);
     await evaluateBadges(user.id);
 

@@ -4,6 +4,7 @@ import {
   ageFrom,
   dateKeyIn,
   dateKeyRange,
+  dayBoundsIn,
   daysBetween,
   fromDateKey,
   isDateKey,
@@ -86,5 +87,36 @@ describe('cles de date', () => {
     const birth = new Date();
     birth.setFullYear(birth.getFullYear() - 30);
     expect(ageFrom(birth)).toBe(30);
+  });
+});
+
+describe('bornes d une journee locale', () => {
+  it('decale la journee selon le fuseau', () => {
+    const paris = dayBoundsIn('2026-08-10', 'Europe/Paris');
+    expect(paris.start.toISOString()).toBe('2026-08-09T22:00:00.000Z');
+    expect(paris.end.toISOString()).toBe('2026-08-10T21:59:59.999Z');
+
+    const tokyo = dayBoundsIn('2026-08-10', 'Asia/Tokyo');
+    expect(tokyo.start.toISOString()).toBe('2026-08-09T15:00:00.000Z');
+  });
+
+  it('suit les changements d heure', () => {
+    // Passage a l'heure d'hiver : la journee du 25 octobre 2026 dure 25 heures.
+    const { start, end } = dayBoundsIn('2026-10-25', 'Europe/Paris');
+    expect(start.toISOString()).toBe('2026-10-24T22:00:00.000Z');
+    expect(end.toISOString()).toBe('2026-10-25T22:59:59.999Z');
+  });
+
+  it('retombe sur UTC pour un fuseau inconnu', () => {
+    const { start } = dayBoundsIn('2026-08-10', 'Pas/UnFuseau');
+    expect(start.toISOString()).toBe('2026-08-10T00:00:00.000Z');
+  });
+
+  it('place un instant local dans la bonne journee', () => {
+    // 00 h 30 a Paris le 11 = 22 h 30 UTC le 10 : c'est bien la journee du 11.
+    const instant = new Date('2026-08-10T22:30:00Z');
+    const { start, end } = dayBoundsIn('2026-08-11', 'Europe/Paris');
+    expect(instant >= start && instant <= end).toBe(true);
+    expect(dateKeyIn('Europe/Paris', instant)).toBe('2026-08-11');
   });
 });

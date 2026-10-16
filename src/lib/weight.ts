@@ -7,7 +7,7 @@
  * texte. Deux chemins de rendu pour la meme donnee, donc deux resultats.
  *
  * Un seul point de passage : la valeur est arrondie au dixieme, formatee selon
- * la locale — la virgue decimale francaise n'est pas un point — et suivie de
+ * la locale — la virgule decimale francaise n'est pas un point — et suivie de
  * son unite separee par une espace.
  */
 export function formatWeight(kilogrammes: number, locale: string, unite = 'kg'): string {

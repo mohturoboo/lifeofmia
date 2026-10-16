@@ -121,8 +121,6 @@ export const BADGE_DEFINITIONS = [
   { code: 'transformation', name: 'Transformation', description: 'Perdre ou gagner 5 kg vers son objectif', icon: 'trending', tier: 'gold', xpReward: 400 },
 ] as const;
 
-export type BadgeCode = (typeof BADGE_DEFINITIONS)[number]['code'];
-
 /**
  * Evalue tous les badges non encore debloques et attribue ceux qui sont acquis.
  * Renvoie les codes nouvellement obtenus (pour l'affichage d'une celebration).
